@@ -6,7 +6,8 @@ internal class Player
     public int Level { get; }
     public int Atk { get; }
     public int Def { get; }
-    public int Hp { get; }
+    public int Hp { get; set;}
+    public int DefultHp { get; set; }
     public int Gold { get; set; }
 
     public Player(string name, string job, int level, int atk, int def, int hp, int gold)
@@ -18,6 +19,7 @@ internal class Player
         Def = def;
         Hp = hp;
         Gold = gold;
+        DefultHp = hp;
     }
 
     internal void PlayerPhase(Monster monster)
@@ -48,5 +50,12 @@ internal class Player
         }
         ConsoleUtility.PrintTextHighlights("", "0. ", "다음"); 
         Console.WriteLine();
+    }
+
+    public void HpPotion(int potion)
+    {
+        //HP회복 기능 칸
+        Hp = potion;
+        DefultHp = potion;
     }
 }

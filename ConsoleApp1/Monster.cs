@@ -13,14 +13,6 @@ internal class Monster
     public int Atk { get => atk; set => atk = value; }
     public bool IsLive { get => isLive; set => isLive = value; }
 
-    public Monster(int level, string name, int hp, int atk, bool isLive)
-    {
-        this.Level = level;
-        this.Name = name;
-        this.Hp = hp;
-        this.Atk = atk;
-        this.IsLive = isLive;
-    }
     public Monster(int num)
     {
         switch (num)
@@ -62,13 +54,26 @@ internal class Monster
         return true;
     }
 
-    internal void MonsterPhase()
+    internal void MonsterPhase(Player player)
     {
+        Console.Clear();
         ConsoleUtility.PrintTextHighlights("", "Battle!");
         Console.WriteLine("\n");
         ConsoleUtility.PrintTextHighlights("Lv.",level.ToString());
-        //Console.WriteLine($"{})
+        ConsoleUtility.PrintTextHighlights($"{name} 의 공격", "!");
+        Console.WriteLine();
+        ConsoleUtility.PrintTextHighlights($"{player.Name} 을(를) 맞췄습니다.   [데미지 : ", atk.ToString(), "]");
+        Console.WriteLine("\n\n");
+        ConsoleUtility.PrintTextHighlights("Lv.", player.Level.ToString(),player.Name);
+        Console.WriteLine();
+        ConsoleUtility.PrintTextHighlights("HP ", $"{player.Hp} -> {player.Hp -= atk}");
+        Console.WriteLine("\n");
         ConsoleUtility.PrintTextHighlights("", "0. ", "다음");
-        Console.ReadLine();
+        Console.WriteLine("\n");
+        Console.WriteLine("대상을 선택해주세요.");
+
+        switch(ConsoleUtility.PromotMenuChoice(0, 0)){
+            case 0:break;
+        }
     }
 }

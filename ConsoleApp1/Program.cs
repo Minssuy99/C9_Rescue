@@ -15,9 +15,7 @@ public class GameManager
 
     private List<Item> storeInventory;
 
-    private List<Monster> monsters;
-
-    private bool turn = true;
+    private int MonsterAtkNum;  //몬스터들의 공격 순서
 
     public GameManager()
     {
@@ -142,10 +140,11 @@ public class GameManager
         }
         MainManu();
     }
-
+    
     private void FightStartMenu()
     {
         Console.Clear();
+        MonsterAtkNum = 0;
         Random random = new Random();
         int Mnum = random.Next(1, 5); //1~4마리의 랜덤 몬스터;
         Monster[] TempMonster = new Monster[Mnum];
@@ -157,33 +156,102 @@ public class GameManager
         switch (FightMenu(false, random, Mnum, TempMonster))
         {
             case 1:
-                BattleMenu(random, Mnum, TempMonster);
+                BattleMenu(random, Mnum, TempMonster, MonsterAtkNum);
                 break;
         }
     }
-    int MonsterAtkNum = 0; //몬스터의 공격순서를 위한 변수
-    private void BattleMenu(Random random, int Mnum, Monster[] TempMonster)
+     //몬스터의 공격순서를 위한 변수
+    private void BattleMenu(Random random, int Mnum, Monster[] TempMonster,int MonsterAtkNum)
     {
+        int dieCheck = 0;
+        foreach(Monster m in TempMonster)
+        {
+            if (!m.IsLive)
+            {
+                dieCheck++;
+            }
+        }
+        if (dieCheck ==Mnum)
+        {
+            DongeonClear(Mnum,true);
+        }
+        if (player.Hp<=0) 
+        {
+            DongeonClear(Mnum, false);
+        }
         int choice = FightMenu(true, random, Mnum, TempMonster); //FightMenu를 출력하면서 choice의 값을 받아온다.
         switch (choice)
         {
             case 0:
-                TempMonster[MonsterAtkNum%(Mnum-1)].MonsterPhase();
+                //
+                while (true)
+                {
+                    if (!TempMonster[MonsterAtkNum % Mnum].IsLive)
+                    {
+                        MonsterAtkNum++;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                
+                TempMonster[MonsterAtkNum%Mnum].MonsterPhase(player);
                 MonsterAtkNum++;
-                BattleMenu(random, Mnum, TempMonster);
+                BattleMenu(random, Mnum, TempMonster, MonsterAtkNum);
                 break;
             default:
                 player.PlayerPhase(TempMonster[choice - 1]);
                 switch (ConsoleUtility.PromotMenuChoice(0, 0))
                 {
                     case 0:
-                        TempMonster[MonsterAtkNum % (Mnum - 1)].MonsterPhase();
+                        TempMonster[MonsterAtkNum % Mnum].MonsterPhase(player);
                         MonsterAtkNum++;
-                        BattleMenu(random, Mnum, TempMonster);
+                        BattleMenu(random, Mnum, TempMonster, MonsterAtkNum);
                         break;
                 }
                 break;
         }
+    }
+
+    private void DongeonClear(int Mnum,bool win)
+    {
+        Console.Clear();
+        ConsoleUtility.PrintTextHighlights("", "Battle! - Result");
+        Console.WriteLine("\n");
+        if (win)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Victory\n");
+            Console.ResetColor();
+
+            Console.WriteLine($"던전에서 몬스터{Mnum}마리를 잡았습니다.\n");
+
+            ConsoleUtility.PrintTextHighlights("Lv", player.Level.ToString(), player.Name);
+            ConsoleUtility.PrintTextHighlights("HP", $"{player.DefultHp.ToString()} - > {player.Hp.ToString()}");
+
+            player.DefultHp = player.Hp;
+        }
+        else
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("You Lose\n");
+            Console.ResetColor();
+
+
+            ConsoleUtility.PrintTextHighlights("Lv", player.Level.ToString(), player.Name);
+            ConsoleUtility.PrintTextHighlights("HP", $"{player.DefultHp.ToString()} - > 0");
+
+            player.DefultHp = 1;
+        }
+
+
+        Console.WriteLine("\n");
+        ConsoleUtility.PrintTextHighlights("", "0.", "다음");
+
+        ConsoleUtility.PromotMenuChoice(0, 0);
+
+        MainManu();
     }
 
     private int FightMenu(bool fightCheck, Random random, int Mnum, Monster[] TempMonster)
