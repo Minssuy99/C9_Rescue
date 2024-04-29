@@ -166,14 +166,15 @@ public class GameManager
                 break;
         }
     }
-    
+    int MonsterAtkNum = 0; //몬스터의 공격순서를 위한 변수
     private void BattleMenu(Random random, int Mnum, Monster[] TempMonster)
     {
         int choice = FightMenu(true, random, Mnum, TempMonster); //FightMenu를 출력하면서 choice의 값을 받아온다.
         switch (choice)
         {
             case 0:
-                TempMonster[0].MonsterPhase();
+                TempMonster[MonsterAtkNum%(Mnum-1)].MonsterPhase();
+                MonsterAtkNum++;
                 BattleMenu(random, Mnum, TempMonster);
                 break;
             default:
@@ -181,7 +182,8 @@ public class GameManager
                 switch (ConsoleUtility.PromotMenuChoice(0, 0))
                 {
                     case 0:
-                        TempMonster[0].MonsterPhase();
+                        TempMonster[MonsterAtkNum % (Mnum - 1)].MonsterPhase();
+                        MonsterAtkNum++;
                         BattleMenu(random, Mnum, TempMonster);
                         break;
                 }
