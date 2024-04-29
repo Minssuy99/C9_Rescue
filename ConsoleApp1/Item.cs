@@ -3,8 +3,6 @@
 
 
 
-using System.Numerics;
-
 public enum ItemType
 {
     WEAPON,
@@ -49,7 +47,6 @@ internal class Item
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write($"{idx}");
             Console.ResetColor();
-            Console.Write(" ");
         }
         if (IsEquipped)
         {
@@ -73,7 +70,7 @@ internal class Item
         Console.WriteLine(Desc);
     }
 
-    internal void ToggleEquipStates(List<Item> inventory, Player player)
+    internal void ToggleEquipStates(List<Item> inventory)
     {
         if (!IsEquipped)
         {
@@ -89,7 +86,6 @@ internal class Item
             if (canEquip)
             {
                 IsEquipped = true;
-                player.UpdateStats(inventory); // 플레이어의 능력치 업데이트
             }
             else
             {
@@ -99,9 +95,7 @@ internal class Item
         else
         {
             IsEquipped = false;
-            player.UpdateStats(inventory); // 플레이어의 능력치 업데이트
         }
-
     }
 
     internal void PrintStoreItemDescription(bool withNumber = false, int idx = 0)
@@ -111,13 +105,9 @@ internal class Item
         {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write($"{idx}");
-            Console.Write(" ");
             Console.ResetColor();
-
         }
-
-        Console.Write(ConsoleUtility.PadRightForMixedText(Name, 19));
-
+        else Console.Write(ConsoleUtility.PadRightForMixedText(Name, 19));
 
         Console.Write(" | ");
 

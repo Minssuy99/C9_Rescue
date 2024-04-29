@@ -1,50 +1,52 @@
-﻿using System.Buffers.Text;
-
+﻿
 internal class Player
 {
     public string Name { get; }
     public string Job { get; }
-    public int Level { get; private set; }
-    public int BaseAtk { get; private set; }
-    public int BaseDef { get; private set; }
-    public int BaseHp { get; private set; }
-    public int Atk { get; private set; }
-    public int Def { get; private set; }
-    public int Hp { get; private set; }
+    public int Level { get; }
+    public int Atk { get; }
+    public int Def { get; }
+    public int Hp { get; }
     public int Gold { get; set; }
 
-    public Player(string name, string job, int level, int baseAtk, int baseDef, int baseHp, int gold)
+    public Player(string name, string job, int level, int atk, int def, int hp, int gold)
     {
         Name = name;
         Job = job;
         Level = level;
-        BaseAtk = baseAtk;
-        BaseDef = baseDef;
-        BaseHp = baseHp;
-        Atk = baseAtk;
-        Def = baseDef;
-        Hp = baseHp;
+        Atk = atk;
+        Def = def;
+        Hp = hp;
         Gold = gold;
     }
 
-    public void UpdateStats(List<Item> inventory)
+    internal void PlayerPhase(Monster monster)
     {
-        // 기본 능력치 초기화
-        Atk = BaseAtk;
-        Def = BaseDef;
-        Hp = BaseHp;
-
-        // 장착된 아이템에 따라 능력치 업데이트
-        foreach (var item in inventory)
+        Console.Clear();
+        Random rand = new();
+        int difference = (Atk * 10 / 100)+1;
+        int nowAttack = rand.Next(Atk - difference, Atk + difference + 1);
+        ConsoleUtility.PrintTextHighlights("", "Battle!");
+        Console.WriteLine("\n\n");
+        Console.WriteLine($"{Name} 의 공격!");
+        ConsoleUtility.PrintTextHighlights("Lv.", monster.Level.ToString(), $" {monster.Name} 을(를) 맞췄습니다!");
+        Console.WriteLine();
+        ConsoleUtility.PrintTextHighlights("[데미지 : ", monster.Atk.ToString(), "]");
+        Console.WriteLine("\n");
+        ConsoleUtility.PrintTextHighlights("Lv.", monster.Level.ToString(), $" {monster.Name}");
+        Console.WriteLine();
+        ConsoleUtility.PrintTextHighlights("HP ", $"{monster.Hp} -> ");
+        if (monster.Hp > 0)
         {
-            if (item.IsEquipped)
-            {
-                Atk += item.Atk;
-                Def += item.Def;
-                Hp += item.Hp;
-            }
+            monster.Hp -= nowAttack;
+            Console.WriteLine(monster.Hp);
         }
+        if (monster.Hp <= 0)
+        {
+            Console.WriteLine("Dead");
+            monster.IsLive = false;
+        }
+        ConsoleUtility.PrintTextHighlights("", "0. ", "다음"); 
+        Console.WriteLine();
     }
 }
-
-
