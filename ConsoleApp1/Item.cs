@@ -112,11 +112,12 @@ internal class Item
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
             Console.Write($"{idx}");
             Console.Write(" ");
-            Console.Write(ConsoleUtility.PadRightForMixedText(Name, 19));
             Console.ResetColor();
 
         }
-        
+
+        Console.Write(ConsoleUtility.PadRightForMixedText(Name, 19));
+
 
         Console.Write(" | ");
 
