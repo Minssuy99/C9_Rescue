@@ -21,6 +21,21 @@ internal class Monster
         this.Atk = atk;
         this.IsLive = isLive;
     }
+    public Monster(int num)
+    {
+        switch (num)
+        {        
+            case 0:
+                level = 2;name = "미니언";hp = 15;atk = 5;isLive = true;
+                break;
+            case 1: 
+                level = 3;name = "공허충";hp = 10;atk = 9;isLive = true;
+                break;
+            case 2:
+                level = 5; name = "대포미니언"; hp = 25; atk = 8; isLive = true;
+                break;
+        }
+    }
 
     internal void PrintMonsterInfo(bool fight = false, int idx = 0)
     {

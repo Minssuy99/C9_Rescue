@@ -37,11 +37,6 @@ public class GameManager
         storeInventory.Add(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", ItemType.WEAPON, 2, 0, 0, 600));
         storeInventory.Add(new Item("청동 도끼", "어디선가 사용됐던 것 같은 도끼입니다.", ItemType.WEAPON, 5, 0, 0, 1500));
         storeInventory.Add(new Item("스파르타의 창", "스파르타의 전사들이 사용했다는 전설의 창입니다.", ItemType.WEAPON, 7, 0, 0, 2500));
-
-        monsters = new List<Monster>();
-        monsters.Add(new Monster(2,"미니언",15,5,true));
-        monsters.Add(new Monster(3, "공허충", 10, 9, true));
-        monsters.Add(new Monster(5, "대포미니언", 25, 8, true));
     }
 
     public void StartGame()
@@ -156,7 +151,7 @@ public class GameManager
         Monster[] TempMonster = new Monster[Mnum];
         for (int i = 0; i < Mnum; i++)
         {
-            TempMonster[i] = monsters[random.Next(0, monsters.Count)]; //임시 저장
+            TempMonster[i] = new Monster(random.Next(0, 3)); //임시 저장
         }
 
         switch (FightMenu(false, random, Mnum, TempMonster))

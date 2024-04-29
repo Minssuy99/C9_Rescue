@@ -43,7 +43,10 @@ internal class ConsoleUtility
             Console.Write("원하시는 번호를 입력해주세요.");
             if (int.TryParse(Console.ReadLine(), out int choice) && choice >= min && choice <= max)
             {
-                if(choice!=0&& temporaries[choice - 1].IsLive)
+                if (choice == 0)
+                {
+                    return choice;
+                }else if (temporaries[choice - 1].IsLive)
                 {
                     return choice;
                 }
