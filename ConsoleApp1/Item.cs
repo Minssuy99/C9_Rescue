@@ -3,6 +3,9 @@
 
 
 
+using System.Diagnostics;
+using System.Xml.Linq;
+
 public enum ItemType
 {
     WEAPON,
@@ -36,6 +39,11 @@ internal class Item
         Price = price;
         IsEquipped = isEquipped;
         IsPurchased = isPurchased;
+    }
+    public Item CloneItem()
+    {
+        Item clone = new Item(Name, Desc, Type, Atk, Def, Hp, Price, IsEquipped = false, IsPurchased = false);
+        return clone;
     }
 
     //
