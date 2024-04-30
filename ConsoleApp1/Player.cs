@@ -1,4 +1,5 @@
-﻿
+﻿using System.Numerics;
+
 internal class Player
 {
     public string Name { get; }
@@ -6,56 +7,41 @@ internal class Player
     public int Level { get; }
     public int Atk { get; }
     public int Def { get; }
-    public int Hp { get; set;}
-    public int DefultHp { get; set; }
+    public int MaxHp { get; }
+    public int CurrentHp { get; private set; }
     public int Gold { get; set; }
 
-    public Player(string name, string job, int level, int atk, int def, int hp, int gold)
+    public Player(string name, string job, int level, int atk, int def, int maxHp, int currentHp, int gold)
     {
         Name = name;
         Job = job;
         Level = level;
         Atk = atk;
         Def = def;
-        Hp = hp;
+        MaxHp = maxHp;
+        CurrentHp = currentHp;
         Gold = gold;
-        DefultHp = hp;
     }
 
-    internal void PlayerPhase(Monster monster)
+    public void PlayerTakeDamage(int damage)
     {
-        Console.Clear();
-        Random rand = new();
-        int difference = (Atk * 10 / 100)+1;
-        int nowAttack = rand.Next(Atk - difference, Atk + difference + 1);
-        ConsoleUtility.PrintTextHighlights("", "Battle!");
-        Console.WriteLine("\n\n");
-        Console.WriteLine($"{Name} 의 공격!");
-        ConsoleUtility.PrintTextHighlights("Lv.", monster.Level.ToString(), $" {monster.Name} 을(를) 맞췄습니다!");
-        Console.WriteLine();
-        ConsoleUtility.PrintTextHighlights("[데미지 : ", monster.Atk.ToString(), "]");
-        Console.WriteLine("\n");
-        ConsoleUtility.PrintTextHighlights("Lv.", monster.Level.ToString(), $" {monster.Name}");
-        Console.WriteLine();
-        ConsoleUtility.PrintTextHighlights("HP ", $"{monster.Hp} -> ");
-        if (monster.Hp > 0)
-        {
-            monster.Hp -= nowAttack;
-            Console.WriteLine(monster.Hp);
-        }
-        if (monster.Hp <= 0)
-        {
-            Console.WriteLine("Dead");
-            monster.IsLive = false;
-        }
-        ConsoleUtility.PrintTextHighlights("", "0. ", "다음"); 
-        Console.WriteLine();
+        CurrentHp -= damage;
+        if (CurrentHp < 0)
+            CurrentHp = 0;
     }
 
-    public void HpPotion(int potion)
+    public bool IsAlive()
     {
-        //HP회복 기능 칸
-        Hp = potion;
-        DefultHp = potion;
+        return CurrentHp > 0;
+    }
+
+    public void playerdefeat()
+    {
+        CurrentHp = 1;
+    }
+
+    public void Reset()
+    {
+        CurrentHp = MaxHp;
     }
 }

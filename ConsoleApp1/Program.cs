@@ -5,17 +5,17 @@
 
 
 
-using System;
-using System.Data.SqlTypes;
+
+using System.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 public class GameManager
 {
     private Player player;
     private List<Item> inventory;
-
     private List<Item> storeInventory;
-
-    private int MonsterAtkNum;  //몬스터들의 공격 순서
+    private List<Monster> monster;
+    private List<Monster> battleMonster;
 
     public GameManager()
     {
@@ -24,10 +24,19 @@ public class GameManager
 
     private void InitializeGame()
     {
-        player = new Player("Seungjun", "Programmer", 1, 10, 5, 100, 15000);
+        player = new Player("Seungjun", "Programmer", 1, 10, 5, 100, 100, 15000);
+
+        battleMonster = new List<Monster>();
+
+        monster = new List<Monster>();
+        monster.Add(new Monster("미니언", 2, 5, 2, 15, 15));
+        monster.Add(new Monster("대포미니언", 5, 9, 5, 25, 25));
+        monster.Add(new Monster("공허충", 3, 8, 3, 10, 10));
+        monster.Add(new Monster("칼날부리새끼", 1, 3, 1, 8, 8));
+        monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8));
 
         inventory = new List<Item>();
-        
+
         storeInventory = new List<Item>();
         storeInventory.Add(new Item("수련자 갑옷", "수련에 도움을 주는 갑옷입니다.", ItemType.ARMOR, 0, 5, 0, 500));
         storeInventory.Add(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", ItemType.ARMOR, 0, 9, 0, 2000));
@@ -46,8 +55,6 @@ public class GameManager
 
     private void MainManu()
     {
-
-
         Console.Clear();
         Console.WriteLine("■■■■■■■■■■■■■■■■■■■■■■■■■■■");
         Console.WriteLine("스파르타 마을에 오신 여러분 환영합니다.");
@@ -84,22 +91,12 @@ public class GameManager
     private void DungeonMenu()
     {
         Console.Clear();
-
         ConsoleUtility.ShowTitle("■ 던전입구 ■");
-        Console.WriteLine("가고 싶은 던전을 선택해주세요..");
+        Console.WriteLine("던전에 들어가면 전투가 시작됩니다.");
         Console.WriteLine();
-        Console.WriteLine("★☆☆");
-        Console.WriteLine("1. 깊은 숲");
 
-        Console.WriteLine();
-        Console.WriteLine("★★☆");
-        Console.WriteLine("2. 설산");
-
-        Console.WriteLine();
-        Console.WriteLine("★★★");
-        Console.WriteLine("3. 용암동굴");
-
-        Console.WriteLine();
+        Console.WriteLine("2. 전투 시작");
+        Console.WriteLine("1. 상태 보기");
         Console.WriteLine("0. 뒤로가기");
         Console.WriteLine();
 
@@ -111,177 +108,169 @@ public class GameManager
                 MainManu();
                 break;
             case 1:
-                FightStartMenu();
+                StatusMenu();
                 break;
             case 2:
-                if (player.Def > 10)
-                {
-                    player.Gold += 1700;
-                    Console.WriteLine("설산에 입장하였습니다.");
-                    Console.WriteLine("보상으로 1700골드를 획득하였습니다.");
-                }
-                else
-                {
-                    Console.WriteLine("방어력이 부족하여 설산에 입장할 수 없습니다.");
-                }
-                break;
-            case 3:
-                if (player.Def > 15)
-                {
-                    player.Gold += 2500;
-                    Console.WriteLine("용암동굴에 입장하였습니다.");
-                    Console.WriteLine("보상으로 2500골드를 획득하였습니다.");
-                }
-                else
-                {
-                    Console.WriteLine("방어력이 부족하여 용암동굴에 입장할 수 없습니다.");
-                }
+                BattleManu();
                 break;
         }
         MainManu();
     }
-    
-    private void FightStartMenu()
+
+    private void BattleManu()
     {
         Console.Clear();
-        MonsterAtkNum = 0;
-        Random random = new Random();
-        int Mnum = random.Next(1, 5); //1~4마리의 랜덤 몬스터;
-        Monster[] TempMonster = new Monster[Mnum];
-        for (int i = 0; i < Mnum; i++)
-        {
-            TempMonster[i] = new Monster(random.Next(0, 3)); //임시 저장
-        }
+        ConsoleUtility.ShowTitle("■ Battle!! ■");
+        Console.WriteLine();
+        // 전투돌입할때마다 초기화
+        battleMonster.Clear();
 
-        switch (FightMenu(false, random, Mnum, TempMonster))
+        for (int i = 0; i < 3; i++)
         {
-            case 1:
-                BattleMenu(random, Mnum, TempMonster, MonsterAtkNum);
-                break;
-        }
-    }
-     //몬스터의 공격순서를 위한 변수
-    private void BattleMenu(Random random, int Mnum, Monster[] TempMonster,int MonsterAtkNum)
-    {
-        int dieCheck = 0;
-        foreach(Monster m in TempMonster)
-        {
-            if (!m.IsLive)
+            while (true)
             {
-                dieCheck++;
+                Monster randomMonster = GetRandomMonster();
+                if (!battleMonster.Contains(randomMonster))
+                {
+                    battleMonster.Add(randomMonster);
+                    Console.WriteLine($"Lv.{battleMonster[i].Level} {battleMonster[i].Name} HP {battleMonster[i].CurrentHp}");
+                    break;
+                }
             }
         }
-        if (dieCheck ==Mnum)
-        {
-            DongeonClear(Mnum,true);
-        }
-        if (player.Hp<=0) 
-        {
-            DongeonClear(Mnum, false);
-        }
-        int choice = FightMenu(true, random, Mnum, TempMonster); //FightMenu를 출력하면서 choice의 값을 받아온다.
-        switch (choice)
-        {
-            case 0:
-                //
-                while (true)
-                {
-                    if (!TempMonster[MonsterAtkNum % Mnum].IsLive)
-                    {
-                        MonsterAtkNum++;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-                
-                TempMonster[MonsterAtkNum%Mnum].MonsterPhase(player);
-                MonsterAtkNum++;
-                BattleMenu(random, Mnum, TempMonster, MonsterAtkNum);
-                break;
-            default:
-                player.PlayerPhase(TempMonster[choice - 1]);
-                switch (ConsoleUtility.PromotMenuChoice(0, 0))
-                {
-                    case 0:
-                        TempMonster[MonsterAtkNum % Mnum].MonsterPhase(player);
-                        MonsterAtkNum++;
-                        BattleMenu(random, Mnum, TempMonster, MonsterAtkNum);
-                        break;
-                }
-                break;
-        }
-    }
 
-    private void DongeonClear(int Mnum,bool win)
-    {
-        Console.Clear();
-        ConsoleUtility.PrintTextHighlights("", "Battle! - Result");
-        Console.WriteLine("\n");
-        if (win)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Victory\n");
-            Console.ResetColor();
-
-            Console.WriteLine($"던전에서 몬스터{Mnum}마리를 잡았습니다.\n");
-
-            ConsoleUtility.PrintTextHighlights("Lv", player.Level.ToString(), player.Name);
-            ConsoleUtility.PrintTextHighlights("HP", $"{player.DefultHp.ToString()} - > {player.Hp.ToString()}");
-
-            player.DefultHp = player.Hp;
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("You Lose\n");
-            Console.ResetColor();
-
-
-            ConsoleUtility.PrintTextHighlights("Lv", player.Level.ToString(), player.Name);
-            ConsoleUtility.PrintTextHighlights("HP", $"{player.DefultHp.ToString()} - > 0");
-
-            player.DefultHp = 1;
-        }
-
-
-        Console.WriteLine("\n");
-        ConsoleUtility.PrintTextHighlights("", "0.", "다음");
-
-        ConsoleUtility.PromotMenuChoice(0, 0);
-
-        MainManu();
-    }
-
-    private int FightMenu(bool fightCheck, Random random, int Mnum, Monster[] TempMonster)
-    {
-        Console.Clear();
-        ConsoleUtility.PrintTextHighlights("", "Battle!");
-        Console.WriteLine("\n\n");
-        for (int i = 0; i < Mnum; i++)
-        {
-            TempMonster[i].PrintMonsterInfo(fightCheck, i + 1);
-        }
-        Console.WriteLine("\n\n\n");
-        Console.WriteLine("[내정보]");
-        ConsoleUtility.PrintTextHighlights("Lv", player.Level.ToString(), $" {player.Name} ({player.Job})");
         Console.WriteLine();
-        ConsoleUtility.PrintTextHighlights("HP ", $"{player.Hp}/100");
-        Console.WriteLine("\n\n");
-        if (fightCheck)
-        {
-            ConsoleUtility.PrintTextHighlights("", "0. ", "취소");
-            Console.WriteLine("\n");
-            return ConsoleUtility.PromotMenuChoice(0, Mnum, TempMonster);
-        }
-        else
-        {
-            ConsoleUtility.PrintTextHighlights("", "1. ", "공격");
-            Console.WriteLine("\n");
-            return ConsoleUtility.PromotMenuChoice(1, 1);
-        }
+        Console.WriteLine("[내정보]");
+        Console.WriteLine($"Lv.{player.Level}  {player.Name}({player.Job})");
+        Console.WriteLine($"HP {player.CurrentHp} / {player.MaxHp}");
+        Console.WriteLine();
+        Console.WriteLine("1. 공격");
+        Console.WriteLine();
 
+        int choice = ConsoleUtility.PromotMenuChoice(1, 1);
+
+        if (choice == 1)
+        {
+            StartBattle();
+        }
+    }
+
+    private void StartBattle()
+    {
+        while (true)
+        {
+            Console.Clear();
+            ConsoleUtility.ShowTitle("■ Battle!! ■");
+            Console.WriteLine();
+
+            for (int i = 0; i < 3; i++)
+            {
+                if (!battleMonster[i].IsAlive())
+                {
+                    ConsoleUtility.PrintTextDeath("", $"[{i + 1}] Lv.{battleMonster[i].Level} {battleMonster[i].Name} HP {battleMonster[i].CurrentHp}");
+                }
+                else
+                {
+                    Console.WriteLine($"[{i + 1}] Lv.{battleMonster[i].Level} {battleMonster[i].Name} HP {battleMonster[i].CurrentHp}");
+                }
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("[내정보]");
+            Console.WriteLine($"Lv.{player.Level}  {player.Name}({player.Job})");
+            Console.WriteLine($"HP {player.CurrentHp} / {player.MaxHp}");
+            Console.WriteLine();
+
+            int choice = ConsoleUtility.PromotMenuChoice(1, 3);
+
+            int selectedMonsterIndex = choice - 1;
+
+            if (!battleMonster[selectedMonsterIndex].IsAlive())
+            {
+                Console.WriteLine("선택한 몬스터가 이미 죽었습니다. 다른 몬스터를 선택하세요.");
+                Console.ReadKey();
+                continue; // 다시 반복문의 처음으로 돌아가 다시 선택할 수 있도록 합니다.
+            }
+
+            Monster selectedMonster = battleMonster[selectedMonsterIndex];
+
+            Console.WriteLine();
+            ConsoleUtility.PrintTextHighlights("", $"{player.Name}가 공격!");
+            Console.WriteLine($"[데미지 : {player.Atk}]");
+            selectedMonster.MonterTakeDamage(player.Atk);
+            Console.WriteLine($"몬스터 {selectedMonster.Name}의 HP: {selectedMonster.CurrentHp}");
+
+            if (!selectedMonster.IsAlive())
+            {
+                Console.WriteLine($"몬스터 {selectedMonster.Name}를 물리쳤습니다!");
+            }
+
+            bool allMonstersDead = true;
+            foreach (var monster in battleMonster)
+            {
+                if (monster.IsAlive())
+                {
+                    allMonstersDead = false;
+                    break;
+                }
+            }
+
+            if (allMonstersDead)
+            {
+                Console.WriteLine();
+                Console.WriteLine("모든 몬스터를 물리쳤습니다.");
+                Console.WriteLine("던전 입구로 돌아갑니다.");
+
+                foreach (var monster in battleMonster)
+                {
+                    monster.Reset();
+                }
+
+                player.Reset();
+                Thread.Sleep(1000);
+                Console.WriteLine("아무키나 누르세요...");
+                Console.ReadLine();
+                DungeonMenu();
+            }
+
+            // 몬스터의 반격
+            Thread.Sleep(1000);
+            Console.WriteLine();
+            ConsoleUtility.PrintTextHighlights("", $"{selectedMonster.Name}이(가) 반격합니다!");
+            player.PlayerTakeDamage(selectedMonster.Atk);
+            Console.WriteLine($"{player.Name}의 HP: {player.CurrentHp}");
+            Console.WriteLine();
+            Thread.Sleep(1000);
+            Console.WriteLine("아무키나 누르세요...");
+            Console.ReadLine();
+
+            if (!player.IsAlive())
+            {
+                Console.WriteLine("전투에서 패배했습니다.");
+                Console.WriteLine("마을로 돌아갑니다.");
+
+                foreach (var monster in battleMonster)
+                {
+                    monster.Reset();
+                }
+
+                player.playerdefeat();
+
+                //골드값 0미만으로 떨어지지 않게 Player에서 조정한 후
+                //골드를 일정값 빼주는 메서드 작성
+
+                Thread.Sleep(1000);
+                Console.ReadLine();
+                MainManu();
+            }
+
+        }
+    }
+
+    private Monster GetRandomMonster()
+    {
+        Random rand = new Random();
+        return monster[rand.Next(monster.Count)];
     }
 
     private void StatusMenu()
@@ -293,7 +282,6 @@ public class GameManager
 
         ConsoleUtility.PrintTextHighlights("Lv. ", player.Level.ToString("00")); //00은 두글자 제한
         Console.WriteLine();
-        Console.WriteLine();
         Console.WriteLine($"{player.Name}({player.Job})");
 
         //능력치 강화된 부분 추가하기
@@ -303,14 +291,10 @@ public class GameManager
 
 
         ConsoleUtility.PrintTextHighlights("공격력 :", (player.Atk + bonusAtk).ToString(), bonusAtk > 0 ? $"(+{bonusAtk})" : "");
-        Console.WriteLine();
         ConsoleUtility.PrintTextHighlights("방어력 :", (player.Def + bonusDef).ToString(), bonusDef > 0 ? $"(+{bonusDef})" : "");
-        Console.WriteLine();
-        ConsoleUtility.PrintTextHighlights("체  력 :", (player.Hp + bonusHp).ToString(), bonusHp > 0 ? $"(+{bonusHp})" : "");
-        Console.WriteLine();
+        ConsoleUtility.PrintTextHighlights("체  력 :", (player.MaxHp + bonusHp).ToString(), bonusHp > 0 ? $"(+{bonusHp})" : "");
 
         ConsoleUtility.PrintTextHighlights("Gold :", player.Gold.ToString());
-        Console.WriteLine();
         Console.WriteLine();
 
         Console.WriteLine("0. 뒤로가기");
@@ -397,7 +381,6 @@ public class GameManager
         Console.WriteLine("[보유 골드]");
         ConsoleUtility.PrintTextHighlights("", player.Gold.ToString(), " G");
         Console.WriteLine();
-        Console.WriteLine();
         Console.WriteLine("[아이템 목록]");
 
         for (int i = 0; i < storeInventory.Count; i++)
@@ -434,7 +417,6 @@ public class GameManager
         Console.WriteLine();
         Console.WriteLine("[보유 골드]");
         ConsoleUtility.PrintTextHighlights("", player.Gold.ToString(), " G");
-        Console.WriteLine();
         Console.WriteLine();
         Console.WriteLine("[아이템 목록]");
 
@@ -480,7 +462,6 @@ public class GameManager
         Console.WriteLine("[보유 골드]");
         ConsoleUtility.PrintTextHighlights("", player.Gold.ToString(), " G");
         Console.WriteLine();
-        Console.WriteLine();
         Console.WriteLine("[아이템 목록]");
 
         for (int i = 0; i < storeInventory.Count; i++)
@@ -508,7 +489,7 @@ public class GameManager
                 {
                     player.Gold -= storeInventory[keyInput - 1].Price;
                     storeInventory[keyInput - 1].TogglePurchase();
-                    inventory.Add(storeInventory[keyInput - 1]);
+                    inventory.Add(storeInventory[keyInput - 1].CloneItem());
                     PurchaseMenu();
                 }
                 else
