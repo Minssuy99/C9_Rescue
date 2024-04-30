@@ -1,25 +1,25 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\",
+  "WorkspaceRootPath": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|d:\\sprtacodingclub\\c#\\c9_rescue\\consoleapp1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|c:\\users\\qwet676\\desktop\\c9_rescue\\consoleapp1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|solutionrelative:consoleapp1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|d:\\sprtacodingclub\\c#\\c9_rescue\\consoleapp1\\monster.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|solutionrelative:consoleapp1\\monster.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|d:\\sprtacodingclub\\c#\\c9_rescue\\consoleapp1\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|c:\\users\\qwet676\\desktop\\c9_rescue\\consoleapp1\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|solutionrelative:consoleapp1\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|d:\\sprtacodingclub\\c#\\c9_rescue\\consoleapp1\\item.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|c:\\users\\qwet676\\desktop\\c9_rescue\\consoleapp1\\monster.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|solutionrelative:consoleapp1\\monster.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|c:\\users\\qwet676\\desktop\\c9_rescue\\consoleapp1\\item.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|solutionrelative:consoleapp1\\item.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|d:\\sprtacodingclub\\c#\\c9_rescue\\consoleapp1\\consoleutility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|c:\\users\\qwet676\\desktop\\c9_rescue\\consoleapp1\\consoleutility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{95C7E80C-C31E-4916-A954-37685DAB7467}|ConsoleApp1\\ConsoleApp1.csproj|solutionrelative:consoleapp1\\consoleutility.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -29,18 +29,37 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 272,
-          "SelectedChildIndex": 2,
+          "DockedWidth": 519,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\Program.cs",
+              "RelativeDocumentMoniker": "ConsoleApp1\\Program.cs",
+              "ToolTip": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\Program.cs*",
+              "RelativeToolTip": "ConsoleApp1\\Program.cs*",
+              "ViewState": "AQIAABoBAAAAAAAAAAAAAEIBAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-30T05:34:36.407Z",
+              "EditorCaption": ""
+            }
+          ]
+        },
+        {
+          "DockedWidth": 25,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "Player.cs",
-              "DocumentMoniker": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\Player.cs",
+              "DocumentMoniker": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\Player.cs",
               "RelativeDocumentMoniker": "ConsoleApp1\\Player.cs",
-              "ToolTip": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\Player.cs",
+              "ToolTip": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\Player.cs",
               "RelativeToolTip": "ConsoleApp1\\Player.cs",
-              "ViewState": "AQIAABkAAAAAAAAAAAA6wCoAAAAUAAAA",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAiwCoAAAAUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-30T05:39:04.596Z",
               "IsPinned": true,
@@ -48,37 +67,24 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "Monster.cs",
-              "DocumentMoniker": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\Monster.cs",
+              "DocumentMoniker": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\Monster.cs",
               "RelativeDocumentMoniker": "ConsoleApp1\\Monster.cs",
-              "ToolTip": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\Monster.cs",
+              "ToolTip": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\Monster.cs",
               "RelativeToolTip": "ConsoleApp1\\Monster.cs",
-              "ViewState": "AQIAAAcAAAAAAAAAAAA0wCIAAAAAAAAA",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAYwCIAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-30T08:02:25.175Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\Program.cs",
-              "RelativeDocumentMoniker": "ConsoleApp1\\Program.cs",
-              "ToolTip": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\Program.cs",
-              "RelativeToolTip": "ConsoleApp1\\Program.cs",
-              "ViewState": "AQIAADUBAAAAAAAAAAAYwEkBAABNAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-30T05:34:36.407Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 4,
               "Title": "ConsoleUtility.cs",
-              "DocumentMoniker": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\ConsoleUtility.cs",
+              "DocumentMoniker": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\ConsoleUtility.cs",
               "RelativeDocumentMoniker": "ConsoleApp1\\ConsoleUtility.cs",
-              "ToolTip": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\ConsoleUtility.cs",
+              "ToolTip": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\ConsoleUtility.cs",
               "RelativeToolTip": "ConsoleApp1\\ConsoleUtility.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -89,11 +95,11 @@
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "Item.cs",
-              "DocumentMoniker": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\Item.cs",
+              "DocumentMoniker": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\Item.cs",
               "RelativeDocumentMoniker": "ConsoleApp1\\Item.cs",
-              "ToolTip": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\Item.cs",
+              "ToolTip": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\Item.cs",
               "RelativeToolTip": "ConsoleApp1\\Item.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "ViewState": "AQIAABYAAAAAAAAAAAA3wAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-30T05:42:13.512Z",
               "EditorCaption": ""

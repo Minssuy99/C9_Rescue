@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\wogns\\.nuget\\packages\\": {}
+    "C:\\Users\\qwet676\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\ConsoleApp1.csproj",
+      "projectUniqueName": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\ConsoleApp1.csproj",
       "projectName": "ConsoleApp1",
-      "projectPath": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\ConsoleApp1.csproj",
-      "packagesPath": "C:\\Users\\wogns\\.nuget\\packages\\",
-      "outputPath": "D:\\SprtaCodingClub\\C#\\C9_Rescue\\ConsoleApp1\\obj\\",
+      "projectPath": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\ConsoleApp1.csproj",
+      "packagesPath": "C:\\Users\\qwet676\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\qwet676\\Desktop\\C9_Rescue\\ConsoleApp1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\wogns\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\qwet676\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -66,7 +66,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.202/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
