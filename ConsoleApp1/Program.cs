@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using ConsoleApp1;
+using System.Threading;
 using static System.Net.Mime.MediaTypeNames;
 
 public class GameManager
@@ -8,7 +9,7 @@ public class GameManager
     private List<Item> storeInventory;
     private List<Monster> monster;
     private List<Monster> battleMonster;
-
+    private List<Dungeon> dungeons;
     public GameManager()
     {
         InitializeGame();
@@ -36,6 +37,11 @@ public class GameManager
         storeInventory.Add(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", ItemType.WEAPON, 2, 0, 0, 600));
         storeInventory.Add(new Item("청동 도끼", "어디선가 사용됐던 것 같은 도끼입니다.", ItemType.WEAPON, 5, 0, 0, 1500));
         storeInventory.Add(new Item("스파르타의 창", "스파르타의 전사들이 사용했다는 전설의 창입니다.", ItemType.WEAPON, 7, 0, 0, 2500));
+
+        dungeons = new List<Dungeon>();
+        dungeons.Add(new Dungeon(1, "초급던전", 5, 3, 1000));
+        dungeons.Add(new Dungeon(2, "중급던전", 15, 5, 3000));
+        dungeons.Add(new Dungeon(3, "고급던전", 25, 7, 5000));
     }
 
     public void StartGame()
@@ -75,7 +81,7 @@ public class GameManager
                 StoreMenu(); //상점
                 break;
             case 4:
-                DungeonMenu();
+                DungeonChoiceMenu();
                 break;
             case 5:
                 RestMenu();
@@ -113,7 +119,7 @@ public class GameManager
 
     }
 
-    private void DungeonMenu()
+    private void DungeonMenu(int max)
     {
         Console.Clear();
         ConsoleUtility.ShowTitle("■ 던전입구 ■");
@@ -136,13 +142,13 @@ public class GameManager
                 StatusMenu();
                 break;
             case 2:
-                BattleManu();
+                BattleManu(max);
                 break;
         }
         MainManu();
     }
 
-    private void BattleManu()
+    private void BattleManu(int max)
     {
         Console.Clear();
         ConsoleUtility.ShowTitle("■ Battle!! ■");
@@ -150,7 +156,7 @@ public class GameManager
         // 전투돌입할때마다 초기화
         battleMonster.Clear();
         Random rand = new();
-        int random = rand.Next(1, 4);
+        int random = rand.Next(1, max);
         for (int i = 0; i < random; i++)
         {
             while (true)
@@ -256,7 +262,7 @@ public class GameManager
                 Thread.Sleep(1000);
                 Console.WriteLine("아무키나 누르세요...");
                 Console.ReadKey();
-                DungeonMenu();
+                DungeonChoiceMenu();
             }
 
             // 몬스터의 공격
@@ -530,6 +536,25 @@ public class GameManager
                 {
                     PurchaseMenu("Gold가 부족합니다.");
                 }
+                break;
+        }
+    }
+
+    private void DungeonChoiceMenu()
+    {
+        Console.Clear();
+        foreach(Dungeon dungeon in dungeons) 
+        {
+            dungeon.PrintDungeon();
+        }
+        ConsoleUtility.PrintTextHighlights("", "0. ", "나가기");
+        int choice = ConsoleUtility.PromotMenuChoice(0, 3);
+        switch (choice){
+            case 0:
+                MainManu();
+                break;
+            default:
+                DungeonMenu(dungeons[choice-1].MaxMonster);
                 break;
         }
     }
