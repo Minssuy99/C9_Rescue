@@ -158,7 +158,7 @@ public class GameManager
         // 전투돌입할때마다 초기화
         battleMonster.Clear();
         Random rand = new();
-        int random = rand.Next(1, max);
+        int random = rand.Next(max-2, max);
         for (int i = 0; i < random; i++)
         {
             while (true)
