@@ -127,6 +127,7 @@ internal class Item
         else
         {
             ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
+            Console.WriteLine();
         }
     }
 
