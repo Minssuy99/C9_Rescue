@@ -53,6 +53,15 @@ internal class ConsoleUtility
         Console.WriteLine(s3);
     }
 
+    public static void PrintTextDeath(string s1, string s2, string s3 = "") //s2를 강조하는 함수
+    {
+        Console.Write(s1);
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        Console.Write(s2); //s2를 강조함
+        Console.ResetColor();
+        Console.WriteLine(s3);
+    }
+
     public static int GetPrintableLength(string str)
     {
         int length = 0;

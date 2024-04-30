@@ -38,7 +38,6 @@ internal class Item
         IsPurchased = isPurchased;
     }
 
-    //
     internal void PrintItemStatDescription(bool withNumber = false, int idx = 0)
     {
         Console.Write("- ");

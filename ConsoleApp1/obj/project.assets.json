@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\qwet676\\Desktop\\Sparta_Dungeon\\ConsoleApp1\\ConsoleApp1.csproj",
+      "projectUniqueName": "C:\\Users\\qwet676\\Documents\\Workspace\\C9_Rescue\\ConsoleApp1\\ConsoleApp1.csproj",
       "projectName": "ConsoleApp1",
-      "projectPath": "C:\\Users\\qwet676\\Desktop\\Sparta_Dungeon\\ConsoleApp1\\ConsoleApp1.csproj",
+      "projectPath": "C:\\Users\\qwet676\\Documents\\Workspace\\C9_Rescue\\ConsoleApp1\\ConsoleApp1.csproj",
       "packagesPath": "C:\\Users\\qwet676\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\qwet676\\Desktop\\Sparta_Dungeon\\ConsoleApp1\\obj\\",
+      "outputPath": "C:\\Users\\qwet676\\Documents\\Workspace\\C9_Rescue\\ConsoleApp1\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\qwet676\\AppData\\Roaming\\NuGet\\NuGet.Config",
