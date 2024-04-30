@@ -20,7 +20,6 @@ internal class Monster
         CurrentHp = currentHp;
         IsDead = isdead;
     }
-    }
 
     public void MonterTakeDamage(int damage)
     {

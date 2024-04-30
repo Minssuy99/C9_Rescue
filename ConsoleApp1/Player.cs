@@ -40,7 +40,7 @@ internal class Player
         CurrentHp = 1;
     }
 
-    public void Reset()
+    public void Rest()
     {
         CurrentHp = MaxHp;
     }

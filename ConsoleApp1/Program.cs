@@ -1,12 +1,4 @@
-﻿
-
-
-
-
-
-
-
-using System.Threading;
+﻿using System.Threading;
 using static System.Net.Mime.MediaTypeNames;
 
 public class GameManager
@@ -66,9 +58,10 @@ public class GameManager
         Console.WriteLine("2. 인벤토리");
         Console.WriteLine("3. 상점");
         Console.WriteLine("4. 던전입장");
+        Console.WriteLine("5. 여관");
         Console.WriteLine();
 
-        int choice = ConsoleUtility.PromotMenuChoice(1, 4);
+        int choice = ConsoleUtility.PromotMenuChoice(1, 5);
 
         switch (choice)
         {
@@ -84,8 +77,40 @@ public class GameManager
             case 4:
                 DungeonMenu();
                 break;
+            case 5:
+                RestMenu();
+                break;
         }
         MainManu(); // 혹시나 몰라서 받아주는 부분
+    }
+
+    private void RestMenu()
+    {
+        Console.Clear();
+        Console.WriteLine("쉬고가겠나");
+        ConsoleUtility.PrintTextHighlights("", "1. ", "500G를 지불하면 피를 회복합니다.");
+        ConsoleUtility.PrintTextHighlights("", "0. ", "나가기");
+        int choice = ConsoleUtility.PromotMenuChoice(1, 5);
+        switch(choice){
+            case 0:
+                MainManu();
+                break;
+            case 1:
+                if (player.Gold < 500)
+                {
+                    Console.WriteLine("안돼 돌아가");
+                    Console.ReadKey();
+                    
+                }
+                else
+                {
+                    Console.WriteLine("체력이 회복됐습니다.");
+                    player.Rest();
+                    Console.ReadKey();
+                }
+                break;
+        }
+
     }
 
     private void DungeonMenu()
@@ -124,8 +149,9 @@ public class GameManager
         Console.WriteLine();
         // 전투돌입할때마다 초기화
         battleMonster.Clear();
-
-        for (int i = 0; i < 3; i++)
+        Random rand = new();
+        int random = rand.Next(1, 4);
+        for (int i = 0; i < random; i++)
         {
             while (true)
             {
@@ -151,11 +177,11 @@ public class GameManager
 
         if (choice == 1)
         {
-            StartBattle();
+            StartBattle(random);
         }
     }
 
-    private void StartBattle()
+    private void StartBattle(int random)
     {
         while (true)
         {
@@ -163,7 +189,7 @@ public class GameManager
             ConsoleUtility.ShowTitle("■ Battle!! ■");
             Console.WriteLine();
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < random; i++)
             {
                 if (!battleMonster[i].IsAlive())
                 {
@@ -181,7 +207,7 @@ public class GameManager
             Console.WriteLine($"HP {player.CurrentHp} / {player.MaxHp}");
             Console.WriteLine();
 
-            int choice = ConsoleUtility.PromotMenuChoice(1, 3);
+            int choice = ConsoleUtility.PromotMenuChoice(1, random);
 
             int selectedMonsterIndex = choice - 1;
 
@@ -226,21 +252,29 @@ public class GameManager
                     monster.Reset();
                 }
 
-                player.Reset();
+
                 Thread.Sleep(1000);
                 Console.WriteLine("아무키나 누르세요...");
-                Console.ReadLine();
+                Console.ReadKey();
                 DungeonMenu();
             }
 
-            // 몬스터의 반격
+            // 몬스터의 공격
             Thread.Sleep(1000);
             Console.WriteLine();
-            ConsoleUtility.PrintTextHighlights("", $"{selectedMonster.Name}이(가) 반격합니다!");
-            player.PlayerTakeDamage(selectedMonster.Atk);
-            Console.WriteLine($"{player.Name}의 HP: {player.CurrentHp}");
-            Console.WriteLine();
-            Thread.Sleep(1000);
+            Console.WriteLine("몬스터 차례");
+            foreach(Monster m in battleMonster)
+            {
+                if (m.IsAlive())
+                {
+                    ConsoleUtility.PrintTextHighlights("", $"{m.Name}이(가) 공격합니다!");
+                    player.PlayerTakeDamage(m.Atk);
+                    Console.WriteLine($"{player.Name}의 HP: {player.CurrentHp}");
+                    Console.WriteLine();
+                    Thread.Sleep(1000);
+                }
+            }
+
             Console.WriteLine("아무키나 누르세요...");
             Console.ReadLine();
 
@@ -260,7 +294,7 @@ public class GameManager
                 //골드를 일정값 빼주는 메서드 작성
 
                 Thread.Sleep(1000);
-                Console.ReadLine();
+                Console.ReadKey();
                 MainManu();
             }
 
@@ -292,7 +326,7 @@ public class GameManager
 
         ConsoleUtility.PrintTextHighlights("공격력 :", (player.Atk + bonusAtk).ToString(), bonusAtk > 0 ? $"(+{bonusAtk})" : "");
         ConsoleUtility.PrintTextHighlights("방어력 :", (player.Def + bonusDef).ToString(), bonusDef > 0 ? $"(+{bonusDef})" : "");
-        ConsoleUtility.PrintTextHighlights("체  력 :", (player.MaxHp + bonusHp).ToString(), bonusHp > 0 ? $"(+{bonusHp})" : "");
+        ConsoleUtility.PrintTextHighlights("체  력 :", $"{(player.CurrentHp + bonusHp).ToString()}/{(player.MaxHp + bonusHp)}".ToString(), bonusHp > 0 ? $"(+{bonusHp})" : "");
 
         ConsoleUtility.PrintTextHighlights("Gold :", player.Gold.ToString());
         Console.WriteLine();
