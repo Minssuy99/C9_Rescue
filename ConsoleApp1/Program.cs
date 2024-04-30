@@ -384,9 +384,9 @@ public class GameManager
         int bonusHp = inventory.Select(item => item.IsEquipped ? item.Hp : 0).Sum();
 
 
-        ConsoleUtility.PrintTextHighlights("공격력 :", (player.Atk + bonusAtk).ToString(), bonusAtk > 0 ? $"(+{bonusAtk})" : "");
-        ConsoleUtility.PrintTextHighlights("방어력 :", (player.Def + bonusDef).ToString(), bonusDef > 0 ? $"(+{bonusDef})" : "");
-        ConsoleUtility.PrintTextHighlights("체  력 :", $"{(player.CurrentHp + bonusHp).ToString()}/{(player.MaxHp + bonusHp)}".ToString(), bonusHp > 0 ? $"(+{bonusHp})" : "");
+        ConsoleUtility.PrintTextHighlights("공격력 :", (player.Atk).ToString(), bonusAtk > 0 ? $"(+{bonusAtk})" : "");
+        ConsoleUtility.PrintTextHighlights("방어력 :", (player.Def).ToString(), bonusDef > 0 ? $"(+{bonusDef})" : "");
+        ConsoleUtility.PrintTextHighlights("체  력 :", $"{player.CurrentHp + bonusHp}/{(player.MaxHp + bonusHp)}".ToString(), bonusHp > 0 ? $"(+{bonusHp})" : "");
 
         ConsoleUtility.PrintTextHighlights("Gold :", player.Gold.ToString());
         Console.WriteLine();
@@ -459,7 +459,7 @@ public class GameManager
                 InventoryMenu();
                 break;
             default:
-                inventory[keyInput - 1].ToggleEquipStates(inventory);
+                inventory[keyInput - 1].ToggleEquipStates(inventory, player, keyInput);
                 EquipMenu();
                 break;
         }

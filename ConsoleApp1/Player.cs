@@ -5,8 +5,8 @@ internal class Player
     public string Name { get; }
     public string Job { get; }
     public int Level { get; private set; }
-    public float Atk { get; private set; }
-    public int Def { get; private set; }
+    public float Atk { get; set; }
+    public int Def { get; set; }
     public int MaxHp { get; private set; }
     public int CurrentHp { get; private set; }
     public int MaxExp { get; private set; }
