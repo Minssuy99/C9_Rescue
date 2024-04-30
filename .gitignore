@@ -400,7 +400,3 @@ FodyWeavers.xsd
 *.sln.iml
 
 # End of https://www.toptal.com/developers/gitignore/api/csharp
-
-.vs/
-.bin/
-.obj/
