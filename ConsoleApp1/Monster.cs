@@ -7,10 +7,11 @@ internal class Monster
     public int Atk { get; }
     public int Def { get; }
     public int MaxHp { get; }
-    public int CurrentHp { get; private set; }
+    public float CurrentHp { get; private set; }
+    public int Exp { get; }
     public bool IsDead { get; private set; }
 
-    public Monster(string name, int level, int atk, int def, int maxHp, int currentHp, bool isdead = false)
+    public Monster(string name, int level, int atk, int def, int maxHp, int currentHp, int exp,bool isdead = false)
     {
         Name = name;
         Level = level;
@@ -18,10 +19,11 @@ internal class Monster
         Def = def;
         MaxHp = maxHp;
         CurrentHp = currentHp;
+        Exp = exp;
         IsDead = isdead;
     }
 
-    public void MonterTakeDamage(int damage)
+    public void MonterTakeDamage(float damage)
     {
         CurrentHp -= damage;
         if (CurrentHp < 0)

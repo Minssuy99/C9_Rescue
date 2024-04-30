@@ -17,16 +17,16 @@ public class GameManager
 
     private void InitializeGame()
     {
-        player = new Player("Seungjun", "Programmer", 1, 10, 5, 100, 100, 15000);
+        player = new Player("Seungjun", "Programmer", 1, 10, 5, 100, 100, 11, 0,15000);
 
         battleMonster = new List<Monster>();
 
         monster = new List<Monster>();
-        monster.Add(new Monster("미니언", 2, 5, 2, 15, 15));
-        monster.Add(new Monster("대포미니언", 5, 9, 5, 25, 25));
-        monster.Add(new Monster("공허충", 3, 8, 3, 10, 10));
-        monster.Add(new Monster("칼날부리새끼", 1, 3, 1, 8, 8));
-        monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8));
+        monster.Add(new Monster("미니언", 2, 5, 2, 15, 15, 2));
+        monster.Add(new Monster("대포미니언", 5, 9, 5, 25, 25, 5));
+        monster.Add(new Monster("공허충", 3, 8, 3, 10, 10, 3));
+        monster.Add(new Monster("칼날부리새끼", 1, 3, 1, 8, 8, 1));
+        monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8, 5));
 
         inventory = new List<Item>();
 
@@ -252,6 +252,11 @@ public class GameManager
                 if (!selectedMonster.IsAlive())
                 {
                     Console.WriteLine($"몬스터 {selectedMonster.Name}를 물리쳤습니다!");
+                    Console.WriteLine($"경험치 {selectedMonster.Exp}를 얻었습니다!");
+                    player.GetExp(selectedMonster.Exp);
+                    player.LevelUp();
+
+                    ConsoleUtility.PrintTextHighlights("경험치 :", $"{player.CurrentExp}/{player.MaxExp}".ToString());
                 }
             }
 
