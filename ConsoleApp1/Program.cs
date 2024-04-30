@@ -489,7 +489,7 @@ public class GameManager
                 {
                     player.Gold -= storeInventory[keyInput - 1].Price;
                     storeInventory[keyInput - 1].TogglePurchase();
-                    inventory.Add(storeInventory[keyInput - 1]);
+                    inventory.Add(storeInventory[keyInput - 1].CloneItem());
                     PurchaseMenu();
                 }
                 else
