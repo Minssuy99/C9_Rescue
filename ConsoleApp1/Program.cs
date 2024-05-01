@@ -6,14 +6,34 @@ using static System.Net.Mime.MediaTypeNames;
 public class GameManager
 {
     private Player player;
+    private List<Skill> skills;
     private List<Item> inventory;
     private List<Item> storeInventory;
     private List<Item> dungeonItemList;
     private List<Item> weaponReward;
     private List<Monster> monster;
-    private List<Monster> battleMonster;
+    public List<Monster> battleMonster;
     Random battleRandom = new Random();
     private List<Dungeon> dungeons;
+
+    private static GameManager instance = null;
+    private static readonly object padlock = new object();
+
+    public static GameManager Instance
+    {
+        get
+        {
+            lock (padlock)
+            {
+                if (instance == null)
+                {
+                    instance = new GameManager();
+                }
+                return instance;
+            }
+        }
+    }
+
     public GameManager()
     {
         InitializeGame();
@@ -22,6 +42,10 @@ public class GameManager
     private void InitializeGame()
     {
         player = new Player("", "", 1, 10, 5, 100, 100, 11, 0, 15000);
+
+        skills = new List<Skill>();
+        skills.Add(new Skill("파이어볼", "불공", 0, 1, 0)); //견본용 스킬 추가 템플릿 스킬 타입은 0이 공격 1이 서포트 스킬 레인지는 0이 단일 1이 광역
+
         battleMonster = new List<Monster>();
 
         monster = new List<Monster>();
@@ -188,9 +212,10 @@ public class GameManager
         Console.WriteLine($"HP {player.CurrentHp} / {player.MaxHp}");
         Console.WriteLine();
         Console.WriteLine("1. 공격");
+        Console.WriteLine("2. 스킬");
         Console.WriteLine();
 
-        int choice = ConsoleUtility.PromotMenuChoice(1, 1);
+        int choice = ConsoleUtility.PromotMenuChoice(1, 2);
 
         if (choice == 1)
         {

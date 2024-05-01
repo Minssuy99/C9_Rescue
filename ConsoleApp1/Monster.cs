@@ -1,18 +1,18 @@
 ﻿
 
-internal class Monster
+public class Monster
 {
     public string Name { get; }
     public int Level { get; }
     public int Atk { get; }
     public int Def { get; }
     public int MaxHp { get; }
-    public float CurrentHp { get; private set; }
+    public float CurrentHp { get; set; }
     public int Exp { get; }
     public string DropItem { get; }
     public bool IsDead { get; private set; }
 
-    public Monster(string name, int level, int atk, int def, int maxHp, int currentHp, int exp, string dropItem , bool isdead = false)
+    public Monster(string name, int level, int atk, int def, int maxHp, float currentHp, int exp, string dropItem , bool isdead = false)
     {
         Name = name;
         Level = level;
