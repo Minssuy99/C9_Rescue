@@ -9,9 +9,10 @@ internal class Monster
     public int MaxHp { get; }
     public float CurrentHp { get; private set; }
     public int Exp { get; }
+    public string DropItem { get; }
     public bool IsDead { get; private set; }
 
-    public Monster(string name, int level, int atk, int def, int maxHp, int currentHp, int exp,bool isdead = false)
+    public Monster(string name, int level, int atk, int def, int maxHp, int currentHp, int exp, string dropItem , bool isdead = false)
     {
         Name = name;
         Level = level;
@@ -20,6 +21,7 @@ internal class Monster
         MaxHp = maxHp;
         CurrentHp = currentHp;
         Exp = exp;
+        DropItem = dropItem;
         IsDead = isdead;
     }
 
