@@ -89,10 +89,20 @@ internal class ConsoleUtility
 
     public static void MakeSentence(string sentence)
     {
+        bool skipTyping = false;
+
         for (int i = 0; i < sentence.Length; i++)
         {
-            Console.Write(sentence[i]);
-            Thread.Sleep(100);
+            if (skipTyping || (Console.KeyAvailable && Console.ReadKey(true).Key == ConsoleKey.K))
+            {
+                Console.Write(sentence.Substring(i));
+                break;
+            }
+            else
+            {
+                Console.Write(sentence[i]);
+                Thread.Sleep(100);
+            }
         }
     }
 }

@@ -14,6 +14,8 @@ public class GameManager
     private List<Monster> battleMonster;
     Random battleRandom = new Random();
     private List<Dungeon> dungeons;
+    private List<Quest> quest;
+
     public GameManager()
     {
         InitializeGame();
@@ -50,6 +52,28 @@ public class GameManager
         dungeonItemList.Add(new Item("대포", "대포 미니언의 강력한 대포입니다.", ItemType.WEAPON, 9, 0, 0, 300));
 
         weaponReward = new List<Item>();
+
+        quest = new List<Quest>();
+        quest.Add(new Quest("마을을 위협하는 미니언 처치",
+                            "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\n" +
+                            "마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\n" +
+                            "모험가인 자네가 좀 처치해주게!\n",
+                            "미니언 5마리 처치 (0/5)",
+                            "방패 x 1", 5));
+
+        quest.Add(new Quest("장비를 장착해보자",
+                            "어떤 장비를 장착하느냐에 따라 모험가의 전투력이 크게 달라질 수 있다네.\n" +
+                            "어서 장비를 장착해보도록 하게!",
+                            "장비 1개 장착",
+                            "포션 x 3", 10));
+
+        quest.Add(new Quest("더욱 더 강해지기!",
+                            "모험가여, 당신의 모험은 아직 끝나지 않았다." +
+                            "계속해서 성장하고 더욱 강해져야 한다." +
+                            "자, 새로운 도전에 나서보시게!",
+                            "몬스터 10마리 처치 (0/10)",
+                            "도끼 x 1", 15));
+
     }
 
 
@@ -58,10 +82,10 @@ public class GameManager
         Console.Clear();
         ConsoleUtility.PrintGameHeader();
         player.PlayerCreate(player);
-        MainManu();
+        MainMenu();
     }
 
-    private void MainManu()
+    private void MainMenu()
     {
         Console.Clear();
         Console.WriteLine("■■■■■■■■■■■■■■■■■■■■■■■■■■■");
@@ -75,8 +99,10 @@ public class GameManager
         Console.WriteLine("3. 상점");
         Console.WriteLine("4. 던전입장");
         Console.WriteLine("5. 여관");
+        Console.WriteLine("6. 퀘스트");
+        Console.WriteLine();
 
-        int choice = ConsoleUtility.PromotMenuChoice(1, 5);
+        int choice = ConsoleUtility.PromotMenuChoice(1, 6);
 
         switch (choice)
         {
@@ -95,8 +121,11 @@ public class GameManager
             case 5:
                 RestMenu();
                 break;
+            case 6:
+                QuestMenu();
+                break;
         }
-        MainManu(); // 혹시나 몰라서 받아주는 부분
+        MainMenu(); // 혹시나 몰라서 받아주는 부분
     }
 
     private void RestMenu()
@@ -109,7 +138,7 @@ public class GameManager
         switch (choice)
         {
             case 0:
-                MainManu();
+                MainMenu();
                 break;
             case 1:
                 if (player.Gold < 500)
@@ -138,7 +167,7 @@ public class GameManager
             player.NowDongeon = 1;
             player.InTower = false;
             Console.ReadKey();
-            MainManu();
+            MainMenu();
         }
         ConsoleUtility.ShowTitle("■ 던전입구 ■");
         Console.WriteLine("던전에 들어가면 전투가 시작됩니다.");
@@ -164,7 +193,7 @@ public class GameManager
         switch (choice)
         {
             case 0:
-                MainManu();
+                MainMenu();
                 break;
             case 1:
                 StatusMenu();
@@ -176,7 +205,7 @@ public class GameManager
                     BattleManu(max);
                 break;
         }
-        MainManu();
+        MainMenu();
     }
     private void BattleManu(int max)
     {
@@ -373,7 +402,7 @@ public class GameManager
 
                 Thread.Sleep(1000);
                 Console.ReadKey();
-                MainManu();
+                MainMenu();
             }
 
         }
@@ -491,7 +520,7 @@ public class GameManager
         switch (ConsoleUtility.PromotMenuChoice(0, 0))
         {
             case 0:
-                MainManu();
+                MainMenu();
                 break;
         }
     }
@@ -518,7 +547,7 @@ public class GameManager
         switch (ConsoleUtility.PromotMenuChoice(0, 1))
         {
             case 0:
-                MainManu();
+                MainMenu();
                 break;
             case 1:
                 EquipMenu();
@@ -584,7 +613,7 @@ public class GameManager
         switch (ConsoleUtility.PromotMenuChoice(0, 2))
         {
             case 0:
-                MainManu();
+                MainMenu();
                 break;
             case 1:
                 PurchaseMenu();
@@ -701,7 +730,7 @@ public class GameManager
         {
             case 0:
                 player.InTower = false;
-                MainManu();
+                MainMenu();
                 break;
             case 4:
                 player.InTower = true;
@@ -712,6 +741,95 @@ public class GameManager
                 break;
         }
     }
+
+    private void QuestMenu()
+    {
+        Console.Clear();
+
+        ConsoleUtility.ShowTitle("■ 퀘스트 ■");
+        Console.WriteLine("퀘스트를 확인하고 선택할 수 있습니다.");
+        Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("[ 퀘스트 목록 ]");
+        Console.ResetColor();
+        Console.WriteLine();
+        for (int i = 0; i < quest.Count; i++)
+        {
+            Console.WriteLine($"{ i + 1 }. {quest[i].Title}");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("0. 뒤로가기");
+        Console.WriteLine();
+
+
+        switch (ConsoleUtility.PromotMenuChoice(0, 3))
+        {
+            case 0:
+                MainMenu();
+                break;
+            case 1:
+                PrintQuestDetails(0);
+                break;
+            case 2:
+                PrintQuestDetails(1);
+                break;
+            case 3:
+                PrintQuestDetails(2);
+                break;
+        }
+        MainMenu();
+    }
+
+    private void PrintQuestDetails(int idx)
+    {
+        Console.Clear();
+        ConsoleUtility.ShowTitle("■ 퀘스트 세부내용 ■");
+        Console.WriteLine();
+        Console.WriteLine($"~ {quest[idx].Title} ~");
+        Console.WriteLine();
+
+
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("[ 퀘스트 주요내용 ]");
+        Console.ResetColor();
+
+        Console.WriteLine(quest[idx].Description);
+        Console.WriteLine();
+
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("[ 퀘스트 요약 ]");
+        Console.ResetColor();
+
+        Console.WriteLine(quest[idx].Summary);
+        Console.WriteLine();
+
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("[ 보상 ]");
+        Console.ResetColor();
+
+        Console.WriteLine(quest[idx].RewardItem);
+        Console.WriteLine(quest[idx].RewardGold + " G");
+        Console.WriteLine();
+        Console.WriteLine("1. 수락하기");
+        Console.WriteLine("2. 거절하기");
+        Console.WriteLine();
+
+        switch (ConsoleUtility.PromotMenuChoice(1, 2))
+        {
+            case 1:
+                Console.WriteLine();
+                Console.WriteLine("미구현 입니다. 아무 키를 눌러 이전화면으로 돌아갈 수 있습니다.");
+                Console.ReadKey();
+                QuestMenu();
+                break;
+            case 2:
+                QuestMenu();
+                break;
+        }
+        MainMenu();
+    }
+
 }
 
 public class Program

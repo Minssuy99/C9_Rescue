@@ -75,19 +75,11 @@ internal class Player
     {
         
         Console.Clear();
-        ConsoleUtility.MakeSentence("\n당신을 환영합니다!");
-        ConsoleUtility.MakeSentence("\n");
-        ConsoleUtility.MakeSentence("\n당신의 이름은 무엇인가요?");
+        Console.WriteLine("스크립트 스킵 [K]");
+        ConsoleUtility.MakeSentence("\n당신을 환영합니다!\n당신의 이름은 무엇인가요?");
         ConsoleUtility.MakeSentence("\n");
         player.Name = Console.ReadLine();
-        ConsoleUtility.MakeSentence($"\n그렇군요.{player.Name}, 만나서 반갑습니다.");
-        ConsoleUtility.MakeSentence("\n당신의 직업은 무엇인가요?");
-        ConsoleUtility.MakeSentence("\n");
-        ConsoleUtility.MakeSentence("\n1. 전사");
-        ConsoleUtility.MakeSentence("\n2. 기사");
-        ConsoleUtility.MakeSentence("\n3. 궁수");
-        ConsoleUtility.MakeSentence("\n");
-        ConsoleUtility.MakeSentence("\n");
+        ConsoleUtility.MakeSentence($"\n그렇군요.{player.Name}, 만나서 반갑습니다.\n당신의 직업은 무엇인가요?\n\n1. 전사\n2. 기사\n3. 궁수\n\n");
         int choice = ConsoleUtility.PromotMenuChoice(1, 3);
 
         switch (choice)
@@ -103,10 +95,7 @@ internal class Player
                 break;
         }
 
-        ConsoleUtility.MakeSentence("\n");
-        ConsoleUtility.MakeSentence("\n그렇군요. 감사합니다.");
-        ConsoleUtility.MakeSentence("\n이제 당신이 누구인지 알겠습니다.");
-        ConsoleUtility.MakeSentence("\n그러면 모험을 떠나볼까요?");
+        ConsoleUtility.MakeSentence("\n\n그렇군요. 감사합니다.\n이제 당신이 누구인지 알겠습니다.\n그러면 모험을 떠나볼까요?");
         Console.ReadKey();
         return player;
     }
