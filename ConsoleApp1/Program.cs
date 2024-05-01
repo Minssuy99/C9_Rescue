@@ -1,5 +1,6 @@
 ﻿using ConsoleApp1;
 using System.Threading;
+using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
 
 public class GameManager
@@ -18,8 +19,6 @@ public class GameManager
 
     private void InitializeGame()
     {
-        player = new Player("Seungjun", "Programmer", 1, 10, 5, 100, 100, 11, 0,15000);
-
         battleMonster = new List<Monster>();
 
         monster = new List<Monster>();
@@ -45,10 +44,50 @@ public class GameManager
         dungeons.Add(new Dungeon(3, "고급던전", 25, 7, 5000));
     }
 
+    public void PlayerCreate()
+    {
+        player = new Player("", "", 1, 10, 5, 100, 100, 11, 0, 15000);
+
+        Console.Clear();
+        ConsoleUtility.MakeSentence("\n당신을 환영합니다!");
+        ConsoleUtility.MakeSentence("\n");
+        ConsoleUtility.MakeSentence("\n당신의 이름은 무엇인가요?");
+        ConsoleUtility.MakeSentence("\n");
+        player.Name = Console.ReadLine();
+        ConsoleUtility.MakeSentence($"\n그렇군요.{player.Name}, 만나서 반갑습니다.");
+        ConsoleUtility.MakeSentence("\n당신의 직업은 무엇인가요?");
+        ConsoleUtility.MakeSentence("\n");
+        ConsoleUtility.MakeSentence("\n1. 전사");
+        ConsoleUtility.MakeSentence("\n2. 기사");
+        ConsoleUtility.MakeSentence("\n3. 궁수");
+        ConsoleUtility.MakeSentence("\n");
+        ConsoleUtility.MakeSentence("\n");
+        int choice = ConsoleUtility.PromotMenuChoice(1, 3);
+
+        switch (choice)
+        {
+            case 1:
+                player.Job = "전사";
+                break;
+            case 2:
+                player.Job = "기사";
+                break;
+            case 3:
+                player.Job = "궁수";
+                break;
+        }
+
+        ConsoleUtility.MakeSentence("\n");
+        ConsoleUtility.MakeSentence("\n그렇군요. 감사합니다.");
+        ConsoleUtility.MakeSentence("\n이제 당신이 누구인지 알겠습니다.");
+        ConsoleUtility.MakeSentence("\n그러면 모험을 떠나볼까요?");
+        Console.ReadKey();
+    }
     public void StartGame()
     {
         Console.Clear();
         ConsoleUtility.PrintGameHeader();
+        PlayerCreate();
         MainManu();
     }
 
@@ -616,8 +655,6 @@ public class GameManager
 
 public class Program
 {
-
-
     static void Main(string[] args)
     {
         GameManager gameManager = new GameManager();
