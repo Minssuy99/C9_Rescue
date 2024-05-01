@@ -86,4 +86,13 @@ internal class ConsoleUtility
         int padding = totalLength - currentLength;
         return str.PadRight(str.Length + padding); //PadRight 공간을 공백으로 채워준다
     }
+
+    public static void MakeSentence(string sentence)
+    {
+        for (int i = 0; i < sentence.Length; i++)
+        {
+            Console.Write(sentence[i]);
+            Thread.Sleep(100);
+        }
+    }
 }
