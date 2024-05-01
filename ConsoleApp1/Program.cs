@@ -58,10 +58,10 @@ public class GameManager
         Console.Clear();
         ConsoleUtility.PrintGameHeader();
         player.PlayerCreate(player);
-        MainManu();
+        MainMenu();
     }
 
-    private void MainManu()
+    private void MainMenu()
     {
         Console.Clear();
         Console.WriteLine("■■■■■■■■■■■■■■■■■■■■■■■■■■■");
@@ -75,8 +75,10 @@ public class GameManager
         Console.WriteLine("3. 상점");
         Console.WriteLine("4. 던전입장");
         Console.WriteLine("5. 여관");
+        Console.WriteLine("6. 퀘스트");
+        Console.WriteLine();
 
-        int choice = ConsoleUtility.PromotMenuChoice(1, 5);
+        int choice = ConsoleUtility.PromotMenuChoice(1, 6);
 
         switch (choice)
         {
@@ -95,8 +97,11 @@ public class GameManager
             case 5:
                 RestMenu();
                 break;
+            case 6:
+                QuestMenu();
+                break;
         }
-        MainManu(); // 혹시나 몰라서 받아주는 부분
+        MainMenu(); // 혹시나 몰라서 받아주는 부분
     }
 
     private void RestMenu()
@@ -109,7 +114,7 @@ public class GameManager
         switch (choice)
         {
             case 0:
-                MainManu();
+                MainMenu();
                 break;
             case 1:
                 if (player.Gold < 500)
@@ -138,7 +143,7 @@ public class GameManager
             player.NowDongeon = 1;
             player.InTower = false;
             Console.ReadKey();
-            MainManu();
+            MainMenu();
         }
         ConsoleUtility.ShowTitle("■ 던전입구 ■");
         Console.WriteLine("던전에 들어가면 전투가 시작됩니다.");
@@ -164,7 +169,7 @@ public class GameManager
         switch (choice)
         {
             case 0:
-                MainManu();
+                MainMenu();
                 break;
             case 1:
                 StatusMenu();
@@ -176,7 +181,7 @@ public class GameManager
                     BattleManu(max);
                 break;
         }
-        MainManu();
+        MainMenu();
     }
     private void BattleManu(int max)
     {
@@ -373,7 +378,7 @@ public class GameManager
 
                 Thread.Sleep(1000);
                 Console.ReadKey();
-                MainManu();
+                MainMenu();
             }
 
         }
@@ -491,7 +496,7 @@ public class GameManager
         switch (ConsoleUtility.PromotMenuChoice(0, 0))
         {
             case 0:
-                MainManu();
+                MainMenu();
                 break;
         }
     }
@@ -518,7 +523,7 @@ public class GameManager
         switch (ConsoleUtility.PromotMenuChoice(0, 1))
         {
             case 0:
-                MainManu();
+                MainMenu();
                 break;
             case 1:
                 EquipMenu();
@@ -584,7 +589,7 @@ public class GameManager
         switch (ConsoleUtility.PromotMenuChoice(0, 2))
         {
             case 0:
-                MainManu();
+                MainMenu();
                 break;
             case 1:
                 PurchaseMenu();
@@ -701,7 +706,7 @@ public class GameManager
         {
             case 0:
                 player.InTower = false;
-                MainManu();
+                MainMenu();
                 break;
             case 4:
                 player.InTower = true;
@@ -712,6 +717,38 @@ public class GameManager
                 break;
         }
     }
+
+    private void QuestMenu()
+    {
+        Console.Clear();
+
+        ConsoleUtility.ShowTitle("■ 퀘스트 ■");
+        Console.WriteLine("퀘스트를 확인하고 선택할 수 있습니다.");
+        Console.WriteLine();
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine("[ 퀘스트 목록 ]");
+        Console.ResetColor();
+        Console.WriteLine();
+
+        Console.WriteLine();
+        Console.WriteLine("0. 뒤로가기");
+        Console.WriteLine();
+
+
+        switch (ConsoleUtility.PromotMenuChoice(0, 2))
+        {
+            case 0:
+                MainMenu();
+                break;
+            case 1:
+                MainMenu();
+                break;
+            case 2:
+                MainMenu();
+                break;
+        }
+    }
+
 }
 
 public class Program
