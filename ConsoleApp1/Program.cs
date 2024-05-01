@@ -8,6 +8,8 @@ public class GameManager
     private Player player;
     private List<Item> inventory;
     private List<Item> storeInventory;
+    private List<Item> dungeonItemList;
+    private List<Item> weaponReward;
     private List<Monster> monster;
     private List<Monster> battleMonster;
     Random battleRandom = new Random();
@@ -23,11 +25,11 @@ public class GameManager
         battleMonster = new List<Monster>();
 
         monster = new List<Monster>();
-        monster.Add(new Monster("미니언", 2, 5, 2, 15, 15, 2));
-        monster.Add(new Monster("대포미니언", 5, 9, 5, 25, 25, 5));
-        monster.Add(new Monster("공허충", 3, 8, 3, 10, 10, 3));
-        monster.Add(new Monster("칼날부리새끼", 1, 3, 1, 8, 8, 1));
-        monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8, 5));
+        monster.Add(new Monster("미니언", 2, 5, 2, 15, 15, 2, ""));
+        monster.Add(new Monster("대포미니언", 5, 9, 5, 25, 25, 5, "대포"));
+        monster.Add(new Monster("공허충", 3, 8, 3, 10, 10, 3, ""));
+        monster.Add(new Monster("칼날부리새끼", 1, 3, 1, 8, 8, 1, ""));
+        monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8, 5, ""));
 
         inventory = new List<Item>();
 
@@ -43,6 +45,11 @@ public class GameManager
         dungeons.Add(new Dungeon(1, "초급던전", 5, 3, 1000));
         dungeons.Add(new Dungeon(2, "중급던전", 15, 5, 3000));
         dungeons.Add(new Dungeon(3, "고급던전", 25, 7, 5000));
+
+        dungeonItemList = new List<Item>();
+        dungeonItemList.Add(new Item("대포", "대포 미니언의 강력한 대포입니다.", ItemType.WEAPON, 9, 0, 0, 300));
+
+        weaponReward = new List<Item>();
     }
 
 
@@ -160,7 +167,7 @@ public class GameManager
         // 전투돌입할때마다 초기화
         battleMonster.Clear();
         Random rand = new();
-        int random = rand.Next(max-2, max);
+        int random = rand.Next(max - 2, max);
         for (int i = 0; i < random; i++)
         {
             while (true)
@@ -264,6 +271,8 @@ public class GameManager
                     player.GetExp(selectedMonster.Exp);
                     player.LevelUp();
 
+                    MonsterDied(selectedMonster);
+
                     ConsoleUtility.PrintTextHighlights("경험치 :", $"{player.CurrentExp}/{player.MaxExp}".ToString());
                 }
             }
@@ -281,20 +290,7 @@ public class GameManager
             //플레이어 승리
             if (allMonstersDead)
             {
-                Console.WriteLine();
-                Console.WriteLine("모든 몬스터를 물리쳤습니다.");
-                Console.WriteLine("던전 입구로 돌아갑니다.");
-
-                foreach (var monster in battleMonster)
-                {
-                    monster.Reset();
-                }
-
-
-                Thread.Sleep(1000);
-                Console.WriteLine("아무키나 누르세요...");
-                Console.ReadKey();
-                DungeonChoiceMenu();
+                ShowResultMenu(random);
             }
 
             // 몬스터의 공격차례
@@ -302,16 +298,16 @@ public class GameManager
             Console.WriteLine();
             Console.WriteLine("몬스터 차례");
 
-            if (battleRandom.Next(100) < 10)
+            foreach (Monster m in battleMonster)
             {
-                Console.WriteLine("회피!");
-                Console.WriteLine($"{player.Name}이(가) 공격을 회피했습니다.");
-            }
-            else
-            {
-                foreach (Monster m in battleMonster)
+                if (m.IsAlive())
                 {
-                    if (m.IsAlive())
+                    if (battleRandom.Next(100) < 10)
+                    {
+                        Console.WriteLine("회피!");
+                        Console.WriteLine($"{player.Name}이(가) 공격을 회피했습니다.");
+                    }
+                    else
                     {
                         ConsoleUtility.PrintTextHighlights("", $"{m.Name}이(가) 공격합니다!");
 
@@ -335,6 +331,7 @@ public class GameManager
                     }
                 }
             }
+
 
             Console.WriteLine("아무키나 누르세요...");
             Console.ReadLine();
@@ -362,6 +359,71 @@ public class GameManager
 
         }
     }
+
+    // 몬스터가 죽었을 때 호출되는 메서드
+    private void MonsterDied(Monster selectedMonster)
+    {
+        // 몬스터가 가지고 있는 아이템의 인덱스를 찾기
+        int itemIndex = dungeonItemList.FindIndex(item => item.Name == selectedMonster.DropItem);
+
+        // 해당 아이템을 찾았는지 확인 후 인벤토리에 추가
+        if (itemIndex != -1)
+        {
+            if (battleRandom.Next(100) < 10)
+            {
+                Item droppedItem = dungeonItemList[itemIndex].CloneItem();
+                weaponReward.Add(droppedItem);
+                Console.WriteLine($"{selectedMonster.DropItem}를 얻었습니다!");
+            }
+        }
+    }
+
+    private void ShowResultMenu(int random)
+    {
+        Console.WriteLine();
+        Console.WriteLine("모든 몬스터를 물리쳤습니다.");
+
+        foreach (var monster in battleMonster)
+        {
+            monster.Reset();
+        }
+
+        Thread.Sleep(1000);
+        Console.WriteLine("아무키나 누르세요...");
+        Console.ReadKey();
+
+        Console.Clear();
+        ConsoleUtility.ShowTitle("■ 전투 결과 ■");
+        Console.WriteLine();
+
+        Console.WriteLine($"던전에서 몬스터 {random}마리를 잡았습니다.");
+        Console.WriteLine();
+        Console.WriteLine("[내정보]");
+        Console.WriteLine($"Lv.{player.Level}  {player.Name}({player.Job})");
+        Console.WriteLine($"HP {player.CurrentHp} / {player.MaxHp}");
+        Console.WriteLine();
+
+        Console.WriteLine($"[전투 보상]");
+        Console.WriteLine($"{random * 100}골드를 획득했습니다.");
+        player.Gold += (random * 100);
+
+        for (int i = 0; i < weaponReward.Count; i++)
+        {
+            inventory.Add(weaponReward[i]); // 아이템을 인벤토리에 추가
+            Console.WriteLine($"{weaponReward[i].Name}를 얻었습니다!"); // 아이템 이름 출력
+        }
+        //여기에 보상 목록 추가
+
+        weaponReward.Clear();
+        Console.WriteLine();
+
+        Thread.Sleep(1000);
+        Console.WriteLine("던전 입구로 돌아갑니다.");
+        Console.WriteLine("아무키나 누르세요...");
+        Console.ReadKey();
+        DungeonChoiceMenu();
+    }
+
 
     private Monster GetRandomMonster()
     {
@@ -599,18 +661,19 @@ public class GameManager
     private void DungeonChoiceMenu()
     {
         Console.Clear();
-        foreach(Dungeon dungeon in dungeons) 
+        foreach (Dungeon dungeon in dungeons)
         {
             dungeon.PrintDungeon();
         }
         ConsoleUtility.PrintTextHighlights("", "0. ", "나가기");
         int choice = ConsoleUtility.PromotMenuChoice(0, 3);
-        switch (choice){
+        switch (choice)
+        {
             case 0:
                 MainManu();
                 break;
             default:
-                DungeonMenu(dungeons[choice-1].MaxMonster);
+                DungeonMenu(dungeons[choice - 1].MaxMonster);
                 break;
         }
     }
