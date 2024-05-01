@@ -31,7 +31,13 @@ internal class Player
 
     public void PlayerTakeDamage(int damage)
     {
-        CurrentHp -= damage;
+        Random rand = new();
+        int dmg;
+        if (damage - Def < 0)
+            dmg = 0;
+        else
+            dmg=damage- Def;
+        CurrentHp -= rand.Next(dmg,damage+1);
         if (CurrentHp < 0)
             CurrentHp = 0;
     }

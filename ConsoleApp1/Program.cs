@@ -132,7 +132,7 @@ public class GameManager
     private void DungeonMenu(int max)
     {
         Console.Clear();
-        if (max > 3)
+        if (player.NowDongeon > 3)
         {
             Console.WriteLine("타워를 클리어하셨습니다");
             player.NowDongeon = 1;
@@ -145,11 +145,18 @@ public class GameManager
         Console.WriteLine();
 
         if (player.InTower)
+        {
             Console.WriteLine($"2. 전투 시작 (현재 진행 : {player.NowDongeon})");
+            Console.WriteLine("1. 상태 보기");
+        }
+
         else
+        {
             Console.WriteLine("2. 전투 시작");
-        Console.WriteLine("1. 상태 보기");
-        Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("1. 상태 보기");
+            Console.WriteLine("0. 뒤로가기");
+        }
+        
         Console.WriteLine();
 
         int choice = ConsoleUtility.PromotMenuChoice(0, 3);
@@ -358,7 +365,7 @@ public class GameManager
                 {
                     monster.Reset();
                 }
-
+                player.InTower = false;
                 player.playerdefeat();
 
                 //골드값 0미만으로 떨어지지 않게 Player에서 조정한 후
@@ -430,13 +437,19 @@ public class GameManager
         Console.WriteLine();
 
         Thread.Sleep(1000);
-        Console.WriteLine("던전 입구로 돌아갑니다.");
-        Console.WriteLine("아무키나 누르세요...");
-        Console.ReadKey();
+
         if(player.InTower)
         {
             DungeonMenu(++player.NowDongeon);
+            Console.WriteLine("2층으로 갑니다.");
+
         }
+        else
+        {
+            Console.WriteLine("던전 입구로 돌아갑니다.");
+        }
+        Console.WriteLine("아무키나 누르세요...");
+        Console.ReadKey();
         DungeonChoiceMenu();
     }
 
