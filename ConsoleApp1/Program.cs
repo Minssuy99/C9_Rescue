@@ -1,4 +1,6 @@
 ﻿using ConsoleApp1;
+using System;
+using System.Linq;
 using System.Threading;
 using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
@@ -15,6 +17,8 @@ public class GameManager
     Random battleRandom = new Random();
     private List<Dungeon> dungeons;
     private List<Quest> quest;
+    private List<Potion> potion;
+    private List<Potion> potioninventory;
 
     public GameManager()
     {
@@ -74,6 +78,12 @@ public class GameManager
                             "몬스터 10마리 처치 (0/10)",
                             "도끼 x 1", 15));
 
+        potion = new List<Potion>();
+        potion.Add(new Potion("빨간 포션", "붉은 약초로 만든 물약이다", PotionEffect.Heal, 20, 100));
+        potion.Add(new Potion("주황 포션", "붉은 약초의 농축 물약이다.", PotionEffect.Heal, 30, 150));
+        potion.Add(new Potion("하얀 포션", "붉은 약초의 고농축 물약이다.", PotionEffect.Heal, 50, 300));
+
+        potioninventory = new List<Potion>();
     }
 
 
@@ -96,10 +106,11 @@ public class GameManager
 
         Console.WriteLine("1. 상태보기");
         Console.WriteLine("2. 인벤토리");
-        Console.WriteLine("3. 상점");
-        Console.WriteLine("4. 던전입장");
-        Console.WriteLine("5. 여관");
-        Console.WriteLine("6. 퀘스트");
+        Console.WriteLine("3. 장비 상점");
+        Console.WriteLine("4. 물약 상점");
+        Console.WriteLine("5. 던전입장");
+        Console.WriteLine("6. 여관");
+        Console.WriteLine("7. 퀘스트");
         Console.WriteLine();
 
         int choice = ConsoleUtility.PromotMenuChoice(1, 6);
@@ -116,16 +127,120 @@ public class GameManager
                 StoreMenu(); //상점
                 break;
             case 4:
-                DungeonChoiceMenu();
+                PotionStoreMenu();
                 break;
             case 5:
-                RestMenu();
+                DungeonChoiceMenu();
                 break;
             case 6:
+                RestMenu();
+                break;
+            case 7:
                 QuestMenu();
                 break;
         }
         MainMenu(); // 혹시나 몰라서 받아주는 부분
+    }
+
+    private void PotionStoreMenu()
+    {
+        Console.Clear();
+
+        ConsoleUtility.ShowTitle("■ 물약 상점 ■");
+        Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
+        Console.WriteLine();
+        Console.WriteLine("[보유 골드]");
+        ConsoleUtility.PrintTextHighlights("", player.Gold.ToString(), " G");
+        Console.WriteLine();
+        Console.WriteLine("[아이템 목록]");
+
+        for (int i = 0; i < potion.Count; i++)
+        {
+            potion[i].PrintStorePotionDescription();
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine("1. 물약 구매");
+        Console.WriteLine("2. 포션 판매");
+        Console.WriteLine();
+
+        switch (ConsoleUtility.PromotMenuChoice(0, 2))
+        {
+            case 0:
+                MainMenu();
+                break;
+            case 1:
+                PotionPurchaseMenu();
+                break;
+            case 2:
+                PotionSellMenu();
+                break;
+        }
+    }
+
+    private void PotionPurchaseMenu(string? prompt = null)
+    {
+        if (prompt != null)
+        {
+            Console.Clear();
+            ConsoleUtility.ShowTitle(prompt);
+            Thread.Sleep(1000); //1000=1초 멈추기
+        }
+        Console.Clear();
+
+        ConsoleUtility.ShowTitle("■ 물약 구매 ■");
+        Console.WriteLine("필요한 아이템을 구매 할 수 있습니다.");
+        Console.WriteLine();
+        Console.WriteLine("[보유 골드]");
+        ConsoleUtility.PrintTextHighlights("", player.Gold.ToString(), " G");
+        Console.WriteLine();
+        Console.WriteLine("[아이템 목록]");
+
+        for (int i = 0; i < potion.Count; i++)
+        {
+            potion[i].PrintStorePotionDescription(true, i + 1);
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine();
+
+        int keyInput = ConsoleUtility.PromotMenuChoice(0, storeInventory.Count);
+
+        switch (keyInput)
+        {
+            case 0:
+                StoreMenu();
+                break;
+            default:
+                if (player.Gold >= potion[keyInput - 1].Price) //사는게 가능할때
+                {
+                    player.Gold -= potion[keyInput - 1].Price; //돈 빼주고
+                    string potionName = potion[keyInput - 1].Name; //상점에서 선택한 포션의 이름
+                    if (!potioninventory.Any(p => p.Name == potionName)) //포션이 인벤토리에 없다면
+                    {
+                        Potion newPotion = potion[keyInput - 1].ClonePotion(); //복제해서
+                        newPotion.TogglePurchase(); //복제한걸 증가시켜줌
+                        potioninventory.Add(newPotion); //증가시킨 포션을 추가
+                    }
+                    else //이미 있는 포션이라면
+                    {
+                        potioninventory.First(p => p.Name == potionName).TogglePurchase(); //제일 첫번째 있는 이름같은 포션의 개수 증가
+                    }
+                    PotionPurchaseMenu();
+                }
+                else
+                {
+                    PotionPurchaseMenu("Gold가 부족합니다.");
+                }
+                break;
+        }
+    }
+
+    private void PotionSellMenu()
+    {
+        throw new NotImplementedException();
     }
 
     private void RestMenu()
@@ -538,19 +653,71 @@ public class GameManager
         {
             inventory[i].PrintItemStatDescription();
         }
+        for (int i = 0; i < potioninventory.Count; i++)
+        {
+            potioninventory[i].PrintPotionStatDescription(); //나가기가 0번이라서 +1해줘서 띄워줌
+        }
 
         Console.WriteLine();
         Console.WriteLine("0. 나가기");
-        Console.WriteLine("1. 장착관리");
+        Console.WriteLine("1. 장착 관리");
+        Console.WriteLine("2. 아이템관리");
         Console.WriteLine();
 
-        switch (ConsoleUtility.PromotMenuChoice(0, 1))
+        switch (ConsoleUtility.PromotMenuChoice(0, 2))
         {
             case 0:
                 MainMenu();
                 break;
             case 1:
                 EquipMenu();
+                break;
+            case 2:
+                ItemMenu();
+                break;
+        }
+    }
+
+    private void ItemMenu()
+    {
+        Console.Clear();
+
+        ConsoleUtility.ShowTitle("■ 인벤토리 - 아이템 관리 ■");
+        Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
+        Console.WriteLine();
+        Console.WriteLine("[아이템 목록]");
+
+        for (int i = 0; i < potioninventory.Count; i++)
+        {
+            potioninventory[i].PrintPotionStatDescription(true, i + 1); //나가기가 0번이라서 +1해줘서 띄워줌
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine();
+
+        int keyInput = ConsoleUtility.PromotMenuChoice(0, potioninventory.Count);
+
+        switch (keyInput)
+        {
+            case 0:
+                InventoryMenu();
+                break;
+            default:
+                if (potioninventory[keyInput - 1].Count > 0) //포션이 1개 이상 있을때
+                {
+                    potioninventory[keyInput - 1].ToggleusedStates(); //개수 줄여주고
+                    potioninventory[keyInput - 1].ApplyEffect(player); //효과 사용
+                    if (potioninventory[keyInput - 1].Count == 0) //개수가 0일때
+                    {
+                        potioninventory.RemoveAt(keyInput - 1); //해당 포션을 리스트에서 제거
+                    }
+                }
+                else //사용되지 않지만 예외처리로 남겨둠
+                {
+                    Console.WriteLine("사용 가능한 물약이 없습니다.");
+                }
+                ItemMenu();
                 break;
         }
     }
@@ -591,7 +758,7 @@ public class GameManager
     {
         Console.Clear();
 
-        ConsoleUtility.ShowTitle("■ 상점 ■");
+        ConsoleUtility.ShowTitle("■ 장비 상점 ■");
         Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
         Console.WriteLine();
         Console.WriteLine("[보유 골드]");
@@ -628,7 +795,7 @@ public class GameManager
     {
         Console.Clear();
 
-        ConsoleUtility.ShowTitle("■ 아이템 판매 ■");
+        ConsoleUtility.ShowTitle("■ 장비 판매 ■");
         Console.WriteLine("보유중인 아이템을 판매 할 수 있습니다.");
         Console.WriteLine();
         Console.WriteLine("[보유 골드]");
@@ -653,7 +820,7 @@ public class GameManager
                 StoreMenu();
                 break;
             default:
-                player.Gold += inventory[keyInput - 1].Price; //돈이 올라감
+                player.Gold += (int)(inventory[keyInput - 1].Price * 0.8); //돈이 올라감
                 inventory[keyInput - 1].TogglePurchase(); //선택한 아이템을 보유중에서 판매중으로 바꿈
                 inventory.Remove(inventory[keyInput - 1]); //인벤토리에서 그 아이템을 삭제함
                 SellMenu();
@@ -672,7 +839,7 @@ public class GameManager
 
         Console.Clear();
 
-        ConsoleUtility.ShowTitle("■ 아이템 구매 ■");
+        ConsoleUtility.ShowTitle("■ 장비 구매 ■");
         Console.WriteLine("필요한 아이템을 구매 할 수 있습니다.");
         Console.WriteLine();
         Console.WriteLine("[보유 골드]");

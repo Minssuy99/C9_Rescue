@@ -99,4 +99,15 @@ internal class Player
         Console.ReadKey();
         return player;
     }
+
+    public void Heal(int healAmount)
+    {
+        CurrentHp += healAmount;
+
+        // 체력이 최대 체력을 초과하지 않도록 조정
+        if (CurrentHp > MaxHp)
+        {
+            CurrentHp = MaxHp;
+        }
+    }
 }
