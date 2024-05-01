@@ -75,7 +75,6 @@ public class GameManager
         Console.WriteLine("3. 상점");
         Console.WriteLine("4. 던전입장");
         Console.WriteLine("5. 여관");
-        Console.WriteLine();
 
         int choice = ConsoleUtility.PromotMenuChoice(1, 5);
 
@@ -133,11 +132,22 @@ public class GameManager
     private void DungeonMenu(int max)
     {
         Console.Clear();
+        if (max > 3)
+        {
+            Console.WriteLine("타워를 클리어하셨습니다");
+            player.NowDongeon = 1;
+            player.InTower = false;
+            Console.ReadKey();
+            MainManu();
+        }
         ConsoleUtility.ShowTitle("■ 던전입구 ■");
         Console.WriteLine("던전에 들어가면 전투가 시작됩니다.");
         Console.WriteLine();
 
-        Console.WriteLine("2. 전투 시작");
+        if (player.InTower)
+            Console.WriteLine($"2. 전투 시작 (현재 진행 : {player.NowDongeon})");
+        else
+            Console.WriteLine("2. 전투 시작");
         Console.WriteLine("1. 상태 보기");
         Console.WriteLine("0. 뒤로가기");
         Console.WriteLine();
@@ -153,12 +163,14 @@ public class GameManager
                 StatusMenu();
                 break;
             case 2:
-                BattleManu(max);
+                if (player.InTower)
+                    BattleManu(player.NowDongeon * 2 + 1);
+                else
+                    BattleManu(max);
                 break;
         }
         MainManu();
     }
-
     private void BattleManu(int max)
     {
         Console.Clear();
@@ -421,6 +433,10 @@ public class GameManager
         Console.WriteLine("던전 입구로 돌아갑니다.");
         Console.WriteLine("아무키나 누르세요...");
         Console.ReadKey();
+        if(player.InTower)
+        {
+            DungeonMenu(++player.NowDongeon);
+        }
         DungeonChoiceMenu();
     }
 
@@ -665,12 +681,18 @@ public class GameManager
         {
             dungeon.PrintDungeon();
         }
+        ConsoleUtility.PrintTextHighlights("", "4. ", "타워던전");
         ConsoleUtility.PrintTextHighlights("", "0. ", "나가기");
-        int choice = ConsoleUtility.PromotMenuChoice(0, 3);
+        int choice = ConsoleUtility.PromotMenuChoice(0, 4);
         switch (choice)
         {
             case 0:
+                player.InTower = false;
                 MainManu();
+                break;
+            case 4:
+                player.InTower = true;
+                DungeonMenu(player.NowDongeon);
                 break;
             default:
                 DungeonMenu(dungeons[choice - 1].MaxMonster);
