@@ -38,7 +38,7 @@ internal class Potion
         return clone;
     }
 
-    internal void PrintPotionStatDescription(bool withNumber = false, int idx = 0)
+    internal void PrintPotionStatDescription(bool withNumber = false, int idx = 0, bool withPrice = false)
     {
         Console.Write("- ");
         if (withNumber)
@@ -60,7 +60,18 @@ internal class Potion
 
         Console.Write(" | ");
 
-        Console.WriteLine(Count);
+        if (withPrice)
+        {
+            Console.WriteLine(Count);
+        }
+        else 
+        {
+            Console.Write(Count);
+
+            Console.Write(" | ");
+
+            ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
+        }
     }
 
     internal void ToggleusedStates()
