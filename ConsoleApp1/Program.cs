@@ -19,6 +19,7 @@ public class GameManager
     private List<Quest> quest;
     private List<Potion> potion;
     private List<Potion> potioninventory;
+    private List<Potion> potionReward;
 
     public GameManager()
     {
@@ -31,11 +32,11 @@ public class GameManager
         battleMonster = new List<Monster>();
 
         monster = new List<Monster>();
-        monster.Add(new Monster("미니언", 2, 5, 2, 15, 15, 2, ""));
+        monster.Add(new Monster("미니언", 2, 5, 2, 15, 15, 2, "빨간 포션"));
         monster.Add(new Monster("대포미니언", 5, 9, 5, 25, 25, 5, "대포"));
-        monster.Add(new Monster("공허충", 3, 8, 3, 10, 10, 3, ""));
-        monster.Add(new Monster("칼날부리새끼", 1, 3, 1, 8, 8, 1, ""));
-        monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8, 5, ""));
+        monster.Add(new Monster("공허충", 3, 8, 3, 10, 10, 3, "빨간 포션"));
+        monster.Add(new Monster("칼날부리새끼", 1, 3, 1, 8, 8, 1, "빨간 포션"));
+        monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8, 5, "주황 포션"));
 
         inventory = new List<Item>();
 
@@ -79,11 +80,13 @@ public class GameManager
                             "도끼 x 1", 15));
 
         potion = new List<Potion>();
-        potion.Add(new Potion("빨간 포션", "붉은 약초로 만든 물약이다", PotionEffect.Heal, 20, 100));
-        potion.Add(new Potion("주황 포션", "붉은 약초의 농축 물약이다.", PotionEffect.Heal, 30, 150));
-        potion.Add(new Potion("하얀 포션", "붉은 약초의 고농축 물약이다.", PotionEffect.Heal, 50, 300));
+        potion.Add(new Potion("빨간 포션", "붉은 약초로 만든 물약이다", PotionEffect.Heal, 10, 100));
+        potion.Add(new Potion("주황 포션", "붉은 약초의 농축 물약이다.", PotionEffect.Heal, 15, 150));
+        potion.Add(new Potion("하얀 포션", "붉은 약초의 고농축 물약이다.", PotionEffect.Heal, 30, 300));
 
         potioninventory = new List<Potion>();
+
+        potionReward = new List<Potion>();
     }
 
 
@@ -270,7 +273,7 @@ public class GameManager
                 player.Gold += (int)(potioninventory[keyInput - 1].Price * 0.8); //돈이 올라감
                 potioninventory[keyInput - 1].DecreaseCount(); //선택한 아이템의 갯수를 줄여줌
                 if (potioninventory[keyInput - 1].Count <= 0)
-                potioninventory.Remove(potioninventory[keyInput - 1]); //인벤토리에서 그 아이템을 삭제함
+                    potioninventory.Remove(potioninventory[keyInput - 1]); //인벤토리에서 그 아이템을 삭제함
                 PotionSellMenu();
                 break;
         }
@@ -333,7 +336,7 @@ public class GameManager
             Console.WriteLine("1. 상태 보기");
             Console.WriteLine("0. 뒤로가기");
         }
-        
+
         Console.WriteLine();
 
         int choice = ConsoleUtility.PromotMenuChoice(0, 3);
@@ -559,16 +562,27 @@ public class GameManager
     // 몬스터가 죽었을 때 호출되는 메서드
     private void MonsterDied(Monster selectedMonster)
     {
-        // 몬스터가 가지고 있는 아이템의 인덱스를 찾기
+        // 몬스터가 가지고 있는 아이템의 인덱스를 찾기, 찾지 못하면 -1 반환
         int itemIndex = dungeonItemList.FindIndex(item => item.Name == selectedMonster.DropItem);
+        int potionIndex = potion.FindIndex(p => p.Name == selectedMonster.DropItem);
 
         // 해당 아이템을 찾았는지 확인 후 인벤토리에 추가
         if (itemIndex != -1)
         {
-            if (battleRandom.Next(100) < 10)
+            if (battleRandom.Next(100) < 10) //확률적으로 아이템을 드랍함
             {
                 Item droppedItem = dungeonItemList[itemIndex].CloneItem();
                 weaponReward.Add(droppedItem);
+                Console.WriteLine($"{selectedMonster.DropItem}를 얻었습니다!");
+            }
+        }
+
+        if (potionIndex != -1)
+        {
+            if (battleRandom.Next(100) < 101) //확률적으로 아이템을 드랍함
+            {
+                Potion droppedItem = potion[potionIndex].ClonePotion();
+                potionReward.Add(droppedItem);
                 Console.WriteLine($"{selectedMonster.DropItem}를 얻었습니다!");
             }
         }
@@ -608,14 +622,47 @@ public class GameManager
             inventory.Add(weaponReward[i]); // 아이템을 인벤토리에 추가
             Console.WriteLine($"{weaponReward[i].Name}를 얻었습니다!"); // 아이템 이름 출력
         }
-        //여기에 보상 목록 추가
 
+        Dictionary<string, int> potionCounts = new Dictionary<string, int>();
+
+        for (int i = 0; i < potionReward.Count; i++)
+        {
+            string potionName = potionReward[i].Name; //포션의 이름
+
+            if (!potionCounts.ContainsKey(potionName))
+            {
+                potionCounts[potionName] = 1;
+            }
+            else
+            {
+                potionCounts[potionName]++;
+            }
+
+            if (!potioninventory.Any(p => p.Name == potionName)) //포션이 인벤토리에 없다면
+            {
+                Potion newPotion = potionReward[i].ClonePotion(); //복제해서
+                newPotion.TogglePurchase(); //복제한걸 증가시켜줌
+                potioninventory.Add(newPotion); //증가시킨 포션을 추가
+            }
+            else //이미 있는 포션이라면
+            {
+                potioninventory.First(p => p.Name == potionName).TogglePurchase(); //제일 첫번째 있는 이름같은 포션의 개수 증가
+            }
+        }
+
+        foreach (var kvp in potionCounts)
+        {
+            Console.WriteLine($"{kvp.Key} {kvp.Value}개를 얻었습니다!");
+        }
+
+        //여기에 보상 목록 추가
+        potionReward.Clear();
         weaponReward.Clear();
         Console.WriteLine();
 
         Thread.Sleep(1000);
 
-        if(player.InTower)
+        if (player.InTower)
         {
             DungeonMenu(++player.NowDongeon);
             Console.WriteLine("2층으로 갑니다.");
@@ -722,7 +769,7 @@ public class GameManager
 
         for (int i = 0; i < potioninventory.Count; i++)
         {
-            potioninventory[i].PrintPotionStatDescription(true, i + 1,true); //나가기가 0번이라서 +1해줘서 띄워줌
+            potioninventory[i].PrintPotionStatDescription(true, i + 1, true); //나가기가 0번이라서 +1해줘서 띄워줌
         }
 
         Console.WriteLine();
@@ -955,7 +1002,7 @@ public class GameManager
         Console.WriteLine();
         for (int i = 0; i < quest.Count; i++)
         {
-            Console.WriteLine($"{ i + 1 }. {quest[i].Title}");
+            Console.WriteLine($"{i + 1}. {quest[i].Title}");
         }
 
         Console.WriteLine();
