@@ -211,7 +211,7 @@ public class GameManager
         switch (keyInput)
         {
             case 0:
-                StoreMenu();
+                PotionStoreMenu();
                 break;
             default:
                 if (player.Gold >= potion[keyInput - 1].Price) //사는게 가능할때
@@ -240,7 +240,40 @@ public class GameManager
 
     private void PotionSellMenu()
     {
-        throw new NotImplementedException();
+        Console.Clear();
+
+        ConsoleUtility.ShowTitle("■ 물약 판매 ■");
+        Console.WriteLine("보유중인 아이템을 판매 할 수 있습니다.");
+        Console.WriteLine();
+        Console.WriteLine("[보유 골드]");
+        ConsoleUtility.PrintTextHighlights("", player.Gold.ToString(), " G");
+        Console.WriteLine();
+        Console.WriteLine("[아이템 목록]");
+
+        for (int i = 0; i < potioninventory.Count; i++)
+        {
+            potioninventory[i].PrintPotionStatDescription(true, i + 1);
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("0. 나가기");
+        Console.WriteLine();
+
+        int keyInput = ConsoleUtility.PromotMenuChoice(0, potioninventory.Count);
+
+        switch (keyInput)
+        {
+            case 0:
+                PotionStoreMenu();
+                break;
+            default:
+                player.Gold += (int)(potioninventory[keyInput - 1].Price * 0.8); //돈이 올라감
+                potioninventory[keyInput - 1].DecreaseCount(); //선택한 아이템의 갯수를 줄여줌
+                if (potioninventory[keyInput - 1].Count <= 0)
+                potioninventory.Remove(potioninventory[keyInput - 1]); //인벤토리에서 그 아이템을 삭제함
+                PotionSellMenu();
+                break;
+        }
     }
 
     private void RestMenu()
@@ -689,7 +722,7 @@ public class GameManager
 
         for (int i = 0; i < potioninventory.Count; i++)
         {
-            potioninventory[i].PrintPotionStatDescription(true, i + 1); //나가기가 0번이라서 +1해줘서 띄워줌
+            potioninventory[i].PrintPotionStatDescription(true, i + 1,true); //나가기가 0번이라서 +1해줘서 띄워줌
         }
 
         Console.WriteLine();
