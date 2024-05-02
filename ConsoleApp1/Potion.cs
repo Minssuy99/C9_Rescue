@@ -56,21 +56,21 @@ internal class Potion
 
         Console.Write(" | ");
 
-        Console.Write(Desc);
+        Console.Write(ConsoleUtility.PadRightForMixedText(Desc, 50));
 
         Console.Write(" | ");
 
         if (withPrice)
-        {
-            Console.WriteLine(Count);
-        }
-        else 
         {
             Console.Write(Count);
 
             Console.Write(" | ");
 
             ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
+        }
+        else 
+        {
+            ConsoleUtility.PrintTextHighlights("", Count.ToString(), " 개");
         }
     }
 
