@@ -19,5 +19,4 @@ internal class Quest
         IsAccepted = isAccepted;
         IsCompeleted = isCompleted;
     }
-
 }
