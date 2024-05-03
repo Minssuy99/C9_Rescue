@@ -322,12 +322,13 @@ public class GameManager
                 if (player.Gold < 500)
                 {
                     Console.WriteLine("안돼 돌아가");
-                    dataBase.SavePlayer(player);
+                    
                     Console.ReadKey();
                 }
                 else
                 {
                     Console.WriteLine("체력이 회복됐습니다.");
+                    dataBase.SavePlayer(player);
                     player.Rest();
                     Console.ReadKey();
                 }

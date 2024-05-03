@@ -35,7 +35,10 @@ namespace ConsoleApp1
             {
                 string _playerJson = File.ReadAllText(_playerFilePath);
                 player = JsonConvert.DeserializeObject<Player>(_playerJson);
-                inventory = player.Items;
+                if (player.Items != null)
+                {
+                    inventory = player.Items;
+                }
                 Console.WriteLine("플레이어 데이터를 불러왔습니다.");
                 return true;
             }
