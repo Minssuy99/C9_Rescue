@@ -391,7 +391,7 @@ public class GameManager
             {
                 for (int i = 0; i < skills.Count; i++)
                 {
-                    skills[i].PrintSkillStatDescription(i); //나가기가 0번이라서 +1해줘서 띄워줌
+                    skills[i].PrintSkillStatDescription(i);
                 }
                 Skill.UseSkill(random);
             }

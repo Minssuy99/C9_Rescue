@@ -45,13 +45,6 @@ internal class Item
         Item clone = new Item(Name, Desc, Type, Atk, Def, Hp, Price, IsEquipped = false, IsPurchased = false);
         return clone;
     }
-
-    public Item CloneItem()
-    {
-        Item clone = new Item(Name, Desc, Type, Atk, Def, Hp, Price, IsEquipped = false, IsPurchased = false);
-        return clone;
-    }
-
     internal void PrintItemStatDescription(bool withNumber = false, int idx = 0)
     {
         Console.Write("- ");
