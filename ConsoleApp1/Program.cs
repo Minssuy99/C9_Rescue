@@ -23,14 +23,11 @@ public class GameManager
     {
         get
         {
-            lock (padlock)
+            if (instance == null)
             {
-                if (instance == null)
-                {
-                    instance = new GameManager();
-                }
-                return instance;
+                instance = new GameManager();
             }
+            return instance;
         }
     }
 
@@ -398,7 +395,7 @@ public class GameManager
                 }
                 Skill.UseSkill(random);
             }
-            else if ( choice == 3)
+            else if (choice == 3)
             {
                 Console.WriteLine("미구현");
                 continue;
@@ -729,8 +726,7 @@ public class Program
 {
     static void Main(string[] args)
     {
-        GameManager gameManager = new GameManager();
-        gameManager.StartGame();
+        GameManager.Instance.StartGame();
     }
 }
 

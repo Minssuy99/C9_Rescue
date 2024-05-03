@@ -76,7 +76,7 @@ namespace ConsoleApp1
                     if (GameManager.Instance.battleRandom.Next(100) < 15)
                     {
                         // 추가 효과가 발생한 경우
-                        int criticalDamage = (int)(GameManager.Instance.player.Atk * 1.6); // 160%의 데미지
+                        int criticalDamage = (int)(GameManager.Instance.skills[i].Damage * 1.6); // 160%의 데미지
                         Console.WriteLine("치명타 발생! 추가 데미지를 가합니다.");
                         Console.WriteLine($"[데미지 : {criticalDamage}]");
                         selectedMonster.MonterTakeDamage(criticalDamage);
@@ -84,8 +84,8 @@ namespace ConsoleApp1
                     else
                     {
                         // 추가 효과가 발생하지 않은 경우
-                        Console.WriteLine($"[데미지 : {GameManager.Instance.player.Atk}]");
-                        selectedMonster.MonterTakeDamage(GameManager.Instance.player.Atk);
+                        Console.WriteLine($"[데미지 : {GameManager.Instance.skills[i].Damage}]");
+                        selectedMonster.MonterTakeDamage(GameManager.Instance.skills[i].Damage);
                     }
                     Console.WriteLine($"몬스터 {selectedMonster.Name}의 HP: {selectedMonster.CurrentHp}");
 
@@ -184,14 +184,10 @@ namespace ConsoleApp1
             }
             else if (GameManager.Instance.skills[i].SkillRangeType == SkillRangeType.AreaOfEffect)
             {
+                ConsoleUtility.PrintTextHighlights("", $"{GameManager.Instance.player.Name}의 {GameManager.Instance.skills[i].SkillName}!");
                 //광역기
                 for (int j = 0; j < GameManager.Instance.battleMonster.Count; j++)
                 {
-                    GameManager.Instance.battleMonster[j].CurrentHp -= GameManager.Instance.skills[i].Damage;
-                    Console.WriteLine($"{GameManager.Instance.battleMonster[j].Name}에게 데미지!");
-                    Console.WriteLine();
-                    ConsoleUtility.PrintTextHighlights("", $"{GameManager.Instance.player.Name}가 공격!");
-
                     if (GameManager.Instance.battleRandom.Next(100) < 10)
                     {
                         Console.WriteLine("회피!");
@@ -202,7 +198,7 @@ namespace ConsoleApp1
                         if (GameManager.Instance.battleRandom.Next(100) < 15)
                         {
                             // 추가 효과가 발생한 경우
-                            int criticalDamage = (int)(GameManager.Instance.player.Atk * 1.6); // 160%의 데미지
+                            int criticalDamage = (int)(GameManager.Instance.skills[i].Damage * 1.6); // 160%의 데미지
                             Console.WriteLine("치명타 발생! 추가 데미지를 가합니다.");
                             Console.WriteLine($"[데미지 : {criticalDamage}]");
                             GameManager.Instance.battleMonster[j].MonterTakeDamage(criticalDamage);
@@ -210,21 +206,23 @@ namespace ConsoleApp1
                         else
                         {
                             // 추가 효과가 발생하지 않은 경우
-                            Console.WriteLine($"[데미지 : {GameManager.Instance.player.Atk}]");
-                            GameManager.Instance.battleMonster[j].MonterTakeDamage(GameManager.Instance.player.Atk);
+                            Console.WriteLine($"[데미지 : {GameManager.Instance.skills[i].Damage}]");
+                            GameManager.Instance.battleMonster[j].MonterTakeDamage(GameManager.Instance.skills[i].Damage);
                         }
                         Console.WriteLine($"몬스터 {GameManager.Instance.battleMonster[j].Name}의 HP: {GameManager.Instance.battleMonster[j].CurrentHp}");
+                    }
+                }
+                for (int k = 0;k< random;k++)
+                {
+                    if (!GameManager.Instance.battleMonster[k].IsAlive())
+                    {
+                        Console.WriteLine($"몬스터 {GameManager.Instance.battleMonster[k].Name}를 물리쳤습니다!");
+                        Console.WriteLine($"경험치 {GameManager.Instance.battleMonster[k].Exp}를 얻었습니다!");
+                        GameManager.Instance.player.GetExp(GameManager.Instance.battleMonster[k].Exp);
+                        GameManager.Instance.player.LevelUp();
 
-                        if (!GameManager.Instance.battleMonster[j].IsAlive())
-                        {
-                            Console.WriteLine($"몬스터 {GameManager.Instance.battleMonster[j].Name}를 물리쳤습니다!");
-                            Console.WriteLine($"경험치 {GameManager.Instance.battleMonster[j].Exp}를 얻었습니다!");
-                            GameManager.Instance.player.GetExp(GameManager.Instance.battleMonster[j].Exp);
-                            GameManager.Instance.player.LevelUp();
-
-                            GameManager.Instance.MonsterDied(GameManager.Instance.battleMonster[j]);
-                            ConsoleUtility.PrintTextHighlights("경험치 :", $"{GameManager.Instance.player.CurrentExp}/{GameManager.Instance.player.MaxExp}".ToString());
-                        }
+                        GameManager.Instance.MonsterDied(GameManager.Instance.battleMonster[k]);
+                        ConsoleUtility.PrintTextHighlights("경험치 :", $"{GameManager.Instance.player.CurrentExp}/{GameManager.Instance.player.MaxExp}".ToString());
                     }
                 }
                 bool allMonstersDead = true;

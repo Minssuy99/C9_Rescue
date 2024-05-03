@@ -92,7 +92,7 @@ internal class ConsoleUtility
         for (int i = 0; i < sentence.Length; i++)
         {
             Console.Write(sentence[i]);
-            Thread.Sleep(100);
+            Thread.Sleep(0);
         }
     }
 }
