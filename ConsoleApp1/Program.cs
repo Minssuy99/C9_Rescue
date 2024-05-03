@@ -1024,7 +1024,7 @@ public class GameManager
                 PrintQuestDetails(0);
                 break;
             case 2:
-                CheckQuestCompletion(1, 3);
+                CheckQuestCompletion(1, 3,"낡은검");
                 PrintQuestDetails(1);
                 break;
             case 3:
@@ -1145,15 +1145,19 @@ public class GameManager
                 QuestMenu();
             }
         }
-    private void CheckQuestCompletion(int questidx, int itemidx)
+    private void CheckQuestCompletion(int questidx, int itemidx,string itemName)
     {
         if (quest[questidx].IsAccepted == true)
         {
-            if (/*아이템 정보*/.IsEquipped == true)
+            List<Item> EItem = inventory.Where(Item => Item.IsEquipped == true).ToList();
+            foreach(Item item in EItem)
             {
-                quest[questidx].IsCompeleted = true;
-                Console.WriteLine("퀘스트완료로 전환");
-                Console.ReadKey();
+                if (item.Name == itemName)
+                {
+                    quest[questidx].IsCompeleted = true;
+                    Console.WriteLine("퀘스트완료로 전환");
+                    Console.ReadKey();
+                }
             }
         }
     }
