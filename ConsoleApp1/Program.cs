@@ -409,169 +409,228 @@ public class GameManager
             ConsoleUtility.ShowTitle("■ Battle!! ■");
             Console.WriteLine();
 
-            for (int i = 0; i < random; i++)
-            {
-                if (!battleMonster[i].IsAlive())
-                {
-                    ConsoleUtility.PrintTextDeath("", $"[{i + 1}] Lv.{battleMonster[i].Level} {battleMonster[i].Name} HP {battleMonster[i].CurrentHp}");
-                }
-                else
-                {
-                    Console.WriteLine($"[{i + 1}] Lv.{battleMonster[i].Level} {battleMonster[i].Name} HP {battleMonster[i].CurrentHp}");
-                }
-            }
+            ShowMonsterStatus(random);
 
-            Console.WriteLine();
-            Console.WriteLine("[내정보]");
-            Console.WriteLine($"Lv.{player.Level}  {player.Name}({player.Job})");
-            Console.WriteLine($"HP {player.CurrentHp} / {player.MaxHp}");
-            Console.WriteLine();
+            ShowPlayerStatus();
 
-            int choice = ConsoleUtility.PromotMenuChoice(1, random);
+            int choice = GetPlayerChoice(random);
 
             int selectedMonsterIndex = choice - 1;
-
-            //이미 죽은 몬스터 구분
-            if (!battleMonster[selectedMonsterIndex].IsAlive())
-            {
-                Console.WriteLine("선택한 몬스터가 이미 죽었습니다. 다른 몬스터를 선택하세요.");
-                Console.ReadKey();
-                continue; // 다시 반복문의 처음으로 돌아가 다시 선택할 수 있도록 합니다.
-            }
-
             Monster selectedMonster = battleMonster[selectedMonsterIndex];
 
-            Console.WriteLine();
-            ConsoleUtility.PrintTextHighlights("", $"{player.Name}가 공격!");
+            if (!ValidateMonsterChoice(selectedMonsterIndex))
+                continue;
 
-            double minAtk = Math.Ceiling(player.Atk * 0.9); // 최소 공격력
-            double maxAtk = Math.Ceiling(player.Atk * 1.1); // 최대 공격력
+            PlayerAttack(selectedMonster);
 
-            if (battleRandom.Next(100) < 10)
+            if (CheckAllMonstersDead())
             {
-                Console.WriteLine("회피!");
-                Console.WriteLine($"몬스터 {selectedMonster.Name}이(가) 공격을 회피했습니다.");
+                HandleAllMonstersDefeat();
+                ShowResultMenu(random);
+                break;
             }
-            else
-            {
-                int attackDamage = battleRandom.Next((int)minAtk, (int)maxAtk); // 최소에서 최대 사이의 랜덤한 값을 선택
 
-                if (battleRandom.Next(100) < 15)
+            MonsterAttack();
+
+            if (!player.IsAlive())
+            {
+                HandlePlayerDefeat();
+                break;
+            }
+
+            Console.WriteLine("아무키나 누르세요...");
+            Console.ReadKey();
+        }
+    }
+
+    private void ShowMonsterStatus(int random)
+    {
+        for (int i = 0; i < random; i++)
+        {
+            if (!battleMonster[i].IsAlive())
+                ConsoleUtility.PrintTextDeath("", $"[{i + 1}] Lv.{battleMonster[i].Level} {battleMonster[i].Name} HP {battleMonster[i].CurrentHp}");
+            else
+                Console.WriteLine($"[{i + 1}] Lv.{battleMonster[i].Level} {battleMonster[i].Name} HP {battleMonster[i].CurrentHp}");
+        }
+        Console.WriteLine();
+    }
+
+    private void ShowPlayerStatus()
+    {
+        Console.WriteLine("[내정보]");
+        Console.WriteLine($"Lv.{player.Level}  {player.Name}({player.Job})");
+        Console.WriteLine($"HP {player.CurrentHp} / {player.MaxHp}");
+        Console.WriteLine();
+    }
+
+    private int GetPlayerChoice(int random)
+    {
+        return ConsoleUtility.PromotMenuChoice(1, random);
+    }
+
+    private bool ValidateMonsterChoice(int selectedMonsterIndex)
+    {
+        if (!battleMonster[selectedMonsterIndex].IsAlive())
+        {
+            Console.WriteLine("선택한 몬스터가 이미 죽었습니다. 다른 몬스터를 선택하세요.");
+            Console.ReadKey();
+            return false;
+        }
+        return true;
+    }
+
+    private void PlayerAttack(Monster selectedMonster)
+    {
+        Console.WriteLine();
+        ConsoleUtility.PrintTextHighlights("", $"{player.Name}가 공격!");
+
+        if (IsCriticalHit())
+            InflictCriticalDamage(selectedMonster);
+        else
+            InflictRegularDamage(selectedMonster);
+
+        if (!selectedMonster.IsAlive())
+        {
+            HandleMonsterDefeat(selectedMonster);
+        }
+        Thread.Sleep(1000);
+    }
+
+    private bool IsCriticalHit()
+    {
+        return battleRandom.Next(100) < 15;
+    }
+
+    private void InflictCriticalDamage(Monster selectedMonster)
+    {
+        int criticalDamage = (int)(player.Atk * 1.6);
+        Console.WriteLine("치명타 발생! 추가 데미지를 가합니다.");
+        Console.WriteLine($"[데미지 : {criticalDamage}]");
+        selectedMonster.MonterTakeDamage(criticalDamage);
+    }
+
+    private void InflictRegularDamage(Monster selectedMonster)
+    {
+        Console.WriteLine($"[데미지 : {player.Atk}]");
+        selectedMonster.MonterTakeDamage(player.Atk);
+    }
+
+    private void HandleMonsterDefeat(Monster selectedMonster)
+    {
+        Console.WriteLine($"몬스터 {selectedMonster.Name}를 물리쳤습니다!");
+        Console.WriteLine($"경험치 {selectedMonster.Exp}를 얻었습니다!");
+        player.GetExp(selectedMonster.Exp);
+        player.LevelUp();
+
+        MonsterDied(selectedMonster);
+
+        ConsoleUtility.PrintTextHighlights("경험치 :", $"{player.CurrentExp}/{player.MaxExp}".ToString());
+    }
+
+    private bool CheckAllMonstersDead()
+    {
+        foreach (var monster in battleMonster)
+        {
+            if (monster.IsAlive())
+                return false;
+        }
+        return true;
+    }
+
+    private void HandleAllMonstersDefeat()
+    {
+        Console.WriteLine();
+        Console.WriteLine("모든 몬스터를 물리쳤습니다.");
+
+        ResetMonsters();
+
+        Thread.Sleep(1000);
+        Console.WriteLine("아무키나 누르세요...");
+        Console.ReadKey();
+    }
+
+    private void MonsterAttack()
+    {
+        Console.WriteLine();
+        Console.WriteLine("몬스터 차례");
+
+        foreach (Monster m in battleMonster)
+        {
+            if (m.IsAlive())
+            {
+                if (IsPlayerEvaded())
                 {
-                    // 추가 효과가 발생한 경우
-                    int criticalDamage = (int)(attackDamage * 1.6); // 160%의 데미지
-                    Console.WriteLine("치명타 발생! 추가 데미지를 가합니다.");
-                    Console.WriteLine($"[데미지 : {criticalDamage}]");
-                    selectedMonster.MonterTakeDamage(criticalDamage);
+                    Console.WriteLine("회피!");
+                    Console.WriteLine($"{player.Name}이(가) 공격을 회피했습니다.");
                 }
                 else
                 {
-                    // 추가 효과가 발생하지 않은 경우
-                    Console.WriteLine($"[데미지 : {attackDamage}]");
-                    selectedMonster.MonterTakeDamage(attackDamage);
-                }
-                Console.WriteLine($"몬스터 {selectedMonster.Name}의 HP: {selectedMonster.CurrentHp}");
+                    ConsoleUtility.PrintTextHighlights("", $"{m.Name}이(가) 공격합니다!");
 
-                if (!selectedMonster.IsAlive())
-                {
-                    Console.WriteLine($"몬스터 {selectedMonster.Name}를 물리쳤습니다!");
-                    Console.WriteLine($"경험치 {selectedMonster.Exp}를 얻었습니다!");
-                    player.GetExp(selectedMonster.Exp);
-                    player.LevelUp();
-
-                    MonsterDied(selectedMonster);
-
-                    ConsoleUtility.PrintTextHighlights("경험치 :", $"{player.CurrentExp}/{player.MaxExp}".ToString());
-                }
-            }
-
-            bool allMonstersDead = true;
-            foreach (var monster in battleMonster)
-            {
-                if (monster.IsAlive())
-                {
-                    allMonstersDead = false;
-                    break;
-                }
-            }
-
-            //플레이어 승리
-            if (allMonstersDead)
-            {
-                ShowResultMenu(random);
-            }
-
-            // 몬스터의 공격차례
-            Thread.Sleep(1000);
-            Console.WriteLine();
-            Console.WriteLine("몬스터 차례");
-
-            foreach (Monster m in battleMonster)
-            {
-                if (m.IsAlive())
-                {
-                    double mminAtk = Math.Ceiling(m.Atk * 0.9); // 최소 공격력
-                    double mmaxAtk = Math.Ceiling(m.Atk * 1.1); // 최대 공격력
-
-                    if (battleRandom.Next(100) < 10)
-                    {
-                        Console.WriteLine("회피!");
-                        Console.WriteLine($"{player.Name}이(가) 공격을 회피했습니다.");
-                    }
+                    if (IsMonsterCriticalHit())
+                        InflictMonsterCriticalDamage(m);
                     else
-                    {
-                        int mattackDamage = battleRandom.Next((int)mminAtk, (int)mmaxAtk); // 최소에서 최대 사이의 랜덤한 값을 선택
+                        InflictMonsterRegularDamage(m);
 
-                        ConsoleUtility.PrintTextHighlights("", $"{m.Name}이(가) 공격합니다!");
-
-                        if (battleRandom.Next(100) < 15)
-                        {
-                            // 추가 효과가 발생한 경우
-                            int criticalDamage = (int)(mattackDamage * 1.6); // 160%의 데미지
-                            Console.WriteLine("치명타 발생! 추가 피해를 입었습니다.");
-                            Console.WriteLine($"[데미지 : {criticalDamage}]");
-                            player.PlayerTakeDamage(criticalDamage);
-                        }
-                        else
-                        {
-                            Console.WriteLine($"[데미지 : {mattackDamage}]");
-                            player.PlayerTakeDamage(mattackDamage);
-                        }
-
-                        Console.WriteLine($"{player.Name}의 HP: {player.CurrentHp}");
-                        Console.WriteLine();
-                        Thread.Sleep(1000);
-                    }
+                    ShowPlayerHpAfterMonsterAttack();
                 }
             }
-
-
-            Console.WriteLine("아무키나 누르세요...");
-            Console.ReadLine();
-
-            //플레이어 패배
-            if (!player.IsAlive())
-            {
-                Console.WriteLine("전투에서 패배했습니다.");
-                Console.WriteLine("마을로 돌아갑니다.");
-
-                foreach (var monster in battleMonster)
-                {
-                    monster.Reset();
-                }
-                player.InTower = false;
-                player.playerdefeat();
-
-                //골드값 0미만으로 떨어지지 않게 Player에서 조정한 후
-                //골드를 일정값 빼주는 메서드 작성
-
-                Thread.Sleep(1000);
-                Console.ReadKey();
-                MainMenu();
-            }
-
         }
     }
+
+    private bool IsPlayerEvaded()
+    {
+        return battleRandom.Next(100) < 10;
+    }
+
+    private bool IsMonsterCriticalHit()
+    {
+        return battleRandom.Next(100) < 15;
+    }
+
+    private void InflictMonsterCriticalDamage(Monster monster)
+    {
+        int criticalDamage = (int)(monster.Atk * 1.6);
+        Console.WriteLine("치명타 발생! 추가 피해를 입었습니다.");
+        Console.WriteLine($"[데미지 : {criticalDamage}]");
+        player.PlayerTakeDamage(criticalDamage);
+    }
+
+    private void InflictMonsterRegularDamage(Monster monster)
+    {
+        Console.WriteLine($"[데미지 : {monster.Atk}]");
+        player.PlayerTakeDamage(monster.Atk);
+    }
+
+    private void ShowPlayerHpAfterMonsterAttack()
+    {
+        Console.WriteLine($"{player.Name}의 HP: {player.CurrentHp}");
+        Console.WriteLine();
+        Thread.Sleep(1000);
+    }
+
+    private void HandlePlayerDefeat()
+    {
+        Console.WriteLine("전투에서 패배했습니다.");
+        Console.WriteLine("마을로 돌아갑니다.");
+
+        ResetMonsters();
+        player.InTower = false;
+        player.PlayerDefeat();
+
+        Thread.Sleep(1000);
+        Console.ReadKey();
+        MainMenu();
+    }
+
+    private void ResetMonsters()
+    {
+        foreach (var monster in battleMonster)
+        {
+            monster.Reset();
+        }
+    }
+
 
     // 몬스터가 죽었을 때 호출되는 메서드
     private void MonsterDied(Monster selectedMonster)
@@ -593,7 +652,7 @@ public class GameManager
 
         if (potionIndex != -1)
         {
-            if (battleRandom.Next(100) < 20) //확률적으로 아이템을 드랍함
+            if (battleRandom.Next(100) < 101) //확률적으로 아이템을 드랍함
             {
                 Potion droppedItem = potion[potionIndex].ClonePotion();
                 potionReward.Add(droppedItem);
@@ -604,18 +663,6 @@ public class GameManager
 
     private void ShowResultMenu(int random)
     {
-        Console.WriteLine();
-        Console.WriteLine("모든 몬스터를 물리쳤습니다.");
-
-        foreach (var monster in battleMonster)
-        {
-            monster.Reset();
-        }
-
-        Thread.Sleep(1000);
-        Console.WriteLine("아무키나 누르세요...");
-        Console.ReadKey();
-
         Console.Clear();
         ConsoleUtility.ShowTitle("■ 전투 결과 ■");
         Console.WriteLine();
