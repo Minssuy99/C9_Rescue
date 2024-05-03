@@ -8,6 +8,45 @@ using Newtonsoft.Json;
 
 public partial class GameManager
 {
+    private void BattleManu(int max)
+    {
+        Console.Clear();
+        ConsoleUtility.ShowTitle("■ Battle!! ■");
+        Console.WriteLine();
+        // 전투돌입할때마다 초기화
+        battleMonster.Clear();
+        Random rand = new();
+        int random = rand.Next(max - 2, max);
+        for (int i = 0; i < random; i++)
+        {
+            while (true)
+            {
+                Monster randomMonster = GetRandomMonster();
+                if (!battleMonster.Contains(randomMonster))
+                {
+                    battleMonster.Add(randomMonster);
+                    Console.WriteLine($"Lv.{battleMonster[i].Level} {battleMonster[i].Name} HP {battleMonster[i].CurrentHp}");
+                    break;
+                }
+            }
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("[내정보]");
+        Console.WriteLine($"Lv.{player.Level}  {player.Name}({player.Job})");
+        Console.WriteLine($"HP {player.CurrentHp} / {player.MaxHp}");
+        Console.WriteLine();
+        Console.WriteLine("1. 공격");
+        Console.WriteLine();
+
+        int choice = ConsoleUtility.PromotMenuChoice(1, 1);
+
+        if (choice == 1)
+        {
+            StartBattle(random);
+        }
+    }
+
     private void StartBattle(int random)
     {
         while (true)
@@ -120,5 +159,31 @@ public partial class GameManager
                 break;
         }
         MainMenu();
+    }
+
+    private void DungeonChoiceMenu()
+    {
+        Console.Clear();
+        foreach (Dungeon dungeon in dungeons)
+        {
+            dungeon.PrintDungeon();
+        }
+        ConsoleUtility.PrintTextHighlights("", "4. ", "타워던전");
+        ConsoleUtility.PrintTextHighlights("", "0. ", "나가기");
+        int choice = ConsoleUtility.PromotMenuChoice(0, 4);
+        switch (choice)
+        {
+            case 0:
+                player.InTower = false;
+                MainMenu();
+                break;
+            case 4:
+                player.InTower = true;
+                DungeonMenu(player.NowDongeon);
+                break;
+            default:
+                DungeonMenu(dungeons[choice - 1].MaxMonster);
+                break;
+        }
     }
 }
