@@ -2,78 +2,43 @@
 
 internal class Monster
 {
-    private int level;
-    private string name;
-    private int hp;
-    private int atk;
-    private bool isLive;
-    public int Level { get => level; set => level = value; }
-    public string Name { get => name; set => name = value; }
-    public int Hp { get => hp; set => hp = value; }
-    public int Atk { get => atk; set => atk = value; }
-    public bool IsLive { get => isLive; set => isLive = value; }
+    public string Name { get; }
+    public int Level { get; }
+    public int Atk { get; }
+    public int Def { get; }
+    public int MaxHp { get; }
+    public float CurrentHp { get; private set; }
+    public int Exp { get; }
+    public string DropItem { get; }
+    public bool IsDead { get; private set; }
 
-    public Monster(int num)
+    public Monster(string name, int level, int atk, int def, int maxHp, int currentHp, int exp, string dropItem , bool isdead = false)
     {
-        switch (num)
-        {        
-            case 0:
-                level = 2;name = "미니언";hp = 15;atk = 5;isLive = true;
-                break;
-            case 1: 
-                level = 3;name = "공허충";hp = 10;atk = 9;isLive = true;
-                break;
-            case 2:
-                level = 5; name = "대포미니언"; hp = 25; atk = 8; isLive = true;
-                break;
-        }
+        Name = name;
+        Level = level;
+        Atk = atk;
+        Def = def;
+        MaxHp = maxHp;
+        CurrentHp = currentHp;
+        Exp = exp;
+        DropItem = dropItem;
+        IsDead = isdead;
     }
 
-    internal void PrintMonsterInfo(bool fight = false, int idx = 0)
+    public void MonterTakeDamage(float damage)
     {
-        if (fight)
-        {
-            Console.Write($"{idx}. ");
-        }
-        if (isLive)
-        {
-            ConsoleUtility.PrintTextHighlights("Lv", level.ToString(), name);
-            ConsoleUtility.PrintTextHighlights("HP ", hp.ToString());
-        }
-        else
-        {
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            ConsoleUtility.PrintTextHighlights("Lv", level.ToString(), name);
-            Console.Write("Dead");
-        }
-
-        Console.WriteLine();
-    }
-    public bool CorrectMonster()
-    {
-        return true;
+        CurrentHp -= damage;
+        if (CurrentHp < 0)
+            CurrentHp = 0;
     }
 
-    internal void MonsterPhase(Player player)
+    public bool IsAlive()
     {
-        Console.Clear();
-        ConsoleUtility.PrintTextHighlights("", "Battle!");
-        Console.WriteLine("\n");
-        ConsoleUtility.PrintTextHighlights("Lv.",level.ToString());
-        ConsoleUtility.PrintTextHighlights($"{name} 의 공격", "!");
-        Console.WriteLine();
-        ConsoleUtility.PrintTextHighlights($"{player.Name} 을(를) 맞췄습니다.   [데미지 : ", atk.ToString(), "]");
-        Console.WriteLine("\n\n");
-        ConsoleUtility.PrintTextHighlights("Lv.", player.Level.ToString(),player.Name);
-        Console.WriteLine();
-        ConsoleUtility.PrintTextHighlights("HP ", $"{player.Hp} -> {player.Hp -= atk}");
-        Console.WriteLine("\n");
-        ConsoleUtility.PrintTextHighlights("", "0. ", "다음");
-        Console.WriteLine("\n");
-        Console.WriteLine("대상을 선택해주세요.");
+        return CurrentHp > 0;
+    }
 
-        switch(ConsoleUtility.PromotMenuChoice(0, 0)){
-            case 0:break;
-        }
+    public void Reset()
+    {
+        CurrentHp = MaxHp;
     }
 }
