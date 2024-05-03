@@ -1014,21 +1014,15 @@ public class GameManager
         Console.WriteLine("0. 뒤로가기");
         Console.WriteLine();
 
-
-        switch (ConsoleUtility.PromotMenuChoice(0, 3))
+        int choice = ConsoleUtility.PromotMenuChoice(0, quest.Count+1);
+        switch (choice)
         {
             case 0:
                 MainMenu();
                 break;
-            case 1:
-                PrintQuestDetails(0);
-                break;
-            case 2:
-                CheckQuestCompletion(1, 3,"낡은검");
-                PrintQuestDetails(1);
-                break;
-            case 3:
-                PrintQuestDetails(2);
+            default:
+                CheckQuestCompletion(choice - 1, "낡은 검");
+                PrintQuestDetails(choice-1);
                 break;
         }
         MainMenu();
@@ -1145,7 +1139,7 @@ public class GameManager
                 QuestMenu();
             }
         }
-    private void CheckQuestCompletion(int questidx, int itemidx,string itemName)
+    private void CheckQuestCompletion(int questidx,string itemName)
     {
         if (quest[questidx].IsAccepted == true)
         {
