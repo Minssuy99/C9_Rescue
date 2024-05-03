@@ -125,7 +125,7 @@ public class GameManager
                 StatusMenu(); //상태보기
                 break;
             case 2:
-                InventoryMenu(); //인벤토리
+                InventoryMenu(MainMenu); //인벤토리
                 break;
             case 3:
                 StoreMenu(); //상점
@@ -444,6 +444,9 @@ public class GameManager
             Console.WriteLine();
             ConsoleUtility.PrintTextHighlights("", $"{player.Name}가 공격!");
 
+            double minAtk = Math.Ceiling(player.Atk * 0.9); // 최소 공격력
+            double maxAtk = Math.Ceiling(player.Atk * 1.1); // 최대 공격력
+
             if (battleRandom.Next(100) < 10)
             {
                 Console.WriteLine("회피!");
@@ -451,10 +454,12 @@ public class GameManager
             }
             else
             {
+                int attackDamage = battleRandom.Next((int)minAtk, (int)maxAtk); // 최소에서 최대 사이의 랜덤한 값을 선택
+
                 if (battleRandom.Next(100) < 15)
                 {
                     // 추가 효과가 발생한 경우
-                    int criticalDamage = (int)(player.Atk * 1.6); // 160%의 데미지
+                    int criticalDamage = (int)(attackDamage * 1.6); // 160%의 데미지
                     Console.WriteLine("치명타 발생! 추가 데미지를 가합니다.");
                     Console.WriteLine($"[데미지 : {criticalDamage}]");
                     selectedMonster.MonterTakeDamage(criticalDamage);
@@ -462,8 +467,8 @@ public class GameManager
                 else
                 {
                     // 추가 효과가 발생하지 않은 경우
-                    Console.WriteLine($"[데미지 : {player.Atk}]");
-                    selectedMonster.MonterTakeDamage(player.Atk);
+                    Console.WriteLine($"[데미지 : {attackDamage}]");
+                    selectedMonster.MonterTakeDamage(attackDamage);
                 }
                 Console.WriteLine($"몬스터 {selectedMonster.Name}의 HP: {selectedMonster.CurrentHp}");
 
@@ -505,6 +510,9 @@ public class GameManager
             {
                 if (m.IsAlive())
                 {
+                    double mminAtk = Math.Ceiling(m.Atk * 0.9); // 최소 공격력
+                    double mmaxAtk = Math.Ceiling(m.Atk * 1.1); // 최대 공격력
+
                     if (battleRandom.Next(100) < 10)
                     {
                         Console.WriteLine("회피!");
@@ -512,20 +520,22 @@ public class GameManager
                     }
                     else
                     {
+                        int mattackDamage = battleRandom.Next((int)mminAtk, (int)mmaxAtk); // 최소에서 최대 사이의 랜덤한 값을 선택
+
                         ConsoleUtility.PrintTextHighlights("", $"{m.Name}이(가) 공격합니다!");
 
                         if (battleRandom.Next(100) < 15)
                         {
                             // 추가 효과가 발생한 경우
-                            int criticalDamage = (int)(m.Atk * 1.6); // 160%의 데미지
+                            int criticalDamage = (int)(mattackDamage * 1.6); // 160%의 데미지
                             Console.WriteLine("치명타 발생! 추가 피해를 입었습니다.");
                             Console.WriteLine($"[데미지 : {criticalDamage}]");
                             player.PlayerTakeDamage(criticalDamage);
                         }
                         else
                         {
-                            Console.WriteLine($"[데미지 : {m.Atk}]");
-                            player.PlayerTakeDamage(m.Atk);
+                            Console.WriteLine($"[데미지 : {mattackDamage}]");
+                            player.PlayerTakeDamage(mattackDamage);
                         }
 
                         Console.WriteLine($"{player.Name}의 HP: {player.CurrentHp}");
@@ -583,7 +593,7 @@ public class GameManager
 
         if (potionIndex != -1)
         {
-            if (battleRandom.Next(100) < 101) //확률적으로 아이템을 드랍함
+            if (battleRandom.Next(100) < 20) //확률적으로 아이템을 드랍함
             {
                 Potion droppedItem = potion[potionIndex].ClonePotion();
                 potionReward.Add(droppedItem);
@@ -724,7 +734,7 @@ public class GameManager
         }
     }
 
-    private void InventoryMenu()
+    private void InventoryMenu(Action returnToPreviousMenu)
     {
         Console.Clear();
 
@@ -751,7 +761,7 @@ public class GameManager
         switch (ConsoleUtility.PromotMenuChoice(0, 2))
         {
             case 0:
-                MainMenu();
+                returnToPreviousMenu();
                 break;
             case 1:
                 EquipMenu();
@@ -785,7 +795,7 @@ public class GameManager
         switch (keyInput)
         {
             case 0:
-                InventoryMenu();
+                InventoryMenu(ItemMenu);
                 break;
             default:
                 if (potioninventory[keyInput - 1].Count > 0) //포션이 1개 이상 있을때
@@ -829,7 +839,7 @@ public class GameManager
         switch (keyInput)
         {
             case 0:
-                InventoryMenu();
+                InventoryMenu(EquipMenu);
                 break;
             default:
                 inventory[keyInput - 1].ToggleEquipStates(inventory, player, keyInput);
