@@ -324,7 +324,6 @@ public class GameManager
                     Console.WriteLine("안돼 돌아가");
                     dataBase.SavePlayer(player);
                     Console.ReadKey();
-
                 }
                 else
                 {
@@ -334,7 +333,6 @@ public class GameManager
                 }
                 break;
         }
-
     }
 
     private void DungeonMenu(int max)
@@ -530,14 +528,25 @@ public class GameManager
         Console.WriteLine();
         ConsoleUtility.PrintTextHighlights("", $"{player.Name}가 공격!");
 
-        if (IsCriticalHit())
-            InflictCriticalDamage(selectedMonster);
-        else
-            InflictRegularDamage(selectedMonster);
-
-        if (!selectedMonster.IsAlive())
+        double minAtk = Math.Ceiling(player.Atk * 0.9); // 최소 공격력 (원래 공격력의 90%)
+        double maxAtk = Math.Ceiling(player.Atk * 1.1); // 최대 공격력 (원래 공격력의 110%)
+        if (battleRandom.Next(100) < 10)
         {
-            HandleMonsterDefeat(selectedMonster);
+            Console.WriteLine("회피!");
+            Console.WriteLine($"몬스터 {selectedMonster.Name}이(가) 공격을 회피했습니다.");
+        }
+        else
+        {
+            int attackDamage = battleRandom.Next((int)minAtk, (int)maxAtk);
+            if (IsCriticalHit())
+                InflictCriticalDamage(selectedMonster, attackDamage);
+            else
+                InflictRegularDamage(selectedMonster, attackDamage);
+
+            if (!selectedMonster.IsAlive())
+            {
+                HandleMonsterDefeat(selectedMonster);
+            }
         }
         Thread.Sleep(1000);
     }
@@ -547,18 +556,18 @@ public class GameManager
         return battleRandom.Next(100) < 15;
     }
 
-    private void InflictCriticalDamage(Monster selectedMonster)
+    private void InflictCriticalDamage(Monster selectedMonster, int attackDamage)
     {
-        int criticalDamage = (int)(player.Atk * 1.6);
+        int criticalDamage = (int)(attackDamage * 1.6);
         Console.WriteLine("치명타 발생! 추가 데미지를 가합니다.");
         Console.WriteLine($"[데미지 : {criticalDamage}]");
         selectedMonster.MonterTakeDamage(criticalDamage);
     }
 
-    private void InflictRegularDamage(Monster selectedMonster)
+    private void InflictRegularDamage(Monster selectedMonster, int attackDamage)
     {
-        Console.WriteLine($"[데미지 : {player.Atk}]");
-        selectedMonster.MonterTakeDamage(player.Atk);
+        Console.WriteLine($"[데미지 : {attackDamage}]");
+        selectedMonster.MonterTakeDamage(attackDamage);
     }
 
     private void HandleMonsterDefeat(Monster selectedMonster)
@@ -600,6 +609,9 @@ public class GameManager
         Console.WriteLine();
         Console.WriteLine("몬스터 차례");
 
+        double mminAtk = Math.Ceiling(player.Atk * 0.9); // 최소 공격력 (원래 공격력의 90%)
+        double mmaxAtk = Math.Ceiling(player.Atk * 1.1); // 최대 공격력 (원래 공격력의 110%)
+
         foreach (Monster m in battleMonster)
         {
             if (m.IsAlive())
@@ -611,12 +623,14 @@ public class GameManager
                 }
                 else
                 {
+                    int attackDamage = battleRandom.Next((int)mminAtk, (int)mmaxAtk);
+
                     ConsoleUtility.PrintTextHighlights("", $"{m.Name}이(가) 공격합니다!");
 
                     if (IsMonsterCriticalHit())
-                        InflictMonsterCriticalDamage(m);
+                        InflictMonsterCriticalDamage(m, attackDamage);
                     else
-                        InflictMonsterRegularDamage(m);
+                        InflictMonsterRegularDamage(m, attackDamage);
 
                     ShowPlayerHpAfterMonsterAttack();
                 }
@@ -634,18 +648,18 @@ public class GameManager
         return battleRandom.Next(100) < 15;
     }
 
-    private void InflictMonsterCriticalDamage(Monster monster)
+    private void InflictMonsterCriticalDamage(Monster monster, int attackDamage)
     {
-        int criticalDamage = (int)(monster.Atk * 1.6);
+        int criticalDamage = (int)(attackDamage * 1.6);
         Console.WriteLine("치명타 발생! 추가 피해를 입었습니다.");
         Console.WriteLine($"[데미지 : {criticalDamage}]");
         player.PlayerTakeDamage(criticalDamage);
     }
 
-    private void InflictMonsterRegularDamage(Monster monster)
+    private void InflictMonsterRegularDamage(Monster monster, int attackDamage)
     {
-        Console.WriteLine($"[데미지 : {monster.Atk}]");
-        player.PlayerTakeDamage(monster.Atk);
+        Console.WriteLine($"[데미지 : {attackDamage}]");
+        player.PlayerTakeDamage(attackDamage);
     }
 
     private void ShowPlayerHpAfterMonsterAttack()
@@ -1209,7 +1223,6 @@ public class GameManager
         }
         QuestMenu();
     }
-
 }
 
 public class Program
