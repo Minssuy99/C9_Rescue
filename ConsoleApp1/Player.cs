@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-internal class Player
+public class Player
 {
     public List<Item> Items {  get;  set; }
     public string Name { get; set; }
