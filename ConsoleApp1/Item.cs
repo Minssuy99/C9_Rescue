@@ -118,7 +118,8 @@ public class Item
             Console.Write($"{idx}");
             Console.ResetColor();
         }
-        else Console.Write(ConsoleUtility.PadRightForMixedText(Name, 19));
+
+        Console.Write(ConsoleUtility.PadRightForMixedText(Name, 19));
 
         Console.Write(" | ");
 
