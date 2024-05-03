@@ -69,8 +69,8 @@ public class GameManager
         quest.Add(new Quest("장비를 장착해보자",
                             "어떤 장비를 장착하느냐에 따라 모험가의 전투력이 크게 달라질 수 있다네.\n" +
                             "어서 장비를 장착해보도록 하게!",
-                            "장비 1개 장착",
-                            "포션 x 3", 10));
+                            "상점에서 [낡은 검] 구입 후 장착",
+                            "수련자 갑옷", 10));
 
         quest.Add(new Quest("더욱 더 강해지기!",
                             "모험가여, 당신의 모험은 아직 끝나지 않았다." +
@@ -1028,12 +1028,19 @@ public class GameManager
         MainMenu();
     }
 
-    private void PrintQuestDetails(int idx)
+    private void PrintQuestDetails(int questidx)
     {
         Console.Clear();
         ConsoleUtility.ShowTitle("■ 퀘스트 세부내용 ■");
+        if (quest[questidx].IsAccepted == true)
+        {
+            Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("[진행중]");
+            Console.ResetColor();
+        }
         Console.WriteLine();
-        Console.WriteLine($"~ {quest[idx].Title} ~");
+        Console.WriteLine($"~ {quest[questidx].Title} ~");
         Console.WriteLine();
 
 
@@ -1041,40 +1048,58 @@ public class GameManager
         Console.WriteLine("[ 퀘스트 주요내용 ]");
         Console.ResetColor();
 
-        Console.WriteLine(quest[idx].Description);
+        Console.WriteLine(quest[questidx].Description);
         Console.WriteLine();
 
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("[ 퀘스트 요약 ]");
         Console.ResetColor();
 
-        Console.WriteLine(quest[idx].Summary);
+        Console.WriteLine(quest[questidx].Summary);
         Console.WriteLine();
 
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.WriteLine("[ 보상 ]");
         Console.ResetColor();
 
-        Console.WriteLine(quest[idx].RewardItem);
-        Console.WriteLine(quest[idx].RewardGold + " G");
-        Console.WriteLine();
-        Console.WriteLine("1. 수락하기");
-        Console.WriteLine("2. 거절하기");
+        Console.WriteLine(quest[questidx].RewardItem);
+        Console.WriteLine(quest[questidx].RewardGold + " G");
         Console.WriteLine();
 
-        switch (ConsoleUtility.PromotMenuChoice(1, 2))
+        if (quest[questidx].IsAccepted == true)
         {
+            Console.WriteLine("1. 거절하기");
+            Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine();
+            switch (ConsoleUtility.PromotMenuChoice(0, 1))
+            {
+                case 0:
+                    QuestMenu();
+                    break;
+                case 1:
+                    quest[questidx].IsAccepted = false;
+                    PrintQuestDetails(questidx);
+                    break;
+            }
+            QuestMenu();
+        }
+        Console.WriteLine("1. 수락하기");
+        Console.WriteLine("0. 뒤로가기");
+        Console.WriteLine();
+
+        switch (ConsoleUtility.PromotMenuChoice(0, 1))
+        {
+            case 0:
+                QuestMenu();
+                break;
             case 1:
-                Console.WriteLine();
-                Console.WriteLine("미구현 입니다. 아무 키를 눌러 이전화면으로 돌아갈 수 있습니다.");
+                quest[questidx].IsAccepted = true;
+                PrintQuestDetails(questidx);
                 Console.ReadKey();
                 QuestMenu();
                 break;
-            case 2:
-                QuestMenu();
-                break;
         }
-        MainMenu();
+        QuestMenu();
     }
 
 }

@@ -5,9 +5,11 @@ internal class Quest
     public string Summary { get; }
     public string RewardItem { get; }
     public int RewardGold { get; }
-    public bool IsAccepted { get; }
+    public bool IsAccepted { get; set; }
+    public bool IsCompeleted { get; set; }
 
-    public Quest(string title, string description, string summary, string rewardItem, int rewardGold, bool isAccepted = false)
+    public Quest(string title, string description, string summary, string rewardItem,
+                                             int rewardGold, bool isAccepted = false, bool isCompleted = false)
     {
         Title = title;
         Description = description;
@@ -15,6 +17,7 @@ internal class Quest
         RewardItem = rewardItem;
         RewardGold = rewardGold;
         IsAccepted = isAccepted;
+        IsCompeleted = isCompleted;
     }
 
 }
