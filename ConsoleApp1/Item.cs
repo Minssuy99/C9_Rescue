@@ -46,7 +46,12 @@ internal class Item
         return clone;
     }
 
-    //
+    public Item CloneItem()
+    {
+        Item clone = new Item(Name, Desc, Type, Atk, Def, Hp, Price, IsEquipped = false, IsPurchased = false);
+        return clone;
+    }
+
     internal void PrintItemStatDescription(bool withNumber = false, int idx = 0)
     {
         Console.Write("- ");
@@ -78,11 +83,11 @@ internal class Item
         Console.WriteLine(Desc);
     }
 
-    internal void ToggleEquipStates(List<Item> inventory)
+    internal void ToggleEquipStates(List<Item> inventory, Player player, int keyInput)
     {
         if (!IsEquipped)
         {
-                     // 동일한 ItemType을 가진 이미 장착된 아이템이 있는지 검사
+            // 동일한 ItemType을 가진 이미 장착된 아이템이 있는지 검사
             bool canEquip = true;
             foreach (var equippedItem in inventory.Where(item => item.IsEquipped && item.Type == Type))
             {
@@ -90,9 +95,11 @@ internal class Item
                 break;
             }
 
-                      // 동일한 ItemType을 가진 이미 장착된 아이템이 없으면 장착 가능
+            // 동일한 ItemType을 가진 이미 장착된 아이템이 없으면 장착 가능
             if (canEquip)
             {
+                player.Atk += inventory[keyInput - 1].Atk;
+                player.Def += inventory[keyInput - 1].Def;
                 IsEquipped = true;
             }
             else
@@ -102,6 +109,8 @@ internal class Item
         }
         else
         {
+            player.Atk -= inventory[keyInput - 1].Atk;
+            player.Def -= inventory[keyInput - 1].Def;
             IsEquipped = false;
         }
     }
@@ -135,7 +144,6 @@ internal class Item
         else
         {
             ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
-            Console.WriteLine();
         }
     }
 

@@ -36,32 +36,6 @@ internal class ConsoleUtility
             Console.WriteLine("잘못된 입력입니다. 다시 시도해주세요.");
         }
     }
-    public static int PromotMenuChoice(int min, int max, Monster[] temporaries)
-    {
-        while (true)
-        {
-            Console.Write("원하시는 번호를 입력해주세요.");
-            if (int.TryParse(Console.ReadLine(), out int choice) && choice >= min && choice <= max)
-            {
-                if (choice == 0)
-                {
-                    return choice;
-                }else if (temporaries[choice - 1].IsLive)
-                {
-                    return choice;
-                }
-                else
-                {
-                    Console.WriteLine("죽은 몬스터는 공격할 수 없습니다.");
-                }
-
-            }
-            else
-            {
-                Console.WriteLine("잘못된 입력입니다. 다시 시도해주세요.");
-            }
-        }
-    }
 
     internal static void ShowTitle(string title) //제목 강조
     {
@@ -76,7 +50,16 @@ internal class ConsoleUtility
         Console.ForegroundColor = ConsoleColor.Yellow;
         Console.Write(s2); //s2를 강조함
         Console.ResetColor();
-        Console.Write(s3);
+        Console.WriteLine(s3);
+    }
+
+    public static void PrintTextDeath(string s1, string s2, string s3 = "") //s2를 강조하는 함수
+    {
+        Console.Write(s1);
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        Console.Write(s2); //s2를 강조함
+        Console.ResetColor();
+        Console.WriteLine(s3);
     }
 
     public static int GetPrintableLength(string str)
@@ -102,5 +85,14 @@ internal class ConsoleUtility
         int currentLength = GetPrintableLength(str);
         int padding = totalLength - currentLength;
         return str.PadRight(str.Length + padding); //PadRight 공간을 공백으로 채워준다
+    }
+
+    public static void MakeSentence(string sentence)
+    {
+        for (int i = 0; i < sentence.Length; i++)
+        {
+            Console.Write(sentence[i]);
+            Thread.Sleep(100);
+        }
     }
 }
