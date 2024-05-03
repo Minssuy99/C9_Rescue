@@ -1,5 +1,7 @@
 internal class Quest
 {
+
+
     public string Title { get; }
     public string Description { get; }
     public string Summary { get; }

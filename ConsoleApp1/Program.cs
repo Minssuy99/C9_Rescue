@@ -1024,6 +1024,7 @@ public class GameManager
                 PrintQuestDetails(0);
                 break;
             case 2:
+                CheckQuestCompletion(1, 3);
                 PrintQuestDetails(1);
                 break;
             case 3:
@@ -1039,10 +1040,20 @@ public class GameManager
         ConsoleUtility.ShowTitle("■ 퀘스트 세부내용 ■");
         if (quest[questidx].IsAccepted == true)
         {
-            Console.WriteLine();
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("[진행중]");
-            Console.ResetColor();
+            if (quest[questidx].IsCompeleted == false)
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("[진행중]");
+                Console.ResetColor();
+            }
+            else if (quest[questidx].IsCompeleted == true)
+            {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("[* 퀘스트 완료 *]");
+                Console.ResetColor();
+            }
         }
         Console.WriteLine();
         Console.WriteLine($"~ {quest[questidx].Title} ~");
@@ -1071,42 +1082,81 @@ public class GameManager
         Console.WriteLine(quest[questidx].RewardGold + " G");
         Console.WriteLine();
 
+        SelectQuestStatus(questidx);
+    }
+    private void SelectQuestStatus(int questidx)
+        {
+            if (quest[questidx].IsAccepted == true)
+            {
+                if (quest[questidx].IsCompeleted == true)
+                {
+                    Console.WriteLine("1. 보상받기");
+                    Console.WriteLine("0. 뒤로가기");
+                    Console.WriteLine();
+
+                    switch (ConsoleUtility.PromotMenuChoice(0, 1))
+                    {
+                        case 0:
+                            QuestMenu();
+                            break;
+                        case 1:
+                            Console.WriteLine("보상받기 미구현");
+                            Console.ReadKey();
+                            break;
+                    }
+                }
+                else if (quest[questidx].IsCompeleted == false)
+                {
+                    Console.WriteLine("1. 거절하기");
+                    Console.WriteLine("0. 뒤로가기");
+                    Console.WriteLine();
+
+                    switch (ConsoleUtility.PromotMenuChoice(0, 1))
+                    {
+                        case 0:
+                            QuestMenu();
+                            break;
+                        case 1:
+                            quest[questidx].IsAccepted = false;
+                            PrintQuestDetails(questidx);
+                            break;
+                    }
+                    QuestMenu();
+                }
+            }
+            else if (quest[questidx].IsAccepted == false)
+            {
+                Console.WriteLine("1. 수락하기");
+                Console.WriteLine("0. 뒤로가기");
+                Console.WriteLine();
+
+                switch (ConsoleUtility.PromotMenuChoice(0, 1))
+                {
+                    case 0:
+                        QuestMenu();
+                        break;
+                    case 1:
+                        quest[questidx].IsAccepted = true;
+                        PrintQuestDetails(questidx);
+                        Console.ReadKey();
+                        QuestMenu();
+                        break;
+                }
+                QuestMenu();
+            }
+        }
+    private void CheckQuestCompletion(int questidx, int itemidx)
+    {
         if (quest[questidx].IsAccepted == true)
         {
-            Console.WriteLine("1. 거절하기");
-            Console.WriteLine("0. 뒤로가기");
-            Console.WriteLine();
-            switch (ConsoleUtility.PromotMenuChoice(0, 1))
+            if (/*아이템 정보*/.IsEquipped == true)
             {
-                case 0:
-                    QuestMenu();
-                    break;
-                case 1:
-                    quest[questidx].IsAccepted = false;
-                    PrintQuestDetails(questidx);
-                    break;
-            }
-            QuestMenu();
-        }
-        Console.WriteLine("1. 수락하기");
-        Console.WriteLine("0. 뒤로가기");
-        Console.WriteLine();
-
-        switch (ConsoleUtility.PromotMenuChoice(0, 1))
-        {
-            case 0:
-                QuestMenu();
-                break;
-            case 1:
-                quest[questidx].IsAccepted = true;
-                PrintQuestDetails(questidx);
+                quest[questidx].IsCompeleted = true;
+                Console.WriteLine("퀘스트완료로 전환");
                 Console.ReadKey();
-                QuestMenu();
-                break;
+            }
         }
-        QuestMenu();
     }
-
 }
 
 public class Program

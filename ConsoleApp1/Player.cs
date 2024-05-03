@@ -15,6 +15,7 @@ internal class Player
     public int Gold { get; set; }
     public bool InTower { get; set; }
     public int NowDongeon { get; set; }
+
     public Player(string name, string job, int level, float atk, int def, int maxHp, int currentHp, int maxExp, int currentExp, int gold)
     {
         Name = name;
