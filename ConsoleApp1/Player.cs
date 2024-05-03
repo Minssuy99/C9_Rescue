@@ -12,7 +12,7 @@ internal class Player
     public int MaxExp { get; private set; }
     public int CurrentExp { get; private set; }
     public int Gold { get; set; }
-    public bool InTower {  get; set; }
+    public bool InTower { get; set; }
     public int NowDongeon { get; set; }
     public Player(string name, string job, int level, float atk, int def, int maxHp, int currentHp, int maxExp, int currentExp, int gold)
     {
@@ -36,8 +36,8 @@ internal class Player
         if (damage - Def < 0)
             dmg = 0;
         else
-            dmg=damage- Def;
-        CurrentHp -= rand.Next(dmg,damage+1);
+            dmg = damage - Def;
+        CurrentHp -= rand.Next(dmg, damage + 1);
         if (CurrentHp < 0)
             CurrentHp = 0;
     }
@@ -73,7 +73,7 @@ internal class Player
     }
     public Player PlayerCreate(Player player)
     {
-        
+
         Console.Clear();
         Console.WriteLine("스크립트 스킵 [K]");
         ConsoleUtility.MakeSentence("\n당신을 환영합니다!\n당신의 이름은 무엇인가요?");
