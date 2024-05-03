@@ -116,7 +116,7 @@ public class GameManager
         Console.WriteLine("7. 퀘스트");
         Console.WriteLine();
 
-        int choice = ConsoleUtility.PromotMenuChoice(1, 6);
+        int choice = ConsoleUtility.PromotMenuChoice(1, 7);
 
         switch (choice)
         {
@@ -285,7 +285,7 @@ public class GameManager
         Console.WriteLine("쉬고가겠나");
         ConsoleUtility.PrintTextHighlights("", "1. ", "500G를 지불하면 피를 회복합니다.");
         ConsoleUtility.PrintTextHighlights("", "0. ", "나가기");
-        int choice = ConsoleUtility.PromotMenuChoice(1, 5);
+        int choice = ConsoleUtility.PromotMenuChoice(0,1);
         switch (choice)
         {
             case 0:
