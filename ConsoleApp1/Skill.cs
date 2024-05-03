@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace ConsoleApp1
 {
@@ -16,54 +18,330 @@ namespace ConsoleApp1
     public enum SkillRangeType
     {
         DirectDamage = 0,
+
         AreaOfEffect = 1,
     }
-    internal class Skill
+    public class Skill
     {
         public string SkillName { get; }
         public string SkillInfo { get; }
         public SkillType SkillType { get; }
         public int SkillLevel { get; }
+        public int Damage { get; }
+        public SkillRangeType SkillRangeType { get; set; }
 
-        public SkillRangeType SkillRangeType { get; }
-
-        public Skill(string skillName,string skillInfo,SkillType skillType,int skillLevel,SkillRangeType skillRangeType)
+        public Skill(string skillName, string skillInfo, SkillType skillType, int skillLevel, int damage, SkillRangeType skillRangeType)
         {
             SkillName = skillName;
             SkillInfo = skillInfo;
             SkillType = skillType;
             SkillLevel = skillLevel;
             SkillRangeType = skillRangeType;
+            Damage = damage;
+            damage = SkillDamage(damage);
         }
-        public void SkillRange(SkillRangeType skillRangeType , Monster selectedMonster)
-        {
-            int i = (int)skillRangeType;
 
-            if (i % 3 == 0) 
+        public static void UseSkill(int random)
+        {
+            int cho1 = ConsoleUtility.PromotMenuChoice(1, GameManager.Instance.skills.Count);
+
+            int i = cho1 - 1;
+
+            if (GameManager.Instance.skills[i].SkillRangeType == SkillRangeType.DirectDamage)
             {
                 //단일기
-                selectedMonster.CurrentHp -= 0;
-                Console.WriteLine($"{selectedMonster.Name}에게 데미지!");
+                Console.WriteLine("스킬의 대상을 선택해주세요.");
+                int cho2 = ConsoleUtility.PromotMenuChoice(1, random);
+                int selectedMonsterIndex = cho2 - 1;
+
+                //이미 죽은 몬스터 구분
+                if (!GameManager.Instance.battleMonster[selectedMonsterIndex].IsAlive())
+                {
+                    Console.WriteLine("선택한 몬스터가 이미 죽었습니다. 다른 몬스터를 선택하세요.");
+                    Console.ReadKey();
+                }
+
+                Monster selectedMonster = GameManager.Instance.battleMonster[selectedMonsterIndex];
+
+                Console.WriteLine();
+                ConsoleUtility.PrintTextHighlights("", $"{GameManager.Instance.player.Name}가 공격!");
+
+                if (GameManager.Instance.battleRandom.Next(100) < 10)
+                {
+                    Console.WriteLine("회피!");
+                    Console.WriteLine($"몬스터 {selectedMonster.Name}이(가) 공격을 회피했습니다.");
+                }
+                else
+                {
+                    if (GameManager.Instance.battleRandom.Next(100) < 15)
+                    {
+                        // 추가 효과가 발생한 경우
+                        int criticalDamage = (int)(GameManager.Instance.player.Atk * 1.6); // 160%의 데미지
+                        Console.WriteLine("치명타 발생! 추가 데미지를 가합니다.");
+                        Console.WriteLine($"[데미지 : {criticalDamage}]");
+                        selectedMonster.MonterTakeDamage(criticalDamage);
+                    }
+                    else
+                    {
+                        // 추가 효과가 발생하지 않은 경우
+                        Console.WriteLine($"[데미지 : {GameManager.Instance.player.Atk}]");
+                        selectedMonster.MonterTakeDamage(GameManager.Instance.player.Atk);
+                    }
+                    Console.WriteLine($"몬스터 {selectedMonster.Name}의 HP: {selectedMonster.CurrentHp}");
+
+                    if (!selectedMonster.IsAlive())
+                    {
+                        Console.WriteLine($"몬스터 {selectedMonster.Name}를 물리쳤습니다!");
+                        Console.WriteLine($"경험치 {selectedMonster.Exp}를 얻었습니다!");
+                        GameManager.Instance.player.GetExp(selectedMonster.Exp);
+                        GameManager.Instance.player.LevelUp();
+
+                        GameManager.Instance.MonsterDied(selectedMonster);
+                        ConsoleUtility.PrintTextHighlights("경험치 :", $"{GameManager.Instance.player.CurrentExp}/{GameManager.Instance.player.MaxExp}".ToString());
+                    }
+                }
+
+                bool allMonstersDead = true;
+                foreach (var monster in GameManager.Instance.battleMonster)
+                {
+                    if (monster.IsAlive())
+                    {
+                        allMonstersDead = false;
+                        break;
+                    }
+                }
+
+                //플레이어 승리
+                if (allMonstersDead)
+                {
+                    GameManager.Instance.ShowResultMenu(random);
+                }
+
+                // 몬스터의 공격차례
+                Thread.Sleep(1000);
+                Console.WriteLine();
+                Console.WriteLine("몬스터 차례");
+
+                foreach (Monster m in GameManager.Instance.battleMonster)
+                {
+                    if (m.IsAlive())
+                    {
+                        if (GameManager.Instance.battleRandom.Next(100) < 10)
+                        {
+                            Console.WriteLine("회피!");
+                            Console.WriteLine($"{GameManager.Instance.player.Name}이(가) 공격을 회피했습니다.");
+                        }
+                        else
+                        {
+                            ConsoleUtility.PrintTextHighlights("", $"{m.Name}이(가) 공격합니다!");
+
+                            if (GameManager.Instance.battleRandom.Next(100) < 15)
+                            {
+                                // 추가 효과가 발생한 경우
+                                int criticalDamage = (int)(m.Atk * 1.6); // 160%의 데미지
+                                Console.WriteLine("치명타 발생! 추가 피해를 입었습니다.");
+                                Console.WriteLine($"[데미지 : {criticalDamage}]");
+                                GameManager.Instance.player.PlayerTakeDamage(criticalDamage);
+                            }
+                            else
+                            {
+                                Console.WriteLine($"[데미지 : {m.Atk}]");
+                                GameManager.Instance.player.PlayerTakeDamage(m.Atk);
+                            }
+
+                            Console.WriteLine($"{GameManager.Instance.player.Name}의 HP: {GameManager.Instance.player.CurrentHp}");
+                            Console.WriteLine();
+                            Thread.Sleep(1000);
+                        }
+                    }
+                }
+
+                Console.WriteLine("아무키나 누르세요...");
+                Console.ReadLine();
+
+                //플레이어 패배
+                if (!GameManager.Instance.player.IsAlive())
+                {
+                    Console.WriteLine("전투에서 패배했습니다.");
+                    Console.WriteLine("마을로 돌아갑니다.");
+
+                    foreach (var monster in GameManager.Instance.battleMonster)
+                    {
+                        monster.Reset();
+                    }
+
+                    GameManager.Instance.player.playerdefeat();
+
+                    //골드값 0미만으로 떨어지지 않게 Player에서 조정한 후
+                    //골드를 일정값 빼주는 메서드 작성
+
+                    Thread.Sleep(1000);
+                    Console.ReadKey();
+                    GameManager.Instance.MainManu();
+                }
+                GameManager.Instance.battleMonster[selectedMonsterIndex].CurrentHp -= GameManager.Instance.skills[i].Damage;
+                Console.WriteLine($"{GameManager.Instance.battleMonster[selectedMonsterIndex].Name}에게 데미지!");
             }
-            else if (i % 3 == 1)
+            else if (GameManager.Instance.skills[i].SkillRangeType == SkillRangeType.AreaOfEffect)
             {
                 //광역기
                 for (int j = 0; j < GameManager.Instance.battleMonster.Count; j++)
                 {
-                    selectedMonster.CurrentHp -= 0;
-                    Console.WriteLine($"{selectedMonster.Name}에게 데미지!");
+                    GameManager.Instance.battleMonster[j].CurrentHp -= GameManager.Instance.skills[i].Damage;
+                    Console.WriteLine($"{GameManager.Instance.battleMonster[j].Name}에게 데미지!");
+                    Console.WriteLine();
+                    ConsoleUtility.PrintTextHighlights("", $"{GameManager.Instance.player.Name}가 공격!");
+
+                    if (GameManager.Instance.battleRandom.Next(100) < 10)
+                    {
+                        Console.WriteLine("회피!");
+                        Console.WriteLine($"몬스터 {GameManager.Instance.battleMonster[j].Name}이(가) 공격을 회피했습니다.");
+                    }
+                    else
+                    {
+                        if (GameManager.Instance.battleRandom.Next(100) < 15)
+                        {
+                            // 추가 효과가 발생한 경우
+                            int criticalDamage = (int)(GameManager.Instance.player.Atk * 1.6); // 160%의 데미지
+                            Console.WriteLine("치명타 발생! 추가 데미지를 가합니다.");
+                            Console.WriteLine($"[데미지 : {criticalDamage}]");
+                            GameManager.Instance.battleMonster[j].MonterTakeDamage(criticalDamage);
+                        }
+                        else
+                        {
+                            // 추가 효과가 발생하지 않은 경우
+                            Console.WriteLine($"[데미지 : {GameManager.Instance.player.Atk}]");
+                            GameManager.Instance.battleMonster[j].MonterTakeDamage(GameManager.Instance.player.Atk);
+                        }
+                        Console.WriteLine($"몬스터 {GameManager.Instance.battleMonster[j].Name}의 HP: {GameManager.Instance.battleMonster[j].CurrentHp}");
+
+                        if (!GameManager.Instance.battleMonster[j].IsAlive())
+                        {
+                            Console.WriteLine($"몬스터 {GameManager.Instance.battleMonster[j].Name}를 물리쳤습니다!");
+                            Console.WriteLine($"경험치 {GameManager.Instance.battleMonster[j].Exp}를 얻었습니다!");
+                            GameManager.Instance.player.GetExp(GameManager.Instance.battleMonster[j].Exp);
+                            GameManager.Instance.player.LevelUp();
+
+                            GameManager.Instance.MonsterDied(GameManager.Instance.battleMonster[j]);
+                            ConsoleUtility.PrintTextHighlights("경험치 :", $"{GameManager.Instance.player.CurrentExp}/{GameManager.Instance.player.MaxExp}".ToString());
+                        }
+                    }
+                }
+                bool allMonstersDead = true;
+                foreach (var monster in GameManager.Instance.battleMonster)
+                {
+                    if (monster.IsAlive())
+                    {
+                        allMonstersDead = false;
+                        break;
+                    }
+                }
+
+                //플레이어 승리
+                if (allMonstersDead)
+                {
+                    GameManager.Instance.ShowResultMenu(random);
+                }
+
+                // 몬스터의 공격차례
+                Thread.Sleep(1000);
+                Console.WriteLine();
+                Console.WriteLine("몬스터 차례");
+
+                foreach (Monster m in GameManager.Instance.battleMonster)
+                {
+                    if (m.IsAlive())
+                    {
+                        if (GameManager.Instance.battleRandom.Next(100) < 10)
+                        {
+                            Console.WriteLine("회피!");
+                            Console.WriteLine($"{GameManager.Instance.player.Name}이(가) 공격을 회피했습니다.");
+                        }
+                        else
+                        {
+                            ConsoleUtility.PrintTextHighlights("", $"{m.Name}이(가) 공격합니다!");
+
+                            if (GameManager.Instance.battleRandom.Next(100) < 15)
+                            {
+                                // 추가 효과가 발생한 경우
+                                int criticalDamage = (int)(m.Atk * 1.6); // 160%의 데미지
+                                Console.WriteLine("치명타 발생! 추가 피해를 입었습니다.");
+                                Console.WriteLine($"[데미지 : {criticalDamage}]");
+                                GameManager.Instance.player.PlayerTakeDamage(criticalDamage);
+                            }
+                            else
+                            {
+                                Console.WriteLine($"[데미지 : {m.Atk}]");
+                                GameManager.Instance.player.PlayerTakeDamage(m.Atk);
+                            }
+
+                            Console.WriteLine($"{GameManager.Instance.player.Name}의 HP: {GameManager.Instance.player.CurrentHp}");
+                            Console.WriteLine();
+                            Thread.Sleep(1000);
+                        }
+                    }
+                }
+
+                Console.WriteLine("아무키나 누르세요...");
+                Console.ReadLine();
+
+                //플레이어 패배
+                if (!GameManager.Instance.player.IsAlive())
+                {
+                    Console.WriteLine("전투에서 패배했습니다.");
+                    Console.WriteLine("마을로 돌아갑니다.");
+
+                    foreach (var monster in GameManager.Instance.battleMonster)
+                    {
+                        monster.Reset();
+                    }
+
+                    GameManager.Instance.player.playerdefeat();
+
+                    //골드값 0미만으로 떨어지지 않게 Player에서 조정한 후
+                    //골드를 일정값 빼주는 메서드 작성
+
+                    Thread.Sleep(1000);
+                    Console.ReadKey();
+                    GameManager.Instance.MainManu();
                 }
             }
             else
             {
-                //도트기 근데 이건 만들려나 모르겠네
+                //도트뎀기 근데 이건 만들려나 모르겠네
             }
         }
 
-        public void SkillDamage()
+        public int SkillDamage(int damage)
         {
             //데미지 계산 식
+            damage = SkillLevel * 10 + damage;
+            return damage;
         }
         public List<Skill> skills;
+
+        internal void PrintSkillStatDescription(int idx)
+        {
+            Console.Write(" [");
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;
+            Console.Write($"{idx + 1}");
+            Console.ResetColor();
+            Console.Write("] ");
+            Console.Write(ConsoleUtility.PadRightForMixedText(SkillName, 8));
+            Console.Write(" | ");
+            Console.Write($"데미지 {(Damage >= 0 ? ": " : "")}{ConsoleUtility.PadRightForMixedText(SkillDamage(Damage).ToString(), 4)}");
+            Console.Write(" | ");
+            if (SkillRangeType == SkillRangeType.DirectDamage)
+            {
+                Console.Write($"대상: {ConsoleUtility.PadRightForMixedText("단일", 4)}");
+            }
+            else if (SkillRangeType == SkillRangeType.AreaOfEffect)
+            {
+                Console.Write($"대상: {ConsoleUtility.PadRightForMixedText("범위", 4)}");
+            }
+
+            Console.Write(" | ");
+            Console.WriteLine(SkillInfo);
+        }
     }
 }
