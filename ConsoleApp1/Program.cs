@@ -8,25 +8,45 @@ using Newtonsoft.Json;
 
 public class GameManager
 {
-    private Player player;
+    private static GameManager instance;
+    public Player player;
+
+    public List<Skill> skills;
+
     private List<Item> inventory;
     private List<Item> storeInventory;
     private List<Item> dungeonItemList;
     private List<Item> weaponReward;
+
     private List<Monster> monster;
-    private List<Monster> battleMonster;
-    Random battleRandom = new Random();
+    public List<Monster> battleMonster;
+    public Random battleRandom = new Random();
+
     private List<Dungeon> dungeons;
+
     private List<Quest> quest;
+
     private List<Potion> potion;
     private List<Potion> potioninventory;
     private List<Potion> potionReward;
+
     private DataBase dataBase = new DataBase();
     public GameManager()
     {
         InitializeGame();
     }
 
+    public static GameManager Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new GameManager();
+            }
+            return instance;
+        }
+    }
     private void InitializeGame()
     {
         player = new Player("", "", 1, 10, 5, 100, 100, 11, 0, 15000);
@@ -38,6 +58,10 @@ public class GameManager
         monster.Add(new Monster("공허충", 3, 8, 3, 10, 10, 3, "빨간 포션"));
         monster.Add(new Monster("칼날부리새끼", 1, 3, 1, 8, 8, 1, "빨간 포션"));
         monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8, 5, "주황 포션"));
+
+        skills = new List<Skill>();
+        skills.Add(new Skill("파이어볼", "불공", SkillType.AttackSkills, 1, 0, SkillRangeType.DirectDamage)); //견본용 스킬 추가 템플릿 스킬 타입은 0이 공격 1이 서포트 스킬 레인지는 0이 단일 1이 광역
+        skills.Add(new Skill("메테오", "운석", SkillType.AttackSkills, 1, 10, SkillRangeType.AreaOfEffect));
 
         inventory = new List<Item>();
 
@@ -100,7 +124,7 @@ public class GameManager
         MainMenu();
     }
 
-    private void MainMenu()
+    public void MainMenu()
     {
         Console.Clear();
         Console.WriteLine("■■■■■■■■■■■■■■■■■■■■■■■■■■■");
@@ -330,14 +354,14 @@ public class GameManager
 
         if (player.InTower)
         {
-            Console.WriteLine($"2. 전투 시작 (현재 진행 : {player.NowDongeon})");
-            Console.WriteLine("1. 상태 보기");
+            Console.WriteLine($"1. 전투 시작 (현재 진행 : {player.NowDongeon})");
+            Console.WriteLine("2. 상태 보기");
         }
 
         else
         {
-            Console.WriteLine("2. 전투 시작");
-            Console.WriteLine("1. 상태 보기");
+            Console.WriteLine("1. 전투 시작");
+            Console.WriteLine("2. 상태 보기");
             Console.WriteLine("0. 뒤로가기");
         }
 
@@ -413,33 +437,55 @@ public class GameManager
 
             ShowPlayerStatus();
 
-            int choice = GetPlayerChoice(random);
+            Console.WriteLine();
+            Console.WriteLine("1. 공격");
+            Console.WriteLine("2. 스킬");
+            Console.WriteLine("3. 아이템");
+            Console.WriteLine();
+            int cho1 = ConsoleUtility.PromotMenuChoice(1, 3);
+            if(cho1 == 1)
+            {
+                int choice = GetPlayerChoice(random);
 
-            int selectedMonsterIndex = choice - 1;
-            Monster selectedMonster = battleMonster[selectedMonsterIndex];
+                int selectedMonsterIndex = choice - 1;
+                Monster selectedMonster = battleMonster[selectedMonsterIndex];
 
-            if (!ValidateMonsterChoice(selectedMonsterIndex))
+                if (!ValidateMonsterChoice(selectedMonsterIndex))
+                    continue;
+
+                PlayerAttack(selectedMonster);
+
+                if (CheckAllMonstersDead())
+                {
+                    HandleAllMonstersDefeat();
+                    ShowResultMenu(random);
+                    break;
+                }
+
+                MonsterAttack();
+
+                if (!player.IsAlive())
+                {
+                    HandlePlayerDefeat();
+                    break;
+                }
+
+                Console.WriteLine("아무키나 누르세요...");
+                Console.ReadKey();
+            }
+            else if (cho1 == 2)
+            {
+                for (int i = 0; i < skills.Count; i++)
+                {
+                    skills[i].PrintSkillStatDescription(i);
+                }
+                Skill.UseSkill(random);
+            }
+            else if (cho1 == 3)
+            {
+                Console.WriteLine("미구현");
                 continue;
-
-            PlayerAttack(selectedMonster);
-
-            if (CheckAllMonstersDead())
-            {
-                HandleAllMonstersDefeat();
-                ShowResultMenu(random);
-                break;
             }
-
-            MonsterAttack();
-
-            if (!player.IsAlive())
-            {
-                HandlePlayerDefeat();
-                break;
-            }
-
-            Console.WriteLine("아무키나 누르세요...");
-            Console.ReadKey();
         }
     }
 
@@ -616,7 +662,7 @@ public class GameManager
 
         ResetMonsters();
         player.InTower = false;
-        player.PlayerDefeat();
+        player.playerdefeat();
 
         Thread.Sleep(1000);
         Console.ReadKey();
@@ -633,7 +679,7 @@ public class GameManager
 
 
     // 몬스터가 죽었을 때 호출되는 메서드
-    private void MonsterDied(Monster selectedMonster)
+    public void MonsterDied(Monster selectedMonster)
     {
         // 몬스터가 가지고 있는 아이템의 인덱스를 찾기, 찾지 못하면 -1 반환
         int itemIndex = dungeonItemList.FindIndex(item => item.Name == selectedMonster.DropItem);
@@ -661,7 +707,7 @@ public class GameManager
         }
     }
 
-    private void ShowResultMenu(int random)
+    public void ShowResultMenu(int random)
     {
         Console.Clear();
         ConsoleUtility.ShowTitle("■ 전투 결과 ■");
@@ -1170,8 +1216,7 @@ public class Program
 {
     static void Main(string[] args)
     {
-        GameManager gameManager = new GameManager();
-        gameManager.StartGame();
+        GameManager.Instance.StartGame();
     }
 }
 

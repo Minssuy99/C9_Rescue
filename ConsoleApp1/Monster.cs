@@ -1,13 +1,13 @@
 ﻿
 
-internal class Monster
+public class Monster
 {
     public string Name { get; }
     public int Level { get; }
     public int Atk { get; }
     public int Def { get; }
     public int MaxHp { get; }
-    public float CurrentHp { get; private set; }
+    public float CurrentHp { get; set; }
     public int Exp { get; }
     public string DropItem { get; }
     public bool IsDead { get; private set; }
