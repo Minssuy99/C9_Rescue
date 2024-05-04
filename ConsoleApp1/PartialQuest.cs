@@ -33,7 +33,7 @@ public partial class GameManager
         {
             case Quest.QuestType.Hunt:
                 title = "몬스터 토벌";
-                description = "마을 주변에 나타난 악의적인 몬스터들을 처치하여 마을을 안전하게 만드세요.";
+                description = "마을 주변에 나타난 몬스터들을 처치하여 마을을 안전하게 만드세요.";
                 questTarget = difficulty switch
                 {
                     Quest.QuestDifficulty.Easy => battleRandom.Next(1, 5),
@@ -51,7 +51,7 @@ public partial class GameManager
                 break;
             case Quest.QuestType.Collect:
                 title = "아이템 수집";
-                description = "마을 주변의 산속에 흩어진 소중한 아이템들을 찾아 수집하세요.";
+                description = "마을 주변에서 아이템들을 찾아 수집하세요.";
                 questTarget = difficulty switch
                 {
                     Quest.QuestDifficulty.Easy => battleRandom.Next(1, 3),
@@ -69,7 +69,7 @@ public partial class GameManager
                 break;
             case Quest.QuestType.Equip:
                 title = "장비 장착";
-                description = "강력한 장비를 장착하여 마을을 지키세요. 전설의 무기를 획득하여 마을을 방어할 수 있습니다.";
+                description = "무기를 획득하여 장착하세요.";
                 questTarget = difficulty switch
                 {
                     Quest.QuestDifficulty.Easy => 1,
