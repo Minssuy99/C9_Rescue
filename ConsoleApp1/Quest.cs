@@ -1,22 +1,55 @@
-internal class Quest
+public class Quest
 {
+    public enum QuestType
+    {
+        Hunt,
+        Collect,
+        Equip
+    }
+
+    public enum QuestDifficulty
+    {
+        Easy,
+        Normal,
+        Hard
+    }
+
     public string Title { get; }
     public string Description { get; }
-    public string Summary { get; }
-    public string RewardItem { get; }
+    public QuestType Type { get; }
+    public QuestDifficulty Difficulty { get; }
+    public int TargetAmount { get; }
     public int RewardGold { get; }
-    public bool IsAccepted { get; set; }
-    public bool IsCompeleted { get; set; }
 
-    public Quest(string title, string description, string summary, string rewardItem,
-                                             int rewardGold, bool isAccepted = false, bool isCompleted = false)
+    public Quest(string title, string description, QuestType type, QuestDifficulty difficulty, int targetAmount, int rewardGold)
     {
         Title = title;
         Description = description;
-        Summary = summary;
-        RewardItem = rewardItem;
+        Type = type;
+        Difficulty = difficulty;
+        TargetAmount = targetAmount;
         RewardGold = rewardGold;
-        IsAccepted = isAccepted;
-        IsCompeleted = isCompleted;
+    }
+
+    public static string GetQuestTypeName(QuestType type)
+    {
+        return type switch
+        {
+            QuestType.Hunt => "토벌",
+            QuestType.Collect => "수집",
+            QuestType.Equip => "장착",
+            _ => "미정"
+        };
+    }
+
+    public static string GetQuestDifficultyName(QuestDifficulty difficulty)
+    {
+        return difficulty switch
+        {
+            QuestDifficulty.Easy => "쉬움",
+            QuestDifficulty.Normal => "보통",
+            QuestDifficulty.Hard => "어려움",
+            _ => "미정"
+        };
     }
 }
