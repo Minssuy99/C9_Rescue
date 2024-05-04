@@ -49,7 +49,7 @@ public partial class GameManager
     }
     private void InitializeGame()
     {
-        player = new Player("", "", 1, 10, 5, 100, 100, 11, 0, 15000);
+        player = new Player("", "", 1, 10, 5, 100, 100, 50, 50, 11, 0, 15000);
         battleMonster = new List<Monster>();
 
         monster = new List<Monster>();
@@ -60,18 +60,18 @@ public partial class GameManager
         monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8, 5, "주황 포션"));
 
         skills = new List<Skill>();
-        skills.Add(new Skill("파이어볼", "불공", SkillType.AttackSkills, 1, 0, SkillRangeType.DirectDamage)); //견본용 스킬 추가 템플릿 스킬 타입은 0이 공격 1이 서포트 스킬 레인지는 0이 단일 1이 광역
-        skills.Add(new Skill("메테오", "운석", SkillType.AttackSkills, 1, 10, SkillRangeType.AreaOfEffect));
+        skills.Add(new Skill("파이어볼", "불공", SkillType.AttackSkills, 1, 10, 20, SkillRangeType.DirectDamage)); //견본용 스킬 추가 템플릿 스킬 타입은 0이 공격 1이 서포트 스킬 레인지는 0이 단일 1이 광역
+        skills.Add(new Skill("메테오", "운석", SkillType.AttackSkills, 1, 20, 10, SkillRangeType.AreaOfEffect));
 
         inventory = new List<Item>();
 
         storeInventory = new List<Item>();
-        storeInventory.Add(new Item("수련자 갑옷", "수련에 도움을 주는 갑옷입니다.", ItemType.ARMOR, 0, 5, 0, 500));
-        storeInventory.Add(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", ItemType.ARMOR, 0, 9, 0, 2000));
-        storeInventory.Add(new Item("스파르타의 갑옷", "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", ItemType.ARMOR, 0, 15, 0, 3500));
-        storeInventory.Add(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", ItemType.WEAPON, 2, 0, 0, 600));
-        storeInventory.Add(new Item("청동 도끼", "어디선가 사용됐던 것 같은 도끼입니다.", ItemType.WEAPON, 5, 0, 0, 1500));
-        storeInventory.Add(new Item("스파르타의 창", "스파르타의 전사들이 사용했다는 전설의 창입니다.", ItemType.WEAPON, 7, 0, 0, 2500));
+        storeInventory.Add(new Item("수련자 갑옷", "수련에 도움을 주는 갑옷입니다.", ItemType.ARMOR, 0, 5, 0, 0, 500));
+        storeInventory.Add(new Item("무쇠갑옷", "무쇠로 만들어져 튼튼한 갑옷입니다.", ItemType.ARMOR, 0, 9, 0, 0, 2000));
+        storeInventory.Add(new Item("스파르타의 갑옷", "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.", ItemType.ARMOR, 0, 15, 0, 0, 3500));
+        storeInventory.Add(new Item("낡은 검", "쉽게 볼 수 있는 낡은 검입니다.", ItemType.WEAPON, 2, 0, 0, 0, 600));
+        storeInventory.Add(new Item("청동 도끼", "어디선가 사용됐던 것 같은 도끼입니다.", ItemType.WEAPON, 5, 0, 0, 0, 1500));
+        storeInventory.Add(new Item("스파르타의 창", "스파르타의 전사들이 사용했다는 전설의 창입니다.", ItemType.WEAPON, 7, 0, 0, 0,  2500));
 
         dungeons = new List<Dungeon>();
         dungeons.Add(new Dungeon(1, "초급던전", 5, 3, 1000));
@@ -79,7 +79,7 @@ public partial class GameManager
         dungeons.Add(new Dungeon(3, "고급던전", 25, 7, 5000));
 
         dungeonItemList = new List<Item>();
-        dungeonItemList.Add(new Item("대포", "대포 미니언의 강력한 대포입니다.", ItemType.WEAPON, 9, 0, 0, 300));
+        dungeonItemList.Add(new Item("대포", "대포 미니언의 강력한 대포입니다.", ItemType.WEAPON, 9, 0, 0, 0, 300));
 
         weaponReward = new List<Item>();
 
@@ -215,11 +215,14 @@ public partial class GameManager
         int bonusAtk = inventory.Select(item => item.IsEquipped ? item.Atk : 0).Sum();
         int bonusDef = inventory.Select(item => item.IsEquipped ? item.Def : 0).Sum();
         int bonusHp = inventory.Select(item => item.IsEquipped ? item.Hp : 0).Sum();
+        int bonusMp = inventory.Select(item => item.IsEquipped ? item.Mp : 0).Sum();
 
 
         ConsoleUtility.PrintTextHighlights("공격력 :", (player.Atk).ToString(), bonusAtk > 0 ? $"(+{bonusAtk})" : "");
         ConsoleUtility.PrintTextHighlights("방어력 :", (player.Def).ToString(), bonusDef > 0 ? $"(+{bonusDef})" : "");
         ConsoleUtility.PrintTextHighlights("체  력 :", $"{player.CurrentHp + bonusHp}/{(player.MaxHp + bonusHp)}".ToString(), bonusHp > 0 ? $"(+{bonusHp})" : "");
+        ConsoleUtility.PrintTextHighlights("마  력 :", $"{player.CurrentMp + bonusMp}/{(player.MaxMp + bonusMp)}".ToString(), bonusMp > 0 ? $"(+{bonusMp})" : "");
+        ConsoleUtility.PrintTextHighlights("경험치 :", $"{player.CurrentExp}/{player.MaxExp}");
 
         ConsoleUtility.PrintTextHighlights("Gold :", player.Gold.ToString());
         Console.WriteLine();

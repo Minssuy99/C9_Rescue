@@ -10,12 +10,14 @@ public class Player
     public int Def { get; set; }
     public int MaxHp { get; private set; }
     public int CurrentHp { get; private set; }
+    public int MaxMp { get; private set; }
+    public int CurrentMp { get; set; }
     public int MaxExp { get; private set; }
     public int CurrentExp { get; private set; }
     public int Gold { get; set; }
     public bool InTower { get; set; }
     public int NowDongeon { get; set; }
-    public Player(string name, string job, int level, float atk, int def, int maxHp, int currentHp, int maxExp, int currentExp, int gold)
+    public Player(string name, string job, int level, float atk, int def, int maxHp, int currentHp, int maxMp, int currentMp, int maxExp, int currentExp, int gold)
     {
         Name = name;
         Job = job;
@@ -24,6 +26,8 @@ public class Player
         Def = def;
         MaxHp = maxHp;
         CurrentHp = currentHp;
+        MaxMp = maxMp;
+        CurrentMp = currentMp;
         MaxExp = maxExp;
         CurrentExp = currentExp;
         Gold = gold;
