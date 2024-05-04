@@ -22,13 +22,12 @@ public class Item
     public int Atk { get; }
     public int Def { get; }
     public int Hp { get; }
-
+    public int Mp { get; }
     public int Price { get; }
-
     public bool IsEquipped { get; private set; } //장착여부
     public bool IsPurchased { get; private set; } //구매여부
 
-    public Item(string name, string desc, ItemType type, int atk, int def, int hp, int price, bool isEquipped = false, bool isPurchased = false) //기본값은 false(안낀거)로 수정
+    public Item(string name, string desc, ItemType type, int atk, int def, int hp,int mp, int price, bool isEquipped = false, bool isPurchased = false) //기본값은 false(안낀거)로 수정
     {
         Name = name;
         Desc = desc;
@@ -36,13 +35,14 @@ public class Item
         Atk = atk;
         Def = def;
         Hp = hp;
+        Mp = mp;
         Price = price;
         IsEquipped = isEquipped;
         IsPurchased = isPurchased;
     }
     public Item CloneItem()
     {
-        Item clone = new Item(Name, Desc, Type, Atk, Def, Hp, Price, IsEquipped = false, IsPurchased = false);
+        Item clone = new Item(Name, Desc, Type, Atk, Def, Hp, Price, Mp, IsEquipped = false, IsPurchased = false);
         return clone;
     }
 

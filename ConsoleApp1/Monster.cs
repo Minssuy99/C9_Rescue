@@ -1,5 +1,7 @@
 ﻿
 
+using System.Diagnostics;
+
 public class Monster
 {
     public string Name { get; }
@@ -12,7 +14,7 @@ public class Monster
     public string DropItem { get; }
     public bool IsDead { get; private set; }
 
-    public Monster(string name, int level, int atk, int def, int maxHp, int currentHp, int exp, string dropItem , bool isdead = false)
+    public Monster(string name, int level, int atk, int def, int maxHp, float currentHp, int exp, string dropItem , bool isdead = false)
     {
         Name = name;
         Level = level;
@@ -24,7 +26,11 @@ public class Monster
         DropItem = dropItem;
         IsDead = isdead;
     }
-
+    public Monster CloneMonster()
+    {
+        Monster clone = new Monster(Name, Level, Atk, Def, MaxHp, CurrentHp, Exp, DropItem, IsDead = false);
+        return clone;
+    }
     public void MonterTakeDamage(float damage)
     {
         CurrentHp -= damage;

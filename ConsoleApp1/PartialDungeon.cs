@@ -24,7 +24,7 @@ public partial class GameManager
                 Monster randomMonster = GetRandomMonster();
                 if (!battleMonster.Contains(randomMonster))
                 {
-                    battleMonster.Add(randomMonster);
+                    battleMonster.Add(randomMonster.CloneMonster());
                     Console.WriteLine($"Lv.{battleMonster[i].Level} {battleMonster[i].Name} HP {battleMonster[i].CurrentHp}");
                     break;
                 }
@@ -32,11 +32,10 @@ public partial class GameManager
         }
 
         Console.WriteLine();
-        Console.WriteLine("[내정보]");
-        Console.WriteLine($"Lv.{player.Level}  {player.Name}({player.Job})");
-        Console.WriteLine($"HP {player.CurrentHp} / {player.MaxHp}");
-        Console.WriteLine();
-        Console.WriteLine("1. 공격");
+
+        ShowPlayerStatus();
+        
+        Console.WriteLine("1. 싸운다");
         Console.WriteLine();
 
         int choice = ConsoleUtility.PromotMenuChoice(1, 1);
@@ -145,17 +144,17 @@ public partial class GameManager
 
         switch (choice)
         {
-            case 0:
-                MainMenu();
-                break;
-            case 1:
+            case 2:
                 StatusMenu();
                 break;
-            case 2:
+            case 1:
                 if (player.InTower)
                     BattleManu(player.NowDongeon * 2 + 1);
                 else
                     BattleManu(max);
+                break;
+            case 0:
+                MainMenu();
                 break;
         }
         MainMenu();
