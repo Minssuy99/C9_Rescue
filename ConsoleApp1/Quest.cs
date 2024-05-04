@@ -20,8 +20,9 @@ public class Quest
     public QuestDifficulty Difficulty { get; }
     public int TargetAmount { get; }
     public int RewardGold { get; }
+    public bool IsCompleted { get; private set; }
 
-    public Quest(string title, string description, QuestType type, QuestDifficulty difficulty, int targetAmount, int rewardGold)
+    public Quest(string title, string description, QuestType type, QuestDifficulty difficulty, int targetAmount, int rewardGold, bool isCompleted = false)
     {
         Title = title;
         Description = description;
@@ -29,6 +30,7 @@ public class Quest
         Difficulty = difficulty;
         TargetAmount = targetAmount;
         RewardGold = rewardGold;
+        IsCompleted = isCompleted;
     }
 
     public static string GetQuestTypeName(QuestType type)

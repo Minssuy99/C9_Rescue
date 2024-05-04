@@ -32,6 +32,14 @@ public partial class GameManager
     public GameManager()
     {
         InitializeGame();
+        while (quest.Count < 3)
+        {
+            Quest newQuest = GenerateQuest();
+            if (!quest.Any(q => q.Title == newQuest.Title))
+            {
+                quest.Add(newQuest);
+            }
+        }
     }
 
     public static GameManager Instance
@@ -48,6 +56,7 @@ public partial class GameManager
     private void InitializeGame()
     {
         player = new Player("", "", 1, 10, 5, 100, 100, 50, 50, 11, 0, 15000);
+
         battleMonster = new List<Monster>();
 
         monster = new List<Monster>();
@@ -56,6 +65,7 @@ public partial class GameManager
         monster.Add(new Monster("공허충", 3, 8, 3, 10, 10, 3, "빨간 포션"));
         monster.Add(new Monster("칼날부리새끼", 1, 3, 1, 8, 8, 1, "빨간 포션"));
         monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8, 5, "주황 포션"));
+        monster.Add(new Monster("고블린", 2, 5, 4, 14, 14, 3, "빨간 포션"));
 
         skills = new List<Skill>();
         skills.Add(new Skill("파이어볼", "불공", SkillType.AttackSkills, 1, 10, 20, SkillRangeType.DirectDamage)); //견본용 스킬 추가 템플릿 스킬 타입은 0이 공격 1이 서포트 스킬 레인지는 0이 단일 1이 광역
@@ -162,8 +172,7 @@ public partial class GameManager
             case 1:
                 if (player.Gold < 500)
                 {
-                    Console.WriteLine("안돼 돌아가");
-                    
+                    Console.WriteLine("안돼 돌아가");                   
                     Console.ReadKey();
                 }
                 else
