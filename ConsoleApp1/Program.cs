@@ -24,8 +24,6 @@ public partial class GameManager
 
     private List<Dungeon> dungeons;
 
-    private List<Quest> quest;
-
     private List<Potion> potion;
     private List<Potion> potioninventory;
     private List<Potion> potionReward;
@@ -82,27 +80,6 @@ public partial class GameManager
         dungeonItemList.Add(new Item("대포", "대포 미니언의 강력한 대포입니다.", ItemType.WEAPON, 9, 0, 0, 0, 300));
 
         weaponReward = new List<Item>();
-
-        quest = new List<Quest>();
-        quest.Add(new Quest("마을을 위협하는 미니언 처치",
-                            "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\n" +
-                            "마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\n" +
-                            "모험가인 자네가 좀 처치해주게!\n",
-                            "미니언 5마리 처치 (0/5)",
-                            "방패 x 1", 5));
-
-        quest.Add(new Quest("장비를 장착해보자",
-                            "어떤 장비를 장착하느냐에 따라 모험가의 전투력이 크게 달라질 수 있다네.\n" +
-                            "어서 장비를 장착해보도록 하게!",
-                            "상점에서 [낡은 검] 구입 후 장착",
-                            "수련자 갑옷", 10));
-
-        quest.Add(new Quest("더욱 더 강해지기!",
-                            "모험가여, 당신의 모험은 아직 끝나지 않았다." +
-                            "계속해서 성장하고 더욱 강해져야 한다." +
-                            "자, 새로운 도전에 나서보시게!",
-                            "몬스터 10마리 처치 (0/10)",
-                            "도끼 x 1", 15));
 
         potion = new List<Potion>();
         potion.Add(new Potion("빨간 포션", "붉은 약초로 만든 물약이다", PotionEffect.Heal, 10, 100));
