@@ -56,7 +56,11 @@ namespace ConsoleApp1
                 if (GameManager.Instance.skills[i].SkillRangeType == SkillRangeType.DirectDamage)
                 {
                     //단일기
-                    Console.WriteLine("스킬의 대상을 선택해주세요.");
+                    Console.WriteLine();
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("[몬스터 선택]"); //s2를 강조함
+                    Console.ResetColor();
+
                     int cho2 = GameManager.Instance.GetPlayerChoice(random);
                     int selectedMonsterIndex = cho2 - 1;
 
