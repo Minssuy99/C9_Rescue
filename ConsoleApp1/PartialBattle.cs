@@ -35,12 +35,12 @@ public partial class GameManager
         Console.WriteLine();
     }
 
-    private int GetPlayerChoice(int random)
+    public int GetPlayerChoice(int random)
     {
         return ConsoleUtility.PromotMenuChoice(1, random);
     }
 
-    private bool ValidateMonsterChoice(int selectedMonsterIndex)
+    public bool ValidateMonsterChoice(int selectedMonsterIndex)
     {
         if (!battleMonster[selectedMonsterIndex].IsAlive())
         {
@@ -79,12 +79,12 @@ public partial class GameManager
         Thread.Sleep(1000);
     }
 
-    private bool IsCriticalHit()
+    public bool IsCriticalHit()
     {
         return battleRandom.Next(100) < 15;
     }
 
-    private void InflictCriticalDamage(Monster selectedMonster, int attackDamage)
+    public void InflictCriticalDamage(Monster selectedMonster, int attackDamage)
     {
         int criticalDamage = (int)(attackDamage * 1.6);
         Console.WriteLine("치명타 발생! 추가 데미지를 가합니다.");
@@ -92,13 +92,13 @@ public partial class GameManager
         selectedMonster.MonterTakeDamage(criticalDamage);
     }
 
-    private void InflictRegularDamage(Monster selectedMonster, int attackDamage)
+    public void InflictRegularDamage(Monster selectedMonster, int attackDamage)
     {
         Console.WriteLine($"[데미지 : {attackDamage}]");
         selectedMonster.MonterTakeDamage(attackDamage);
     }
 
-    private void HandleMonsterDefeat(Monster selectedMonster)
+    public void HandleMonsterDefeat(Monster selectedMonster)
     {
         Console.WriteLine($"몬스터 {selectedMonster.Name}를 물리쳤습니다!");
         Console.WriteLine($"경험치 {selectedMonster.Exp}를 얻었습니다!");

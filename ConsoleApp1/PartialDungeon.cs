@@ -104,17 +104,30 @@ public partial class GameManager
             }
             else if (cho1 == 2)
             {
-                Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("[스킬 선택]"); //s2를 강조함
-                Console.ResetColor();
-
                 for (int i = 0; i < skills.Count; i++)
                 {
                     skills[i].PrintSkillStatDescription(i);
                 }
-                Console.WriteLine();
+
                 Skill.UseSkill(random);
+
+                if (CheckAllMonstersDead())
+                {
+                    HandleAllMonstersDefeat();
+                    ShowResultMenu(random);
+                    break;
+                }
+
+                MonsterAttack();
+
+                if (!player.IsAlive())
+                {
+                    HandlePlayerDefeat();
+                    break;
+                }
+
+                Console.WriteLine("아무키나 누르세요...");
+                Console.ReadKey();
             }
             else if (cho1 == 3)
             {
