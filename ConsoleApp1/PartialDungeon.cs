@@ -59,6 +59,9 @@ public partial class GameManager
             ShowPlayerStatus();
 
             Console.WriteLine();
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("[행동 선택]"); //s2를 강조함
+            Console.ResetColor();
             Console.WriteLine("1. 공격");
             Console.WriteLine("2. 스킬");
             Console.WriteLine("3. 아이템");
@@ -66,6 +69,11 @@ public partial class GameManager
             int cho1 = ConsoleUtility.PromotMenuChoice(1, 3);
             if (cho1 == 1)
             {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("[몬스터 선택]"); //s2를 강조함
+                Console.ResetColor();
+
                 int choice = GetPlayerChoice(random);
 
                 int selectedMonsterIndex = choice - 1;
@@ -96,10 +104,16 @@ public partial class GameManager
             }
             else if (cho1 == 2)
             {
+                Console.WriteLine();
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("[스킬 선택]"); //s2를 강조함
+                Console.ResetColor();
+
                 for (int i = 0; i < skills.Count; i++)
                 {
                     skills[i].PrintSkillStatDescription(i);
                 }
+                Console.WriteLine();
                 Skill.UseSkill(random);
             }
             else if (cho1 == 3)

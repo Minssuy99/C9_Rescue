@@ -52,7 +52,7 @@ public class Item
         if (withNumber)
         {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write($"{idx}");
+            Console.Write($"{idx} ");
             Console.ResetColor();
         }
         if (IsEquipped)
@@ -128,7 +128,7 @@ public class Item
         if (withNumber)
         {
             Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Write($"{idx}");
+            Console.Write($"{idx} ");
             Console.ResetColor();
         }
 
