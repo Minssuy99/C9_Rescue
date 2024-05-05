@@ -63,7 +63,7 @@ public partial class GameManager
         monster.Add(new Monster("미니언", 2, 5, 2, 15, 15, 2, "빨간 포션"));
         monster.Add(new Monster("대포미니언", 5, 9, 5, 25, 25, 5, "대포"));
         monster.Add(new Monster("공허충", 3, 8, 3, 10, 10, 3, "빨간 포션"));
-        monster.Add(new Monster("칼날부리새끼", 1, 3, 1, 8, 8, 1, "빨간 포션"));
+        monster.Add(new Monster("칼날부리", 1, 3, 1, 8, 8, 1, "빨간 포션"));
         monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8, 5, "주황 포션"));
         monster.Add(new Monster("고블린", 2, 5, 4, 14, 14, 3, "빨간 포션"));
 
