@@ -116,7 +116,7 @@ public partial class GameManager
                 InventoryMenu();
                 break;
             default:
-                inventory[keyInput - 1].ToggleEquipStates(inventory, player, keyInput);
+                inventory[keyInput - 1].ToggleEquipStates(inventory, player, keyInput, quest);
                 EquipMenu();
                 break;
         }

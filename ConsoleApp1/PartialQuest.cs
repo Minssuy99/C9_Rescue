@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 public partial class GameManager
 {
     List<Quest> quest = new List<Quest>();
-    List<bool> questStatus = new List<bool>();
     private Quest GenerateQuest()
     {
         Quest.QuestType questType = (Quest.QuestType)battleRandom.Next(0, 3);
@@ -18,6 +17,7 @@ public partial class GameManager
         string description = "";
         int questTarget = 0;
         int rewardGold = 0;
+        string targetMonsterName = "";
 
         switch (questType)
         {
@@ -42,6 +42,7 @@ public partial class GameManager
                             Quest.QuestDifficulty.Hard => 1500,
                             _ => 0,
                         };
+                        targetMonsterName = "칼날부리";
                         break;
                     case 1:
                         title = "고블린 사냥";
@@ -60,6 +61,7 @@ public partial class GameManager
                             Quest.QuestDifficulty.Hard => 1500,
                             _ => 0,
                         };
+                        targetMonsterName = "고블린";
                         break;
                 }
                 break;
@@ -82,28 +84,14 @@ public partial class GameManager
                 };
                 break;
             case Quest.QuestType.Equip:
-                title = "장비 장착을 해보자";
-                description = "무기를 획득하여 장착하세요.";
-                questTarget = difficulty switch
-                {
-                    Quest.QuestDifficulty.Easy => 1,
-                    Quest.QuestDifficulty.Normal => 1,
-                    Quest.QuestDifficulty.Hard => 1,
-                    _ => 0,
-                };
-                rewardGold = difficulty switch
-                {
-                    Quest.QuestDifficulty.Easy => 200,
-                    Quest.QuestDifficulty.Normal => 400,
-                    Quest.QuestDifficulty.Hard => 600,
-                    _ => 0,
-                };
+                title = "장비 장착을 해보자!";
+                description = "[낡은 검]무기를 획득하여 장착하세요.";
+                questTarget = 1;
+                rewardGold = 600;
                 break;
         }
 
-        questStatus.Add(false);
-
-        return new Quest(title, description, questType, difficulty, questTarget, rewardGold);
+        return new Quest(title, description, questType, difficulty, questTarget, rewardGold, targetMonsterName);
     }
 
     private void QuestMenu()
@@ -117,10 +105,8 @@ public partial class GameManager
 
         for (int i = 0; i < 3; i++)
         {
-            Console.WriteLine($"[{i + 1}] {quest[i].Title} {(questStatus[i] ? "(진행중)" : "")}"); //bool값이 참이면 (진행중)
-            Console.WriteLine($"{quest[i].Description}");
-            Console.WriteLine($"퀘스트 유형: {Quest.GetQuestTypeName(quest[i].Type)} | 난이도: {Quest.GetQuestDifficultyName(quest[i].Difficulty)} | 목표 수치: {quest[i].TargetAmount} | 보상: {quest[i].RewardGold} G");
-            Console.WriteLine();
+            Console.Write($"[{i + 1}]");
+            DisplayQuestDetails(quest[i]);
         }
 
         Console.WriteLine("퀘스트를 선택하세요.");
@@ -137,11 +123,24 @@ public partial class GameManager
                 Console.Clear();
                 int selectedQuestIndex = choice - 1;
                 Console.WriteLine("[퀘스트]");
-                Console.WriteLine($"{quest[selectedQuestIndex].Title}");
-                Console.WriteLine($"{quest[selectedQuestIndex].Description}");
-                Console.WriteLine($"퀘스트 유형: {Quest.GetQuestTypeName(quest[selectedQuestIndex].Type)} | 난이도: {Quest.GetQuestDifficultyName(quest[selectedQuestIndex].Difficulty)} | 목표 수치: {quest[selectedQuestIndex].TargetAmount} | 보상: {quest[selectedQuestIndex].RewardGold} G");
+                DisplayQuestDetails(quest[selectedQuestIndex]);
                 Console.WriteLine();
-                if (questStatus[selectedQuestIndex])
+
+                if (quest[selectedQuestIndex].IsCompleted)
+                {
+                    if (quest[selectedQuestIndex].IsRewarded)
+                    {
+                        Console.WriteLine($"퀘스트 '{quest[selectedQuestIndex].Title}'는 이미 완료된 퀘스트입니다.");
+                    }
+                    else
+                    {
+                        CheckQuestCompletion();
+                    }
+                    Console.WriteLine("아무 키나 누르세요...");
+                    Console.ReadKey();
+                    QuestMenu();
+                }
+                else if (quest[selectedQuestIndex].IsAccepted)
                 {
                     Console.WriteLine("진행중인 퀘스트입니다.");
                     Console.WriteLine($"{quest[selectedQuestIndex].Title} 퀘스트를 포기하겠습니까?");
@@ -152,7 +151,7 @@ public partial class GameManager
                     int abandonChoice = ConsoleUtility.PromotMenuChoice(1, 2);
                     if (abandonChoice == 1)
                     {
-                        questStatus[selectedQuestIndex] = false;
+                        quest[selectedQuestIndex].IsAccepted = false;
                         Console.WriteLine("퀘스트를 포기했습니다.");
                         Console.WriteLine("아무 키나 누르세요...");
                         Console.ReadKey();
@@ -174,7 +173,7 @@ public partial class GameManager
 
                     if (acceptChoice == 1)
                     {
-                        questStatus[selectedQuestIndex] = true;
+                        quest[selectedQuestIndex].IsAccepted = true;
                         Console.WriteLine($"퀘스트를 수락했습니다!");
                         Console.WriteLine("아무 키나 누르세요...");
                         Console.ReadKey();
@@ -182,7 +181,7 @@ public partial class GameManager
                     }
                     else
                     {
-                        questStatus[selectedQuestIndex] = false;
+                        quest[selectedQuestIndex].IsAccepted = false;
                         Console.WriteLine("퀘스트를 거절했습니다.");
                         Console.WriteLine("아무 키나 누르세요...");
                         Console.ReadKey();
@@ -191,5 +190,39 @@ public partial class GameManager
                 }
                 break;
         }
+    }
+    private void CheckQuestCompletion()
+    {
+        foreach (var quest in quest)
+        {
+            if (quest.IsCompleted)
+            {
+                Console.WriteLine($"퀘스트 '{quest.Title}'가 완료되었습니다!");
+
+                // 보상
+                player.Gold += quest.RewardGold;
+
+                // 여기에 다른 보상 추가 가능함
+
+                Console.WriteLine($"보상으로 {quest.RewardGold}골드를 받았습니다.");
+
+                quest.RewardedQuest();
+            }
+        }
+    }
+
+    private void DisplayQuestDetails(Quest quest)
+    {
+        Console.WriteLine($"{quest.Title} {(quest.IsAccepted ? "(진행중)" : "")} {(quest.IsCompleted ? "(완료)" : "")}");
+        Console.WriteLine($"{quest.Description}");
+        if (quest.Type != Quest.QuestType.Equip)
+        {
+            Console.WriteLine($"퀘스트 유형: {Quest.GetQuestTypeName(quest.Type)} | 난이도: {Quest.GetQuestDifficultyName(quest.Difficulty)} | 목표 수치: {quest.CurrentAmount}/{quest.TargetAmount} | 보상: {quest.RewardGold} G");
+        }
+        else
+        {
+            Console.WriteLine($"퀘스트 유형: {Quest.GetQuestTypeName(quest.Type)} | 보상: {quest.RewardGold} G");
+        }
+        Console.WriteLine();
     }
 }
