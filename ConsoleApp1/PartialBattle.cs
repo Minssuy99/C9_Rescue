@@ -105,6 +105,8 @@ public partial class GameManager
         player.GetExp(selectedMonster.Exp);
         player.LevelUp();
 
+        UpdateQuestProgress(selectedMonster.Name); // 토벌 퀘스트 처치 수 업데이트
+
         MonsterDied(selectedMonster);
 
         ConsoleUtility.PrintTextHighlights("경험치 :", $"{player.CurrentExp}/{player.MaxExp}".ToString());
@@ -326,5 +328,24 @@ public partial class GameManager
         DungeonChoiceMenu();
     }
 
+    // 퀘스트 진행
+    private void UpdateQuestProgress(string monsterName)
+    {
+        // 모든 퀘스트를 한 번씩 본다
+        foreach (var quest in quest)
+        {
+            // 해당 퀘스트가 수락된 상태이고, 사냥 퀘스트이며, 목표 몬스터와 동일한 몬스터를 처치했을 경우
+            if (quest.IsAccepted && quest.Type == Quest.QuestType.Hunt && quest.TargetMonsterName == monsterName)
+            {
+                // 처치한 몬스터 수 증가
+                quest.UpdateProgress(1);
 
+                if (quest.CurrentAmount >= quest.TargetAmount && !quest.IsCompleted)
+                {
+                    // 완료로 만들어 줌
+                    quest.CompleteQuest();
+                }
+            }
+        }
+    }
 }

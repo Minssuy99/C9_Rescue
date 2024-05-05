@@ -77,7 +77,7 @@ public class Item
         Console.WriteLine(Desc);
     }
 
-    internal void ToggleEquipStates(List<Item> inventory, Player player, int keyInput)
+    internal void ToggleEquipStates(List<Item> inventory, Player player, int keyInput, List<Quest> quest)
     {
         if (!IsEquipped)
         {
@@ -95,6 +95,19 @@ public class Item
                 player.Atk += inventory[keyInput - 1].Atk;
                 player.Def += inventory[keyInput - 1].Def;
                 IsEquipped = true;
+
+                // 장착된 아이템의 이름이 "낡은 검"인 경우 해당 퀘스트를 완료
+                if (Name == "낡은 검")
+                {
+                    foreach (var q in quest)
+                    {
+                        if (q.Title == "장비 장착을 해보자!" && q.IsAccepted)
+                        {
+                            q.CompleteQuest();
+                            break;
+                        }
+                    }
+                }
             }
             else
             {
