@@ -100,7 +100,26 @@ public partial class GameManager
                 {
                     skills[i].PrintSkillStatDescription(i);
                 }
+
                 Skill.UseSkill(random);
+
+                if (CheckAllMonstersDead())
+                {
+                    HandleAllMonstersDefeat();
+                    ShowResultMenu(random);
+                    break;
+                }
+
+                MonsterAttack();
+
+                if (!player.IsAlive())
+                {
+                    HandlePlayerDefeat();
+                    break;
+                }
+
+                Console.WriteLine("아무키나 누르세요...");
+                Console.ReadKey();
             }
             else if (cho1 == 3)
             {
