@@ -32,6 +32,7 @@ public partial class GameManager
     public GameManager()
     {
         InitializeGame();
+
         while (quest.Count < 3)
         {
             Quest newQuest = GenerateQuest();

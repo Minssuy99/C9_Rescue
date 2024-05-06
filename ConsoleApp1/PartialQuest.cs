@@ -110,14 +110,47 @@ public partial class GameManager
         }
 
         Console.WriteLine("퀘스트를 선택하세요.");
+        Console.WriteLine("4. 퀘스트 갱신 (500 G)");
         Console.WriteLine("0. 나가기");
         Console.WriteLine();
 
-        int choice = ConsoleUtility.PromotMenuChoice(0, 3);
+        int choice = ConsoleUtility.PromotMenuChoice(0, 4);
         switch (choice)
         {
             case 0:
                 MainMenu();
+                break;
+            case 4:
+                Console.WriteLine("퀘스트를 정말 초기화 하시겠습니까?");
+                Console.WriteLine("(진행중인 퀘스트도 중단됩니다.)");
+                Console.WriteLine("1. 네");
+                Console.WriteLine("0. 아니오");
+                Console.WriteLine();
+
+                int choice1 = ConsoleUtility.PromotMenuChoice(0, 1);
+
+                switch (choice1)
+                {
+                    case 0:
+                        QuestMenu();
+                        break;
+                    case 1:
+                        quest.Clear();
+                        while (quest.Count < 3)
+                        {
+                            Quest newQuest = GenerateQuest();
+                            if (!quest.Any(q => q.Title == newQuest.Title))
+                            {
+                                quest.Add(newQuest);
+                            }
+                        }
+                        player.Gold -= 500;
+                        Console.WriteLine("퀘스트가 갱신되었습니다.");
+                        Console.WriteLine("아무 키나 누르세요...");
+                        Console.ReadKey();
+                        QuestMenu();
+                        break;
+                }
                 break;
             default:
                 Console.Clear();
