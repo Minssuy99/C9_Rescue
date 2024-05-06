@@ -16,11 +16,17 @@ public partial class GameManager
         Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
         Console.WriteLine();
         Console.WriteLine("[아이템 목록]");
+        Console.WriteLine();
 
+        Console.WriteLine("[장비 아이템]");
+        Console.WriteLine();
         for (int i = 0; i < inventory.Count; i++)
         {
             inventory[i].PrintItemStatDescription();
         }
+
+        Console.WriteLine("[소비 아이템]");
+        Console.WriteLine();
         for (int i = 0; i < potioninventory.Count; i++)
         {
             potioninventory[i].PrintPotionStatDescription(); //나가기가 0번이라서 +1해줘서 띄워줌
@@ -29,7 +35,7 @@ public partial class GameManager
         Console.WriteLine();
         Console.WriteLine("0. 나가기");
         Console.WriteLine("1. 장착 관리");
-        Console.WriteLine("2. 아이템관리");
+        Console.WriteLine("2. 아이템 사용");
         Console.WriteLine();
 
         switch (ConsoleUtility.PromotMenuChoice(0, 2))
@@ -50,8 +56,8 @@ public partial class GameManager
     {
         Console.Clear();
 
-        ConsoleUtility.ShowTitle("■ 인벤토리 - 아이템 관리 ■");
-        Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
+        ConsoleUtility.ShowTitle("■ 인벤토리 - 아이템 사용 ■");
+        Console.WriteLine("보유 중인 아이템을 사용할 수 있습니다.");
         Console.WriteLine();
         Console.WriteLine("[아이템 목록]");
 

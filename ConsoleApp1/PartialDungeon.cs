@@ -46,7 +46,7 @@ public partial class GameManager
         }
     }
 
-    private void StartBattle(int random)
+    public void StartBattle(int random)
     {
         while (true)
         {
@@ -70,11 +70,15 @@ public partial class GameManager
             if (cho1 == 1)
             {
                 Console.WriteLine();
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("[몬스터 선택]"); //s2를 강조함
-                Console.ResetColor();
+                ConsoleUtility.PrintTextHighlights("", "[몬스터 선택]");
+                Console.WriteLine();
+                Console.WriteLine("0. 뒤로 가기");
 
                 int choice = GetPlayerChoice(random);
+                if (choice == 0)
+                {
+                    GameManager.Instance.StartBattle(random);
+                }
 
                 int selectedMonsterIndex = choice - 1;
                 Monster selectedMonster = battleMonster[selectedMonsterIndex];
@@ -104,9 +108,21 @@ public partial class GameManager
             }
             else if (cho1 == 2)
             {
-                for (int i = 0; i < skills.Count; i++)
+                if (GameManager.Instance.skills.Count == 0)
                 {
-                    skills[i].PrintSkillStatDescription(i);
+                    Console.WriteLine();
+                    Console.WriteLine("사용할 수 있는 스킬이 없습니다.");
+                    Console.WriteLine();
+                    Console.WriteLine("아무 키나 눌러주세요.");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    for (int i = 0; i < skills.Count; i++)
+                    {
+                        skills[i].PrintSkillStatDescription(i);
+                    }
+
                 }
 
                 Skill.UseSkill(random);
