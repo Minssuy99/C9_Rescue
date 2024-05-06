@@ -60,7 +60,7 @@ public partial class GameManager
 
         for (int i = 0; i < inventory.Count; i++)
         {
-            inventory[i].PrintStoreItemDescription(true, i + 1);
+            inventory[i].PrintStoreItemDescription(true, true, i + 1);
         }
 
         Console.WriteLine();
@@ -104,7 +104,7 @@ public partial class GameManager
 
         for (int i = 0; i < storeInventory.Count; i++)
         {
-            storeInventory[i].PrintStoreItemDescription(true, i + 1);
+            storeInventory[i].PrintStoreItemDescription(false, true, i + 1);
         }
 
         Console.WriteLine();
@@ -248,7 +248,7 @@ public partial class GameManager
 
         for (int i = 0; i < potioninventory.Count; i++)
         {
-            potioninventory[i].PrintPotionStatDescription(true, i + 1);
+            potioninventory[i].PrintPotionStatDescription(true, true, i + 1);
         }
 
         Console.WriteLine();

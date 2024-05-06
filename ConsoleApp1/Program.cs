@@ -13,7 +13,7 @@ public partial class GameManager
 
     public List<Skill> skills;
 
-    private List<Item> inventory;
+    public List<Item> inventory;
     private List<Item> storeInventory;
     private List<Item> dungeonItemList;
     private List<Item> weaponReward;
@@ -26,7 +26,7 @@ public partial class GameManager
     private List<Dungeon> dungeons;
 
     private List<Potion> potion;
-    private List<Potion> potioninventory;
+    public List<Potion> potioninventory;
     private List<Potion> potionReward;
 
     private DataBase dataBase = new DataBase();

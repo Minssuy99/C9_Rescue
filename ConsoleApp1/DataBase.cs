@@ -35,7 +35,6 @@ namespace ConsoleApp1
 
         public void LoadData(ref Player player, ref List<Item> inventory, ref List<Quest> quests, ref List<Skill> skills)
         {
-
             string _userDocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             PlayerDataLoad(ref player, _userDocumentsFolder, ref inventory, ref skills);
             QuestDataLoad(ref quests, _userDocumentsFolder);

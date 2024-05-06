@@ -42,7 +42,7 @@ public class Item
     }
     public Item CloneItem()
     {
-        Item clone = new Item(Name, Desc, Type, Atk, Def, Hp, Price, Mp, IsEquipped = false, IsPurchased = false);
+        Item clone = new Item(Name, Desc, Type, Atk, Def, Hp, Mp, Price, IsEquipped = false, IsPurchased = false);
         return clone;
     }
 
@@ -122,7 +122,7 @@ public class Item
         }
     }
 
-    internal void PrintStoreItemDescription(bool withNumber = false, int idx = 0)
+    internal void PrintStoreItemDescription(bool sell = false,bool withNumber = false, int idx = 0)
     {
         Console.Write("- ");
         if (withNumber)
@@ -151,7 +151,15 @@ public class Item
         }
         else
         {
-            ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
+            if (sell)
+            {
+                ConsoleUtility.PrintTextHighlights("", (4 * Price / 5).ToString(), " G");
+            }
+            else
+            {
+                ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
+
+            }
         }
     }
 
