@@ -85,10 +85,12 @@ public partial class GameManager
         weaponReward = new List<Item>();
 
         potion = new List<Potion>();
-        potion.Add(new Potion("빨간 포션", "붉은 약초로 만든 물약이다", PotionEffect.Heal, 10, 100));
-        potion.Add(new Potion("주황 포션", "붉은 약초의 농축 물약이다.", PotionEffect.Heal, 15, 150));
-        potion.Add(new Potion("하얀 포션", "붉은 약초의 고농축 물약이다.", PotionEffect.Heal, 30, 300));
-
+        potion.Add(new Potion("빨간 포션", "붉은 약초로 만든 물약이다.", PotionEffect.Heal, 10, 0, 100));
+        potion.Add(new Potion("주황 포션", "붉은 약초의 농축 물약이다.", PotionEffect.Heal, 15, 0, 150));
+        potion.Add(new Potion("하얀 포션", "붉은 약초의 고농축 물약이다.", PotionEffect.Heal, 30, 0, 300));
+        potion.Add(new Potion("마나 포션", "푸른 약초로 만든 물약이다.", PotionEffect.Mpup, 0, 20, 100));
+        potion.Add(new Potion("마나 엘릭서", "전설의 비약이다.", PotionEffect.Mpup, 0, 50, 100));
+        
         potioninventory = new List<Potion>();
 
         potionReward = new List<Potion>();

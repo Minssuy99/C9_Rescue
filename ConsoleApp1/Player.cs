@@ -134,5 +134,14 @@ public class Player
         }
     }
 
+    public void ManaHeal(int manaAmount)
+    {
+        CurrentMp += manaAmount;
 
+        // 마나가 최대 마나를 초과하지 않도록 조정
+        if (CurrentMp > MaxMp)
+        {
+            CurrentMp = MaxMp;
+        }
+    }
 }

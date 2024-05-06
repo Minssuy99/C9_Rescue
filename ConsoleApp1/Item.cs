@@ -55,6 +55,8 @@ public class Item
             Console.Write($"{idx} ");
             Console.ResetColor();
         }
+        else Console.Write(ConsoleUtility.PadRightForMixedText(Name, 19));
+
         if (IsEquipped)
         {
             Console.Write("[");
