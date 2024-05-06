@@ -32,7 +32,7 @@ public partial class GameManager
     public GameManager()
     {
         InitializeGame();
-        dataBase.LoadData(ref player, ref inventory, ref quest);
+        dataBase.LoadData(ref player, ref inventory, ref quest,ref skills);
     }
 
     public static GameManager Instance
@@ -181,6 +181,7 @@ public partial class GameManager
                 else
                 {
                     Console.WriteLine("체력이 회복됐습니다.");
+                    player.skills=skills;//게임매니저가 알고 있는 스킬을 player에 저장할 수 있도록 한다.
                     dataBase.SavePlayer(player,quest);
                     player.Rest();
                     Console.ReadKey();
