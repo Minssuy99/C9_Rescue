@@ -139,13 +139,12 @@ public partial class GameManager
         Console.WriteLine();
         Console.WriteLine("몬스터 차례");
 
-        double mminAtk = Math.Ceiling(player.Atk * 0.9); // 최소 공격력 (원래 공격력의 90%)
-        double mmaxAtk = Math.Ceiling(player.Atk * 1.1); // 최대 공격력 (원래 공격력의 110%)
-
         foreach (Monster m in battleMonster)
         {
             if (m.IsAlive())
             {
+                double mminAtk = Math.Ceiling(m.Atk * 0.9); // 최소 공격력 (원래 공격력의 90%)
+                double mmaxAtk = Math.Ceiling(m.Atk * 1.1); // 최대 공격력 (원래 공격력의 110%)
                 if (IsPlayerEvaded())
                 {
                     Console.WriteLine("회피!");

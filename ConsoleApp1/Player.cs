@@ -62,6 +62,7 @@ public class Player
     public void Rest()
     {
         CurrentHp = MaxHp;
+        CurrentMp = MaxMp;
     }
     public void GetExp(int exp)
     {
