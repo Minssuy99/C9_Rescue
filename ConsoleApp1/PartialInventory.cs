@@ -167,7 +167,11 @@ public partial class GameManager
                 {
                     Console.WriteLine("사용 가능한 물약이 없습니다.");
                 }
-                StartBattle(random);
+
+                Console.Clear();
+                ShowMonsterStatus(random);
+
+                ShowPlayerStatus();
                 break;
         }
     }
