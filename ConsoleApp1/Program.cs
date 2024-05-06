@@ -60,7 +60,7 @@ public partial class GameManager
         monster.Add(new Monster("칼날부리", 1, 3, 1, 8, 8, 1, "빨간 포션"));
         monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8, 5, "주황 포션"));
         monster.Add(new Monster("고블린", 2, 5, 4, 14, 14, 3, "빨간 포션"));
-        bossMonster = new Monster("바론",15,20,20,200,200,20,"하얀 포션");
+        bossMonster = new Monster("바론",15,20,20,200,200,20,"남작의 도움");
         skills = new List<Skill>();
 
         inventory = new List<Item>();
@@ -80,6 +80,7 @@ public partial class GameManager
 
         dungeonItemList = new List<Item>();
         dungeonItemList.Add(new Item("대포", "대포 미니언의 강력한 대포입니다.", ItemType.WEAPON, 9, 0, 0, 0, 300));
+        dungeonItemList.Add(new Item("남작의 도움", "남작이 주는 강력한 버프이다.", ItemType.ARMOR, 0, 18, 0, 0, 300));
 
         weaponReward = new List<Item>();
 
