@@ -15,22 +15,30 @@ public partial class GameManager
         Console.WriteLine();
         // 전투돌입할때마다 초기화
         battleMonster.Clear();
+        
         Random rand = new();
         int random = rand.Next(max - 2, max);
-        for (int i = 0; i < random; i++)
+        if (player.NowDongeon == 4)
         {
-            while (true)
+            random = 1;
+            battleMonster.Add(bossMonster);
+        }
+        else
+        {
+            for (int i = 0; i < random; i++)
             {
-                Monster randomMonster = GetRandomMonster();
-                if (!battleMonster.Contains(randomMonster))
+                while (true)
                 {
-                    battleMonster.Add(randomMonster.CloneMonster());
-                    Console.WriteLine($"Lv.{battleMonster[i].Level} {battleMonster[i].Name} HP {battleMonster[i].CurrentHp}");
-                    break;
+                    Monster randomMonster = GetRandomMonster();
+                    if (!battleMonster.Contains(randomMonster))
+                    {
+                        battleMonster.Add(randomMonster.CloneMonster());
+                        Console.WriteLine($"Lv.{battleMonster[i].Level} {battleMonster[i].Name} HP {battleMonster[i].CurrentHp}");
+                        break;
+                    }
                 }
             }
         }
-
         Console.WriteLine();
 
         ShowPlayerStatus();
@@ -174,7 +182,7 @@ public partial class GameManager
     private void DungeonMenu(int max)
     {
         Console.Clear();
-        if (player.NowDongeon > 3)
+        if (player.NowDongeon > 4)
         {
             Console.WriteLine("타워를 클리어하셨습니다");
             player.NowDongeon = 1;

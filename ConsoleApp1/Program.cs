@@ -19,6 +19,7 @@ public partial class GameManager
     private List<Item> weaponReward;
 
     private List<Monster> monster;
+    private Monster bossMonster;
     public List<Monster> battleMonster;
     public Random battleRandom = new Random();
 
@@ -59,7 +60,7 @@ public partial class GameManager
         monster.Add(new Monster("칼날부리", 1, 3, 1, 8, 8, 1, "빨간 포션"));
         monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8, 5, "주황 포션"));
         monster.Add(new Monster("고블린", 2, 5, 4, 14, 14, 3, "빨간 포션"));
-
+        bossMonster = new Monster("바론",15,20,20,200,200,20,"하얀 포션");
         skills = new List<Skill>();
 
         inventory = new List<Item>();
