@@ -32,15 +32,7 @@ public partial class GameManager
     public GameManager()
     {
         InitializeGame();
-
-        while (quest.Count < 3)
-        {
-            Quest newQuest = GenerateQuest();
-            if (!quest.Any(q => q.Title == newQuest.Title))
-            {
-                quest.Add(newQuest);
-            }
-        }
+        dataBase.LoadData(ref player, ref inventory, ref quest);
     }
 
     public static GameManager Instance
@@ -105,7 +97,19 @@ public partial class GameManager
     {
         Console.Clear();
         ConsoleUtility.PrintGameHeader();
-        if(!dataBase.LoadData(ref player,ref inventory))
+        if (!dataBase.checkQuest)
+        {
+            while (quest.Count < 3)
+            {
+                Console.WriteLine("퀘스트 초기화");
+                Quest newQuest = GenerateQuest();
+                if (!quest.Any(q => q.Title == newQuest.Title))
+                {
+                    quest.Add(newQuest);
+                }
+            }
+        }
+        if (!dataBase.checkPlayer)
             player.PlayerCreate(player);
         MainMenu();
     }
@@ -177,7 +181,7 @@ public partial class GameManager
                 else
                 {
                     Console.WriteLine("체력이 회복됐습니다.");
-                    dataBase.SavePlayer(player);
+                    dataBase.SavePlayer(player,quest);
                     player.Rest();
                     Console.ReadKey();
                 }
