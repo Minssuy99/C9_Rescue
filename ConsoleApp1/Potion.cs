@@ -8,11 +8,10 @@ public enum PotionEffect
     IncreaseDefense
 }
 
-internal class Potion
+public class Potion
 {
     public string Name { get; }
     public string Desc { get; }
-
     public PotionEffect Effect { get; }
     public int HealValue { get; }
     public int ManaValue { get; private set; }
@@ -41,7 +40,7 @@ internal class Potion
         return clone;
     }
 
-    internal void PrintPotionStatDescription(bool withNumber = false, int idx = 0, bool withPrice = false)
+    internal void PrintPotionStatDescription(bool sell = false, bool withNumber = false, int idx = 0, bool withPrice = false)
     {
         Console.Write("- ");
         if (withNumber)
@@ -69,8 +68,14 @@ internal class Potion
             Console.Write(Count);
 
             Console.Write(" | ");
-
-            ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
+            if (sell)
+            {
+                ConsoleUtility.PrintTextHighlights("", (4 * Price / 5).ToString(), " G");
+            }
+            else
+            {
+                ConsoleUtility.PrintTextHighlights("", Price.ToString(), " G");
+            }
         }
         else 
         {

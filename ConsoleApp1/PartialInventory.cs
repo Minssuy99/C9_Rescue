@@ -63,7 +63,7 @@ public partial class GameManager
 
         for (int i = 0; i < potioninventory.Count; i++)
         {
-            potioninventory[i].PrintPotionStatDescription(true, i + 1, true); //나가기가 0번이라서 +1해줘서 띄워줌
+            potioninventory[i].PrintPotionStatDescription(false, true, i + 1, true); //나가기가 0번이라서 +1해줘서 띄워줌
         }
 
         Console.WriteLine();
@@ -139,7 +139,7 @@ public partial class GameManager
 
         for (int i = 0; i < potioninventory.Count; i++)
         {
-            potioninventory[i].PrintPotionStatDescription(true, i + 1, true); //나가기가 0번이라서 +1해줘서 띄워줌
+            potioninventory[i].PrintPotionStatDescription(false, true, i + 1, true); //나가기가 0번이라서 +1해줘서 띄워줌
         }
 
         Console.WriteLine();
