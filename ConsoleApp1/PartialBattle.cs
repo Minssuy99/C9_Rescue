@@ -347,6 +347,19 @@ public partial class GameManager
                     quest.CompleteQuest();
                 }
             }
+
+            // 해당 퀘스트가 수락된 상태이고, 수집 퀘스트이며, 목표 몬스터와 동일한 몬스터를 처치했을 경우
+            if (quest.IsAccepted && quest.Title == "따뜻한 겨울나기" && quest.TargetMonsterName == monsterName)
+            {
+                // 얻은 아이템 수 확률적으로 증가
+                if (battleRandom.Next(100) < 101) quest.UpdateProgress(1);
+
+                if (quest.CurrentAmount >= quest.TargetAmount && !quest.IsCompleted)
+                {
+                    // 완료로 만들어 줌
+                    quest.CompleteQuest();
+                }
+            }
         }
     }
 }

@@ -82,6 +82,7 @@ public partial class GameManager
                     Quest.QuestDifficulty.Hard => 1000,
                     _ => 0,
                 };
+                targetMonsterName = "어스름 늑대";
                 break;
             case Quest.QuestType.Equip:
                 title = "장비 장착을 해보자!";
