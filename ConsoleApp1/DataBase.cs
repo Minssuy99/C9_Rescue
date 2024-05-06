@@ -54,10 +54,6 @@ namespace ConsoleApp1
                 string _questrJson = File.ReadAllText(_QuestFilePath);
 
                 quests = JsonConvert.DeserializeObject<List<Quest>>(_questrJson);//Json->C#파일변환
-                foreach(Quest q in quests)
-                {
-                    Console.WriteLine(q.Title);
-                }
                 checkQuest = true;
             }
             else
