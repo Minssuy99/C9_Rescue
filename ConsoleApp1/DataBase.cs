@@ -17,7 +17,6 @@ namespace ConsoleApp1
         {
             string _fileName = "playerStat.json"; //Json
             string _QuestFileName = "QuestmData.json";
-
             // 데이터 경로 저장. (C드라이브, Documents)
             string _userDocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); //경로 내문서
 
@@ -34,11 +33,11 @@ namespace ConsoleApp1
             Console.WriteLine("저장이 완료되었습니다.");
         }
 
-        public void LoadData(ref Player player, ref List<Item> inventory, ref List<Quest> quests)
+        public void LoadData(ref Player player, ref List<Item> inventory, ref List<Quest> quests, ref List<Skill> skills)
         {
 
             string _userDocumentsFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-            PlayerDataLoad(ref player, _userDocumentsFolder, ref inventory);
+            PlayerDataLoad(ref player, _userDocumentsFolder, ref inventory, ref skills);
             QuestDataLoad(ref quests, _userDocumentsFolder);
             Console.ReadKey();
         }
@@ -63,7 +62,7 @@ namespace ConsoleApp1
             }
         }
 
-        private void PlayerDataLoad(ref Player player, string _userDocumentsFolder, ref List<Item> inventory)
+        private void PlayerDataLoad(ref Player player, string _userDocumentsFolder, ref List<Item> inventory, ref List<Skill> skills)
         {
             string _playerFileName = "playerStat.json";
 
@@ -81,7 +80,10 @@ namespace ConsoleApp1
                 }
                 Console.WriteLine("플레이어 데이터를 불러왔습니다.");
                 checkPlayer = true;
-
+                if(player.skills != null)
+                {
+                    skills = player.skills;
+                }
             }
             else
             {

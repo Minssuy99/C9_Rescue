@@ -4,6 +4,7 @@ using System.Numerics;
 public class Player
 {
     public List<Item> Items { get; set; }
+    public List<Skill> skills { get; set; }
     public string Name { get; set; }
     public string Job { get; set; }
     public int Level { get; private set; }
