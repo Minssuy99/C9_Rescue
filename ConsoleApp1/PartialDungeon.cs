@@ -165,8 +165,24 @@ public partial class GameManager
             }
             else if (cho1 == 3)
             {
-                Console.WriteLine("미구현");
-                continue;
+                DungeonItemMenu(random);
+                if (CheckAllMonstersDead())
+                {
+                    HandleAllMonstersDefeat();
+                    ShowResultMenu(random);
+                    break;
+                }
+
+                MonsterAttack();
+
+                if (!player.IsAlive())
+                {
+                    HandlePlayerDefeat();
+                    break;
+                }
+
+                Console.WriteLine("아무키나 누르세요...");
+                Console.ReadKey();
             }
         }
     }
