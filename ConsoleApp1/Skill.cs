@@ -76,7 +76,10 @@ namespace ConsoleApp1
                     //광역기
                     for (int j = 0; j < GameManager.Instance.battleMonster.Count; j++)
                     {
-                        PlayerSkill(GameManager.Instance.skills[i], GameManager.Instance.battleMonster[j]);
+                        if (GameManager.Instance.battleMonster[j].IsAlive())
+                        {
+                            PlayerSkill(GameManager.Instance.skills[i], GameManager.Instance.battleMonster[j]);
+                        }
                     }
                 }
                 else
