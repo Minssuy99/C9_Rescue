@@ -30,7 +30,7 @@ C# 기초를 이용한 스파르타 던전 텍스트 게임 입니다.
 </details>
 
 <details>
-<summary>💻 Code</summary>
+<summary>💻 Program.cs</summary>
  
  ```csharp
   public void MainMenu()
@@ -94,7 +94,7 @@ C# 기초를 이용한 스파르타 던전 텍스트 게임 입니다.
 </details>
 
 <details>
-<summary>💻 Code</summary>
+<summary>💻 Program.cs</summary>
 
  ```csharp
 private void StatusMenu()
@@ -151,7 +151,7 @@ private void StatusMenu()
 </details>
 
 <details>
-<summary>💻 Code</summary>
+<summary>💻 Partial_Inventory.cs</summary>
 
  ```csharp
 private void InventoryMenu()
@@ -214,7 +214,7 @@ private void InventoryMenu()
 </details>
 
 <details>
-<summary>💻 Code</summary>
+<summary>💻 Partial_Store.cs</summary>
 
 ```csharp
  private void StoreMenu()
@@ -269,7 +269,7 @@ private void InventoryMenu()
 </details>
 
 <details>
-<summary>💻 Code</summary>
+<summary>💻 Partial_Store.cs</summary>
 
  ```csharp
 private void PotionStoreMenu()
@@ -324,7 +324,7 @@ private void PotionStoreMenu()
 </details>
 
 <details>
-<summary>💻 Code</summary>
+<summary>💻 Partial_Dungeon.cs</summary>
 
  ```chsarp
 public void StartBattle(int random)
@@ -465,7 +465,7 @@ public void StartBattle(int random)
 </details>
 
 <details>
-<summary>💻 Code</summary>
+<summary>💻 DataBase.cs</summary>
 
  ```csharp
    internal class DataBase
@@ -566,7 +566,7 @@ public void StartBattle(int random)
 </details>
 
 <details>
-<summary>💻 Code</summary>
+<summary>💻 Partial_Quest.cs</summary>
 
  ```csharp
 private Quest GenerateQuest()
