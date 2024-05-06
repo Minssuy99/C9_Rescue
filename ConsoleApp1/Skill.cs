@@ -40,7 +40,7 @@ namespace ConsoleApp1
             SkillMp = skillMp;
             SkillRangeType = skillRangeType;
             Damage = damage;
-            damage = SkillDamage(damage);
+            damage = SkillDamage(SkillRangeType,damage);
         }
 
         public static void UseSkill(int random)
@@ -50,12 +50,10 @@ namespace ConsoleApp1
             {
                 GameManager.Instance.StartBattle(random);
             }
-
-            //스킬 선택
-            int cho1 = ConsoleUtility.PromotMenuChoice(0, GameManager.Instance.skills.Count);
-
             Console.WriteLine();
             Console.WriteLine("0. 뒤로 가기");
+            //스킬 선택
+            int cho1 = ConsoleUtility.PromotMenuChoice(0, GameManager.Instance.skills.Count);
 
             if (cho1 == 0)
             {
@@ -67,11 +65,12 @@ namespace ConsoleApp1
             //스킬 없으면 돌아가게
 
 
-            //스킬 범위 판정
+            //마나 있는지 판정
             if (GameManager.Instance.player.CurrentMp >= GameManager.Instance.skills[i].SkillMp)
             {
                 GameManager.Instance.player.CurrentMp -= GameManager.Instance.skills[i].SkillMp;
 
+                //스킬 범위 판정
                 if (GameManager.Instance.skills[i].SkillRangeType == SkillRangeType.DirectDamage)
                 {
                     //단일기
@@ -114,10 +113,17 @@ namespace ConsoleApp1
             }
         }
 
-        public static int SkillDamage(int damage)
+        public static int SkillDamage(SkillRangeType skillRangeType,int damage)
         {
             //데미지 계산 식
-            damage = SkillLevel * 10 + damage;
+            if(skillRangeType == SkillRangeType.AreaOfEffect)
+            {
+                damage = (SkillLevel * 10 + damage)/4;
+            }
+            else
+            {
+                damage = SkillLevel * 10 + damage;
+            }
             return damage;
         }
         public List<Skill> skills;
@@ -131,7 +137,7 @@ namespace ConsoleApp1
             Console.Write("] ");
             Console.Write(ConsoleUtility.PadRightForMixedText(SkillName, 12));
             Console.Write(" | ");
-            Console.Write($"데미지 {(Damage >= 0 ? ": " : "")}{ConsoleUtility.PadRightForMixedText(SkillDamage(Damage).ToString(), 4)}");
+            Console.Write($"데미지 {(Damage >= 0 ? ": " : "")}{ConsoleUtility.PadRightForMixedText(SkillDamage(SkillRangeType, Damage).ToString(), 4)}");
             Console.Write(" | ");
             Console.Write($"소비 마나 {(SkillMp >= 0 ? ": " : "")}{ConsoleUtility.PadRightForMixedText(SkillMp.ToString(), 4)}");
             Console.Write(" | ");
@@ -159,7 +165,7 @@ namespace ConsoleApp1
             }
             else
             {
-                int attackDamage = SkillDamage(selectSkill.Damage);
+                int attackDamage = SkillDamage(selectSkill.SkillRangeType, selectSkill.Damage);
                 if (GameManager.Instance.IsCriticalHit())
                     GameManager.Instance.InflictCriticalDamage(selectedMonster, attackDamage);
                 else

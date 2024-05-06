@@ -113,7 +113,7 @@ public class Player
 
                 //견본용 스킬 추가 템플릿 스킬 타입은 0이 공격 1이 서포트 스킬 레인지는 0이 단일 1이 광역
                 GameManager.Instance.skills.Add(new Skill("파이어볼", "불공", SkillType.AttackSkills, 1, 10, 20, SkillRangeType.DirectDamage));
-                GameManager.Instance.skills.Add(new Skill("메테오", "운석", SkillType.AttackSkills, 1, 20, 10, SkillRangeType.AreaOfEffect));
+                GameManager.Instance.skills.Add(new Skill("메테오", "운석", SkillType.AttackSkills, 1, 30, 20, SkillRangeType.AreaOfEffect));
 
                 break;
         }
