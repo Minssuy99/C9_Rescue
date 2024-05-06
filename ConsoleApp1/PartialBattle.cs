@@ -262,7 +262,7 @@ public partial class GameManager
         Console.WriteLine("[내정보]");
         Console.WriteLine($"Lv.{player.Level}  {player.Name}({player.Job})");
         Console.WriteLine($"HP {player.CurrentHp} / {player.MaxHp}");
-        Console.WriteLine($"HP {player.CurrentMp} / {player.MaxMp}");
+        Console.WriteLine($"MP {player.CurrentMp} / {player.MaxMp}");
         Console.WriteLine();
 
         Console.WriteLine($"[전투 보상]");

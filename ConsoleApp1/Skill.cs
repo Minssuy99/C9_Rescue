@@ -45,10 +45,29 @@ namespace ConsoleApp1
 
         public static void UseSkill(int random)
         {
-            int cho1 = ConsoleUtility.PromotMenuChoice(1, GameManager.Instance.skills.Count);
+            //스킬 없으면 되돌려보내주는 부분
+            if (GameManager.Instance.skills.Count == 0)
+            {
+                GameManager.Instance.StartBattle(random);
+            }
+
+            //스킬 선택
+            int cho1 = ConsoleUtility.PromotMenuChoice(0, GameManager.Instance.skills.Count);
+
+            Console.WriteLine();
+            Console.WriteLine("0. 뒤로 가기");
+
+            if (cho1 == 0)
+            {
+                GameManager.Instance.StartBattle(random);
+            }
 
             int i = cho1 - 1;
 
+            //스킬 없으면 돌아가게
+
+
+            //스킬 범위 판정
             if (GameManager.Instance.player.CurrentMp >= GameManager.Instance.skills[i].SkillMp)
             {
                 GameManager.Instance.player.CurrentMp -= GameManager.Instance.skills[i].SkillMp;
@@ -65,7 +84,8 @@ namespace ConsoleApp1
                     int selectedMonsterIndex = cho2 - 1;
 
                     //이미 죽은 몬스터 구분
-                    GameManager.Instance.ValidateMonsterChoice(selectedMonsterIndex);
+                    if (!GameManager.Instance.ValidateMonsterChoice(selectedMonsterIndex))
+                        UseSkill(random);
 
                     Monster selectedMonster = GameManager.Instance.battleMonster[selectedMonsterIndex];
 
