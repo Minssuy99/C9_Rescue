@@ -36,13 +36,31 @@ public partial class GameManager
         ShowPlayerStatus();
         
         Console.WriteLine("1. 싸운다");
-        Console.WriteLine();
-
-        int choice = ConsoleUtility.PromotMenuChoice(1, 1);
-
-        if (choice == 1)
+        if (player.InTower = false)
         {
-            StartBattle(random);
+            Console.WriteLine("0. 도망친다.");
+            Console.WriteLine();
+
+            int choice = ConsoleUtility.PromotMenuChoice(0, 1);
+
+            if (choice == 1)
+            {
+                StartBattle(random);
+            }
+            if (choice == 0)
+            {
+                DungeonChoiceMenu();
+            }
+        }
+        else
+        {
+            Console.WriteLine();
+            int choice = ConsoleUtility.PromotMenuChoice(1, 1);
+
+            if (choice == 1)
+            {
+                StartBattle(random);
+            }
         }
     }
 
@@ -171,35 +189,45 @@ public partial class GameManager
         if (player.InTower)
         {
             Console.WriteLine($"1. 전투 시작 (현재 진행 : {player.NowDongeon})");
-            Console.WriteLine("2. 상태 보기");
+            Console.WriteLine();
+
+            int choice = ConsoleUtility.PromotMenuChoice(1, 1);
+
+            switch (choice)
+            {
+                case 1:
+                    if (player.InTower)
+                        BattleManu(player.NowDongeon * 2 + 1);
+                    else
+                        BattleManu(max);
+                    break;
+                case 0:
+                    MainMenu();
+                    break;
+            }
         }
 
         else
         {
             Console.WriteLine("1. 전투 시작");
-            Console.WriteLine("2. 상태 보기");
             Console.WriteLine("0. 뒤로가기");
-        }
+            Console.WriteLine();
 
-        Console.WriteLine();
+            int choice = ConsoleUtility.PromotMenuChoice(0, 1);
 
-        int choice = ConsoleUtility.PromotMenuChoice(0, 3);
-
-        switch (choice)
-        {
-            case 2:
-                StatusMenu();
-                break;
-            case 1:
-                if (player.InTower)
-                    BattleManu(player.NowDongeon * 2 + 1);
-                else
-                    BattleManu(max);
-                break;
-            case 0:
-                MainMenu();
-                break;
-        }
+            switch (choice)
+            {
+                case 1:
+                    if (player.InTower)
+                        BattleManu(player.NowDongeon * 2 + 1);
+                    else
+                        BattleManu(max);
+                    break;
+                case 0:
+                    MainMenu();
+                    break;
+            }
+        } 
         MainMenu();
     }
 
