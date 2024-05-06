@@ -231,7 +231,7 @@ public partial class GameManager
         // 해당 아이템을 찾았는지 확인 후 인벤토리에 추가
         if (itemIndex != -1)
         {
-            if (battleRandom.Next(100) < 10) //확률적으로 아이템을 드랍함
+            if (battleRandom.Next(100) < 101) //확률적으로 아이템을 드랍함
             {
                 Item droppedItem = dungeonItemList[itemIndex].CloneItem();
                 weaponReward.Add(droppedItem);
@@ -241,7 +241,7 @@ public partial class GameManager
 
         if (potionIndex != -1)
         {
-            if (battleRandom.Next(100) < 101) //확률적으로 아이템을 드랍함
+            if (battleRandom.Next(100) < 70) //확률적으로 아이템을 드랍함
             {
                 Potion droppedItem = potion[potionIndex].ClonePotion();
                 potionReward.Add(droppedItem);

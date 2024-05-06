@@ -44,7 +44,7 @@ public partial class GameManager
         ShowPlayerStatus();
         
         Console.WriteLine("1. 싸운다");
-        if (player.InTower = false)
+        if (player.InTower == false)
         {
             Console.WriteLine("0. 도망친다.");
             Console.WriteLine();
@@ -55,7 +55,7 @@ public partial class GameManager
             {
                 StartBattle(random);
             }
-            if (choice == 0)
+            else
             {
                 DungeonChoiceMenu();
             }
@@ -220,13 +220,7 @@ public partial class GameManager
             switch (choice)
             {
                 case 1:
-                    if (player.InTower)
-                        BattleManu(player.NowDongeon * 2 + 1);
-                    else
-                        BattleManu(max);
-                    break;
-                case 0:
-                    MainMenu();
+                    BattleManu(player.NowDongeon * 2 + 1);
                     break;
             }
         }
@@ -242,10 +236,7 @@ public partial class GameManager
             switch (choice)
             {
                 case 1:
-                    if (player.InTower)
-                        BattleManu(player.NowDongeon * 2 + 1);
-                    else
-                        BattleManu(max);
+                    BattleManu(max);
                     break;
                 case 0:
                     MainMenu();
