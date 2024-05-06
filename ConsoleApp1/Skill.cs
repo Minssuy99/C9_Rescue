@@ -118,7 +118,7 @@ namespace ConsoleApp1
             //데미지 계산 식
             if(skillRangeType == SkillRangeType.AreaOfEffect)
             {
-                damage = (SkillLevel * 10 + damage)/4;
+                damage = (SkillLevel * 10 + damage)/3;
             }
             else
             {
