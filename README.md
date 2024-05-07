@@ -1,6 +1,11 @@
 # 💊 C9_Resque
+<details>
+ 
+<summary>WireFrame</summary>
+ 
+![image](https://github.com/Minssuy99/C9_Rescue/assets/101568505/2d6300a5-4322-4b8e-a4e1-61251e7f064c)
 
-</br>
+</details>
 
 ## 🖥️ 프로젝트 소개
 C# 기초를 이용한 스파르타 던전 텍스트 게임 입니다.
