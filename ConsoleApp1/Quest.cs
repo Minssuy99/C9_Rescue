@@ -45,11 +45,6 @@ public class Quest
         CurrentAmount += amount; // 토벌 수 업데이트
     }
 
-    public string GetProgressText()
-    {
-        return $"{CurrentAmount}/{TargetAmount}"; // 현재 진행 상황
-    }
-
     public static string GetQuestTypeName(QuestType type)
     {
         return type switch
