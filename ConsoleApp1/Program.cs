@@ -68,7 +68,13 @@ public partial class GameManager
         monster.Add(new Monster("어스름 늑대", 5, 10, 5, 8, 8, 5, "주황 포션"));
         monster.Add(new Monster("고블린", 2, 5, 4, 14, 14, 3, "빨간 포션"));
 
-        skills = new List<Skill>();
+        if (player.Job == "마법사")
+        {
+            skills = new List<Skill>();
+            //견본용 스킬 추가 템플릿 스킬 타입은 0이 공격 1이 서포트 스킬 레인지는 0이 단일 1이 광역
+            skills.Add(new Skill("파이어볼", "불공", SkillType.AttackSkills, 1, 10, 20, SkillRangeType.DirectDamage));
+            skills.Add(new Skill("메테오", "운석", SkillType.AttackSkills, 1, 20, 10, SkillRangeType.AreaOfEffect));
+        }
 
         inventory = new List<Item>();
 
