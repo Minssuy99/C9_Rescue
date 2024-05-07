@@ -326,7 +326,7 @@ private void PotionStoreMenu()
 <details>
 <summary>💻 Partial_Dungeon.cs</summary>
 
- ```chsarp
+ ```csharp
 public void StartBattle(int random)
 {
     while (true)
@@ -450,6 +450,7 @@ public void StartBattle(int random)
     }
 }
 ```
+
 </details>
 
 </br>
