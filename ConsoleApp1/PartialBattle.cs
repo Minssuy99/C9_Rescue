@@ -112,7 +112,7 @@ public partial class GameManager
         ConsoleUtility.PrintTextHighlights("경험치 :", $"{player.CurrentExp}/{player.MaxExp}".ToString());
     }
 
-    public bool CheckAllMonstersDead()
+    private bool CheckAllMonstersDead()
     {
         foreach (var monster in battleMonster)
         {
@@ -122,7 +122,7 @@ public partial class GameManager
         return true;
     }
 
-    public void HandleAllMonstersDefeat()
+    private void HandleAllMonstersDefeat()
     {
         Console.WriteLine();
         Console.WriteLine("모든 몬스터를 물리쳤습니다.");
@@ -262,7 +262,6 @@ public partial class GameManager
         Console.WriteLine("[내정보]");
         Console.WriteLine($"Lv.{player.Level}  {player.Name}({player.Job})");
         Console.WriteLine($"HP {player.CurrentHp} / {player.MaxHp}");
-        Console.WriteLine($"HP {player.CurrentMp} / {player.MaxMp}");
         Console.WriteLine();
 
         Console.WriteLine($"[전투 보상]");

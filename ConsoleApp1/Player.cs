@@ -90,13 +90,13 @@ public class Player
         switch (choice)
         {
             case 1:
-                player = new Player(player.Name, "전사", 1, 20, 5, 100, 100, 50, 50, 11, 0, 15000);
+                player.Job = "전사";
                 break;
             case 2:
-                player = new Player(player.Name, "기사", 1, 10, 10, 150, 150, 50, 50, 11, 0, 15000);
+                player.Job = "기사";
                 break;
             case 3:
-                player = new Player(player.Name, "마법사", 1, 1, 1, 50, 50, 200, 200, 11, 0, 15000);
+                player.Job = "궁수";
                 break;
         }
 
