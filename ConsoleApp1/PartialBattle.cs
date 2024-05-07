@@ -351,7 +351,11 @@ public partial class GameManager
             if (quest.IsAccepted && quest.Title == "따뜻한 겨울나기" && quest.TargetMonsterName == monsterName)
             {
                 // 얻은 아이템 수 확률적으로 증가
-                if (battleRandom.Next(100) < 101) quest.UpdateProgress(1);
+                if (battleRandom.Next(100) < 101)
+                {
+                    quest.UpdateProgress(1);
+                    Console.WriteLine("늑대의 털을 획득했습니다.");
+                }
 
                 if (quest.CurrentAmount >= quest.TargetAmount && !quest.IsCompleted)
                 {

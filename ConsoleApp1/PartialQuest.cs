@@ -33,14 +33,14 @@ public partial class GameManager
                             Quest.QuestDifficulty.Easy => battleRandom.Next(1, 5),
                             Quest.QuestDifficulty.Normal => battleRandom.Next(5, 10),
                             Quest.QuestDifficulty.Hard => battleRandom.Next(10, 15),
-                            _ => 0,
+                            _ => 0
                         };
                         rewardGold = difficulty switch
                         {
                             Quest.QuestDifficulty.Easy => 500,
                             Quest.QuestDifficulty.Normal => 1000,
                             Quest.QuestDifficulty.Hard => 1500,
-                            _ => 0,
+                            _ => 0
                         };
                         targetMonsterName = "칼날부리";
                         break;
@@ -52,14 +52,14 @@ public partial class GameManager
                             Quest.QuestDifficulty.Easy => battleRandom.Next(1, 5),
                             Quest.QuestDifficulty.Normal => battleRandom.Next(5, 10),
                             Quest.QuestDifficulty.Hard => battleRandom.Next(10, 15),
-                            _ => 0,
+                            _ => 0
                         };
                         rewardGold = difficulty switch
                         {
                             Quest.QuestDifficulty.Easy => 500,
                             Quest.QuestDifficulty.Normal => 1000,
                             Quest.QuestDifficulty.Hard => 1500,
-                            _ => 0,
+                            _ => 0
                         };
                         targetMonsterName = "고블린";
                         break;
@@ -73,14 +73,14 @@ public partial class GameManager
                     Quest.QuestDifficulty.Easy => battleRandom.Next(1, 3),
                     Quest.QuestDifficulty.Normal => battleRandom.Next(3, 6),
                     Quest.QuestDifficulty.Hard => battleRandom.Next(6, 10),
-                    _ => 0,
+                    _ => 0
                 };
                 rewardGold = difficulty switch
                 {
                     Quest.QuestDifficulty.Easy => 300,
                     Quest.QuestDifficulty.Normal => 600,
                     Quest.QuestDifficulty.Hard => 1000,
-                    _ => 0,
+                    _ => 0
                 };
                 targetMonsterName = "어스름 늑대";
                 break;
@@ -185,6 +185,7 @@ public partial class GameManager
                     int abandonChoice = ConsoleUtility.PromotMenuChoice(1, 2);
                     if (abandonChoice == 1)
                     {
+                        quest[selectedQuestIndex].CurrentAmount = 0;
                         quest[selectedQuestIndex].IsAccepted = false;
                         Console.WriteLine("퀘스트를 포기했습니다.");
                         Console.WriteLine("아무 키나 누르세요...");

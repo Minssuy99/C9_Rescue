@@ -18,7 +18,7 @@ public class Quest
     public string Description { get; }
     public QuestType Type { get; }
     public QuestDifficulty Difficulty { get; }
-    public int CurrentAmount { get; private set; }
+    public int CurrentAmount { get; set; }
     public int TargetAmount { get; }
     public int RewardGold { get; }
     public string TargetMonsterName { get; }
